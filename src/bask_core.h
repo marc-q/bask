@@ -4,6 +4,7 @@
 struct _bask_core
 {
 	int tc_amount;
+	char baskpath[200];
 	FILE* baskfile;
 };
 

@@ -110,23 +110,40 @@ static void search_view_summary (bask_core* tcore, struct bask_task** first, cha
    |--------------------------------------------| */
 
 /*
-	Function: bask_init_local (void);
+	Function: bask_get_baskpath (bask_core* tcore);
+	Description: Set the tcore->baskpath to the bask dir in the home dir.
+	InitVersion: 0.0.1
+*/
+static void bask_get_baskpath (bask_core* tcore)
+{
+	strcpy (tcore->baskpath, getenv("HOME"));
+	
+	if (tcore->baskpath == NULL || *tcore->baskpath == '\0')
+	{
+		printf ("cannot get home directory");
+		exit (EXIT_FAILURE);
+	}
+	
+	strcat (tcore->baskpath, "/.local/share/bask/");
+	strcat (tcore->baskpath, BASKFILE);
+}
+
+/*
+	Function: bask_init_local (bask_core* tcore);
 	Description: Inits Bask local, creates the needed files.
 	InitVersion: 0.0.1
 */
-static int bask_init_local (void)
+static int bask_init_local (bask_core* tcore)
 {
-	FILE* baskfile;
-
-	baskfile = fopen (BASKFILE, "w+");
+	tcore->baskfile = fopen (tcore->baskpath, "w+");
 	
-	if (baskfile == NULL)
+	if (tcore->baskfile == NULL)
 	{
 		printf ("ERROR: Could'nt write the baskfile!\n");
 		return -1;
 	}
 	
-	fclose (baskfile);
+	fclose (tcore->baskfile);
 	
 	return 0;
 }
@@ -140,11 +157,11 @@ static int bask_init (bask_core* tcore, struct bask_task** first)
 {
 	int i, tid, tactive, tpriority, tstate;
 	char line[200], tproject[50], tdescription[200];
-	char *token, *saveptr;
+	char *token, *saveptr, *home;
 
 	i = 0;
 
-	tcore->baskfile = fopen (BASKFILE, "r+");
+	tcore->baskfile = fopen (tcore->baskpath, "r+");
 
 	if (tcore->baskfile == NULL)
 	{
@@ -287,11 +304,13 @@ int main (int argc, char* argv[])
 	strcpy (pproject, "");
 	strcpy (pdescription, "");
 	
+	bask_get_baskpath (&tcore);
+	
 	if (argc == 2)
 	{
 		if (strncmp (argv[optind], "init", strlen ("init")) == 0)
 		{
-			bask_init_local ();
+			bask_init_local (&tcore);
 			exit (EXIT_SUCCESS);
 		}
 	}
