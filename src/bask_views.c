@@ -170,6 +170,13 @@ void view_tasklist (bask_core* tcore, struct bask_task** first)
 		ptr = ptr->next;
 	}
 	
-	printf ("\n%i tasks\n", i);
+	if (i == 1)
+	{
+		printf ("\n%i task\n", i);
+	}
+	else
+	{
+		printf ("\n%i tasks\n", i);
+	}
 	view_legend ();
 }
