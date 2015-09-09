@@ -15,7 +15,7 @@
 #define P_CMD "bask"
 #define P_VERSION "0.0.1"
 #define BASKSEP "=;"
-#define BASKFILE "basktest.txt"
+#define BASKFILE "baskbin.txt"
 
 /* |--------------------------------------------|
    |			Utils			|
@@ -110,6 +110,28 @@ static void search_view_summary (bask_core* tcore, struct bask_task** first, cha
    |--------------------------------------------| */
 
 /*
+	Function: bask_init_local (void);
+	Description: Inits Bask local, creates the needed files.
+	InitVersion: 0.0.1
+*/
+static int bask_init_local (void)
+{
+	FILE* baskfile;
+
+	baskfile = fopen (BASKFILE, "w+");
+	
+	if (baskfile == NULL)
+	{
+		printf ("ERROR: Could'nt write the baskfile!\n");
+		return -1;
+	}
+	
+	fclose (baskfile);
+	
+	return 0;
+}
+
+/*
 	Function: bask_init (bask_core* tcore, struct bask_task** first);
 	Description: Inits Bask and loads the tasks from filename.
 	InitVersion: 0.0.1
@@ -127,6 +149,7 @@ static int bask_init (bask_core* tcore, struct bask_task** first)
 	if (tcore->baskfile == NULL)
 	{
 		printf ("ERROR: Could'nt open the baskfile!\n");
+		printf ("Use: '$ bask init' to use Bask.\n");
 		exit (EXIT_FAILURE);
 	}
 
@@ -263,6 +286,15 @@ int main (int argc, char* argv[])
 	
 	strcpy (pproject, "");
 	strcpy (pdescription, "");
+	
+	if (argc == 2)
+	{
+		if (strncmp (argv[optind], "init", strlen ("init")) == 0)
+		{
+			bask_init_local ();
+			exit (EXIT_SUCCESS);
+		}
+	}
 	
 	bask_init (&tcore, &first);
 	

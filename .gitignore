@@ -6,7 +6,7 @@
 .*.swp
 *.out
 bask
-basktest.txt
+baskbin.txt
 
 # IDE files to ignore (Netbeans, Eclipse)
 nbproject/private/

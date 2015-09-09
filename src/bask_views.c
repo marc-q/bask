@@ -158,8 +158,8 @@ void view_tasklist (bask_core* tcore, struct bask_task** first)
 			}
 		
 			printf ("%s", prefix);
-			view_tbl_print_field_int (ptr->t_id, GETDIGITS (tcore->tc_amount) - GETDIGITS (ptr->t_id), GETDIGITS (tcore->tc_amount)+1);
-			view_tbl_print_field_str (ptr->t_project, -1, 16);
+			view_tbl_print_field_int (ptr->t_id, GETDIGITS (tcore->tc_amount) - GETDIGITS (ptr->t_id), DENULL (GETDIGITS (tcore->tc_amount))+1);
+			view_tbl_print_field_str (ptr->t_project, 1, 16);
 			view_tbl_print_field_str (pri, -1, 4);
 			view_tbl_print_field_str (ptr->t_description, -1, 50);
 			printf ("%s\n", BC_TXT_RST);
@@ -170,6 +170,6 @@ void view_tasklist (bask_core* tcore, struct bask_task** first)
 		ptr = ptr->next;
 	}
 	
-	printf ("\n%i bask\n", i);
+	printf ("\n%i tasks\n", i);
 	view_legend ();
 }
