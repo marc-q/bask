@@ -154,7 +154,7 @@ int view_theme_load (bask_core* tcore, bask_theme* btheme)
 	}
 	else
 	{
-		strcpy (btheme->color_normal, "");
+		strcpy (btheme->color_normal, BC_TXT_RST);
 	}
 	
 	if (strncmp (colors[1], "default", strlen(colors[1])) != 0)

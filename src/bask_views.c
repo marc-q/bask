@@ -24,13 +24,14 @@ void view_print_legend_tag (char* tagname, char* tagcolor, char* txtcolor)
 	Description: Displays a legend for the meanings of colors.
 	InitVersion: 0.0.1
 */
-void view_legend (void)
+void view_legend (bask_theme* btheme)
 {
-	printf ("\n\nLegend: Normal, ");
-	view_print_legend_tag ("Critical", BC_BAK_RED, BC_BLD_WHITE);
-	view_print_legend_tag ("Today", BC_BAK_BLUE, BC_BLD_WHITE);
-	view_print_legend_tag ("Important", BC_BAK_GREEN, BC_TXT_BLACK);
-	view_print_legend_tag ("Finished", BC_BAK_BLACK, BC_TXT_WHITE);
+	printf ("\n\nLegend: ");
+	view_print_legend_tag ("Normal", btheme->color_normal, BC_BLD_WHITE);
+	view_print_legend_tag ("Critical", btheme->color_critical, BC_BLD_WHITE);
+	view_print_legend_tag ("Today", btheme->color_today, BC_BLD_WHITE);
+	view_print_legend_tag ("Important", btheme->color_important, BC_TXT_BLACK);
+	view_print_legend_tag ("Finished", btheme->color_finished, BC_TXT_WHITE);
 	printf ("\n");
 }
 
@@ -203,5 +204,5 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	{
 		printf ("\n%i tasks\n", i);
 	}
-	view_legend ();
+	view_legend (btheme);
 }
