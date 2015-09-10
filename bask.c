@@ -155,13 +155,13 @@ static int bask_init_local (bask_core* tcore)
 */
 static int bask_init (bask_core* tcore, struct bask_task** first)
 {
-	int i, tid, tactive, tpriority, tstate;
+	int i, tid, tactive, tpriority, tstate, bb_state;
 	char line[200], tproject[50], tdescription[200];
 	char *token, *saveptr, *home;
 
-	i = 0;
+	i = bb_state = 0;
 
-	tcore->baskfile = fopen (tcore->baskpath, "r+");
+	tcore->baskfile = fopen (tcore->baskpath, "r");
 
 	if (tcore->baskfile == NULL)
 	{
@@ -169,12 +169,25 @@ static int bask_init (bask_core* tcore, struct bask_task** first)
 		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
 		exit (EXIT_FAILURE);
 	}
-
+	
 	while (fgets (line, sizeof (line)-1, tcore->baskfile) != NULL)
 	{
 		token = strtok_r (line, BASKSEP, &saveptr);
 		
-		if (strncmp (token, "END", strlen ("END")) == 0)
+		if (strncmp (token, "BASKBIN", strlen ("BASKBIN")) == 0)
+		{
+			bb_state = 1;
+		}
+		else if (strncmp (token, "BBEND", strlen ("BBEND")) == 0)
+		{
+			bb_state = 0;
+		}
+		
+		if (bb_state == 1)
+		{
+			parser_get_int (token, "bbuid", &tcore->baskbin_uid, saveptr);
+		}
+		else if (strncmp (token, "END", strlen ("END")) == 0)
 		{
 			task_insert (first, i, tid, tactive, tpriority, tstate, tproject, tdescription);
 			i++;
@@ -192,6 +205,8 @@ static int bask_init (bask_core* tcore, struct bask_task** first)
 
 	tcore->tc_amount = i;
 	
+	fclose (tcore->baskfile);
+	
 	return 0;
 }
 
@@ -203,13 +218,19 @@ static int bask_init (bask_core* tcore, struct bask_task** first)
 int bask_write (bask_core* tcore, struct bask_task** first)
 {
 	struct bask_task* ptr = *first;
-		
+	
+	tcore->baskfile = fopen (tcore->baskpath, "w");
+
 	if (tcore->baskfile == NULL)
 	{
-		return -1;
+		printf ("ERROR: Could'nt open the baskfile!\n");
+		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
+		exit (EXIT_FAILURE);
 	}
 	
-	rewind (tcore->baskfile);
+	fprintf (tcore->baskfile, "BASKBIN\n");
+	fprintf (tcore->baskfile, "bbuid=%i;\n", tcore->baskbin_uid);
+	fprintf (tcore->baskfile, "BBEND\n");
 	
 	while (ptr != NULL)
 	{
@@ -222,6 +243,8 @@ int bask_write (bask_core* tcore, struct bask_task** first)
 		fprintf (tcore->baskfile, "END\n");
 		ptr = ptr->next;
 	}
+	
+	fclose (tcore->baskfile);
 }
 
 /*
@@ -231,7 +254,7 @@ int bask_write (bask_core* tcore, struct bask_task** first)
 */
 static void bask_unload (bask_core* tcore)
 {
-	fclose (tcore->baskfile);
+
 }
 
 /* |--------------------------------------------|
@@ -261,10 +284,12 @@ static void print_help (void)
 	printf ("\tabout\t\t\t\t\tAbout the programm.\n");
 	printf ("\tlist\t\t\t\t\tLists all tasks.\n");
 	printf ("\tsummary\t\t\t\t\tSummary of all projects.\n");
+	
 	printf ("\tadd [priority] [PROJECT] [DESCRIPTION]\tAdd a task.\n");
+	printf ("\tremove [id]\t\t\t\tRemoves the task with id [id].\n");
 	
 	printf ("\tshow [id]\t\t\t\tShows informations about a single task.\n");
-	printf ("\tmod [id]\t\t\t\tModifies all tasks!\n");
+	printf ("\tmod [id] ARGS\t\t\t\tModifies all tasks!\n");
 	printf ("\tfinish [id]\t\t\t\tSet the task to finished.\n");
 	printf ("\tstop [id]\t\t\t\tDeactivates (hide) the task.\n");
 	

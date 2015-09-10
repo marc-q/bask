@@ -108,10 +108,11 @@ int task_insert (struct bask_task** first, int n, int tid, int tactive, int tpri
 void task_create (bask_core* tcore, struct bask_task** first, int priority, char* project, char* description)
 {	
 	tcore->tc_amount++;
+	tcore->baskbin_uid++;
 	
-	task_insert (first, tcore->tc_amount-1, tcore->tc_amount-1, 1, priority, 0, project, description);
+	task_insert (first, tcore->tc_amount-1, tcore->baskbin_uid, 1, priority, 0, project, description);
 	
-	printf ("Created task %i.\n", tcore->tc_amount-1);
+	printf ("Created task %i.\n", tcore->baskbin_uid);
 	
 	bask_write (tcore, first);
 }
@@ -121,7 +122,6 @@ void task_create (bask_core* tcore, struct bask_task** first, int priority, char
 	Description: Removes a task!
 	InitVersion: 0.0.1
 */
-/* INFO: NOT WORKING! */
 int task_remove (bask_core* tcore, struct bask_task** first, int id)
 {
 	struct bask_task* ptr = *first, *pre = NULL;
@@ -135,18 +135,29 @@ int task_remove (bask_core* tcore, struct bask_task** first, int id)
 	
 	while (ptr != NULL)
 	{
-		if (ptr->next->t_id == id)
+		if (ptr->t_id == id)
 		{
-			pre = ptr->next->next;
-			free (ptr->next);
-			ptr->next = pre;
+		
+			if (ptr == *first)
+			{
+				*first = ptr->next;
+				free (ptr);
+			}
+			else
+			{
+				pre->next = ptr->next;
+				free (ptr);
+			}
 			
 			printf ("Removed task %i.\n", id);
 			
 			break;
 		}
-		
-		ptr = ptr->next;
+		else
+		{
+			pre = ptr;
+			ptr = ptr->next;
+		}
 	}
 	
 	bask_write (tcore, first);
