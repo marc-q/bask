@@ -84,7 +84,6 @@ void view_summary (bask_core* tcore, struct bask_task** first)
 	struct bask_project* tprojects = NULL, *pptr;
 	struct bask_task* ptr = *first;
 	
-	printf ("\n%s", BC_UND_WHITE);
 	view_tbl_print_title ("Project", 15, 1);
 	view_tbl_print_title ("Remaining", 0, 1);
 	view_tbl_print_title ("Complete", 0, 1);
@@ -138,7 +137,6 @@ void view_tasklist (bask_core* tcore, struct bask_task** first)
 	char prefix[30], pri[4];
 	struct bask_task* ptr = *first;
 	
-	printf ("\n%s", BC_UND_WHITE);
 	view_tbl_print_title ("ID", -1, GETDIGITS (tcore->baskbin_uid)+1);
 	view_tbl_print_title ("Project", 15, 1);
 	view_tbl_print_title ("Pri", 3, 1);

@@ -10,6 +10,7 @@
 #include "src/bask_task.h"
 #include "src/bask_project.h"
 #include "src/bask_views.h"
+#include "src/bask_export.h"
 #include "bask.h"
 
 #define P_CMD "bask"
@@ -513,6 +514,10 @@ int main (int argc, char* argv[])
 		else if (strncmp (argv[optind], "show", strlen ("show")) == 0)
 		{
 			view_single (&tcore, &first, atoi (argv[optind+1]));
+		}
+		else if (strncmp (argv[optind], "export", strlen ("export")) == 0)
+		{
+			export_web (&tcore, &first, argv[optind+1]);
 		}
 		else
 		{

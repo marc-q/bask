@@ -69,7 +69,7 @@ void view_misc_print_progress (float p, char* bakcolor)
 */
 void view_tbl_print_title (char* name, int len_underline, int len_normal)
 {	
-	printf ("%s", name);
+	printf ("\033[4m%s", name);
 	view_print_nspaces_str (name, len_underline);
 	printf ("\033[0m");
 	
