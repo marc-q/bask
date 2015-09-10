@@ -9,67 +9,10 @@
 #include "src/bask_core.h"
 #include "src/bask_task.h"
 #include "src/bask_project.h"
+#include "src/bask_ui.h"
 #include "src/bask_views.h"
 #include "src/bask_export.h"
 #include "bask.h"
-
-#define P_CMD "bask"
-#define P_VERSION "0.0.1"
-#define BASKSEP "=;"
-#define BASKBINFILE "baskbin.txt"
-#define BASKCONFFILE "bask.txt"
-
-/* |--------------------------------------------|
-   |			Utils			|
-   |--------------------------------------------| */
-   
-/*
-	Function: parser_get_str (char* token, char* key, char* out, size_t outsize, char* saveptr);
-	Description: Parses a row and return the value if the key is right.
-	InitVersion: 0.0.1
-*/
-static int parser_get_str (char* token, char* key, char* out, size_t outsize, char* saveptr)
-{
-	if (strncmp (token, key, strlen (token)) == 0)
-	{
-		token = strtok_r (NULL, BASKSEP, &saveptr);
-
-		if (strlen (token) < outsize)
-		{
-			strcpy (out, token);
-		}
-
-		token = strtok_r (NULL, BASKSEP, &saveptr);
-
-		return 0;
-	}
-
-	return -1;
-}
-
-/*
-	Function: parser_get_int (char* token, char* key, int* out, char* saveptr);
-	Description: Parses a row and return the value if the key is right.
-	InitVersion: 0.0.1
-*/
-static int parser_get_int (char* token, char* key, int* out, char* saveptr)
-{
-	if (strncmp (token, key, strlen (token)) == 0)
-	{
-		token = strtok_r (NULL, BASKSEP, &saveptr);
-
-		if (isdigit (token[0]) != 0)
-		{
-			*out = atoi (token);
-		}
-
-		token = strtok_r (NULL, BASKSEP, &saveptr);
-
-		return 0;
-	}
-
-	return -1;
-}
 
 /* |--------------------------------------------|
    |			Search			|
@@ -80,13 +23,13 @@ static int parser_get_int (char* token, char* key, int* out, char* saveptr)
 	Description: Finds tasks with searchtag in the description and uses the view tasklist to display the results.
 	InitVersion: 0.0.1
 */
-static void search_view_tasklist (bask_core* tcore, struct bask_task** first, char* searchtag)
+static void search_view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first, char* searchtag)
 {
 	struct bask_task* haystack = NULL;
 	
 	task_search (tcore, first, &haystack, searchtag);
 	
-	view_tasklist (tcore, &haystack);
+	view_tasklist (tcore, btheme, &haystack);
 	
 	task_free_ll (&haystack);
 }
@@ -96,13 +39,13 @@ static void search_view_tasklist (bask_core* tcore, struct bask_task** first, ch
 	Description: Finds tasks with searchtag in the description and uses the view summary to display the results.
 	InitVersion: 0.0.1
 */
-static void search_view_summary (bask_core* tcore, struct bask_task** first, char* searchtag)
+static void search_view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** first, char* searchtag)
 {
 	struct bask_task* haystack = NULL;
 	
 	task_search (tcore, first, &haystack, searchtag);
 	
-	view_summary (tcore, &haystack);
+	view_summary (tcore, btheme, &haystack);
 	
 	task_free_ll (&haystack);
 }
@@ -166,6 +109,7 @@ static int bask_init_local (bask_core* tcore)
 {
 	bask_init_local_file (tcore->path_baskconf, "baskbin=default;");
 	bask_init_local_file (tcore->path_baskbin, "");
+	bask_init_local_file (tcore->path_basktheme, "color_normal=default;\ncolor_important=default;\ncolor_today=default;\ncolor_critical=default;\ncolor_finished=default;\ncolor_pbarbak=default;");
 	
 	return 0;
 }
@@ -395,6 +339,7 @@ int main (int argc, char* argv[])
 	int optc, ppri, pact, pstate;
 	char pproject[50], pdescription[200];
 	bask_core tcore;
+	bask_theme btheme;
 	struct bask_task* first = NULL;
 	
 	ppri = pact = pstate = -1;
@@ -403,6 +348,7 @@ int main (int argc, char* argv[])
 	strcpy (pdescription, "");
 	
 	bask_get_baskpath (tcore.path_baskconf, BASKCONFFILE);
+	bask_get_baskpath (tcore.path_basktheme, BASKTHEMEFILE);
 	bask_get_baskpath (tcore.path_baskbin, BASKBINFILE);
 	
 	if (argc == 2)
@@ -416,6 +362,7 @@ int main (int argc, char* argv[])
 	
 	bask_load_conf (&tcore);
 	bask_init (&tcore, &first);
+	view_theme_load (&tcore, &btheme);
 	
 	while ((optc = getopt (argc, argv, "p:P:a:D:s:")) != -1)
 	{
@@ -482,11 +429,11 @@ int main (int argc, char* argv[])
 		}
 		else if (strncmp (argv[optind], "list", strlen ("list")) == 0)
 		{
-			view_tasklist (&tcore, &first);
+			view_tasklist (&tcore, &btheme, &first);
 		}
 		else if (strncmp (argv[optind], "summary", strlen ("summary")) == 0)
 		{
-			view_summary (&tcore, &first);
+			view_summary (&tcore, &btheme, &first);
 		}
 		else
 		{
@@ -505,7 +452,7 @@ int main (int argc, char* argv[])
 		}
 		else if (strncmp (argv[optind], "search", strlen ("search")) == 0)
 		{
-			search_view_tasklist (&tcore, &first, argv[optind+1]);
+			search_view_tasklist (&tcore, &btheme, &first, argv[optind+1]);
 		}
 		else if (strncmp (argv[optind], "stop", strlen ("stop")) == 0)
 		{
@@ -530,11 +477,11 @@ int main (int argc, char* argv[])
 		{
 			if (strncmp (argv[optind+1], "tasklist", strlen ("tasklist")) == 0)
 			{
-				search_view_tasklist (&tcore, &first, argv[optind+2]);
+				search_view_tasklist (&tcore, &btheme, &first, argv[optind+2]);
 			}
 			else if (strncmp (argv[optind+1], "summary", strlen ("summary")) == 0)
 			{
-				search_view_summary (&tcore, &first, argv[optind+2]);
+				search_view_summary (&tcore, &btheme, &first, argv[optind+2]);
 			}
 			else
 			{

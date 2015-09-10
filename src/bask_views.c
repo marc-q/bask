@@ -78,7 +78,7 @@ void view_single (bask_core* tcore, struct bask_task** first, int id)
 	Description: Displays the summary of the projects!
 	InitVersion: 0.0.1
 */
-void view_summary (bask_core* tcore, struct bask_task** first)
+void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** first)
 {
 	int ppercent, premaining, pid;
 	struct bask_project* tprojects = NULL, *pptr;
@@ -117,7 +117,7 @@ void view_summary (bask_core* tcore, struct bask_task** first)
 			view_tbl_print_field_int (ppercent, 7-GETDIGITS (ppercent), -1);
 			view_tbl_print_field_str ("%", -1, 2);
 			
-			view_misc_print_progress (100.0*(pptr->p_complete/pptr->p_tasks), BC_BAK_GREEN);
+			view_misc_print_progress (100.0*(pptr->p_complete/pptr->p_tasks), btheme->color_pbarbak);
 		}
 		
 		pptr = pptr->next;
@@ -131,7 +131,7 @@ void view_summary (bask_core* tcore, struct bask_task** first)
 	Description: Displays all tasks in a table!
 	InitVersion: 0.0.1
 */
-void view_tasklist (bask_core* tcore, struct bask_task** first)
+void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first)
 {
 	int i = 0;
 	char prefix[30], pri[4];
@@ -150,30 +150,30 @@ void view_tasklist (bask_core* tcore, struct bask_task** first)
 			switch (ptr->t_priority)
 			{
 				case 0:
-					strcpy (prefix, BC_BLD_WHITE);
+					strcpy (prefix, btheme->color_normal);
 					strcpy (pri, "L");
 					break;
 				case 1:
-					strcpy (prefix, BC_BLD_GREEN);
+					strcpy (prefix, btheme->color_important);
 					strcpy (pri, "I");
 					break;
 				case 2:
-					strcpy (prefix, BC_BLD_BLUE);
+					strcpy (prefix, btheme->color_today);
 					strcpy (pri, "T");
 					break;
 				case 3:
-					strcpy (prefix, BC_BLD_RED);
+					strcpy (prefix, btheme->color_critical);
 					strcpy (pri, "C");
 					break;
 				default:
-					strcpy (prefix, BC_TXT_WHITE);
+					strcpy (prefix, btheme->color_normal);
 					strcpy (pri, "N");
 					break;
 			}
 		
 			if (ptr->t_state == 1)
 			{
-				strcpy (prefix, BC_BLD_BLACK);
+				strcpy (prefix, btheme->color_finished);
 			}
 		
 			if (i%2 == 1)
