@@ -35,15 +35,42 @@ void view_legend (void)
 }
 
 /*
-	Function: view_single (bask_core* tcore, struct bask_task* task);
+	Function: view_print_single (struct bask_task* task);
+	Description: Prints informations about a single task.
+	InitVersion: 0.0.1
+*/
+void view_print_single (struct bask_task* task)
+{
+	if (task != NULL)
+	{
+		printf ("\nTask:\n");
+		printf ("\tID:\t\t%i\n", task->t_id);
+		printf ("\tActive:\t\t%i\n", task->t_active);
+		printf ("\tState:\t\t%i\n", task->t_state);
+		printf ("\tPriority:\t%i\n", task->t_priority);
+		printf ("\tProject:\t%s\n", task->t_project);
+		printf ("\tDescription:\t%s\n", task->t_description);
+	}
+}
+
+/*
+	Function: view_single (bask_core* tcore, struct bask_task* task, int id);
 	Description: Displays a single task.
 	InitVersion: 0.0.1
 */
-void view_single (bask_core* tcore, struct bask_task* task)
+void view_single (bask_core* tcore, struct bask_task** first, int id)
 {
-	printf ("\nTask ID: %i\n", task->t_id);
-	printf ("Task project: %s\n", task->t_project);
-	printf ("Task description: %s\n", task->t_description);
+	struct bask_task* ptr = *first;
+	
+	while (ptr != NULL)
+	{
+		if (ptr->t_id == id)
+		{
+			view_print_single (ptr);
+		}
+		
+		ptr = ptr->next;
+	}
 }
 
 /*

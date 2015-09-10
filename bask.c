@@ -75,7 +75,7 @@ static int parser_get_int (char* token, char* key, int* out, char* saveptr)
 
 /*
 	Function: search_view_tasklist (bask_core* tcore, struct bask_task** first, char* searchtag);
-	Description: Finds tasks with searchtag in the description and uses the view projects to display the results.
+	Description: Finds tasks with searchtag in the description and uses the view tasklist to display the results.
 	InitVersion: 0.0.1
 */
 static void search_view_tasklist (bask_core* tcore, struct bask_task** first, char* searchtag)
@@ -120,7 +120,7 @@ static void bask_get_baskpath (bask_core* tcore)
 	
 	if (tcore->baskpath == NULL || *tcore->baskpath == '\0')
 	{
-		printf ("cannot get home directory");
+		printf ("ERROR: Cannot get home directory!\n");
 		exit (EXIT_FAILURE);
 	}
 	
@@ -166,7 +166,7 @@ static int bask_init (bask_core* tcore, struct bask_task** first)
 	if (tcore->baskfile == NULL)
 	{
 		printf ("ERROR: Could'nt open the baskfile!\n");
-		printf ("Use: '$ bask init' to use Bask.\n");
+		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
 		exit (EXIT_FAILURE);
 	}
 
@@ -261,14 +261,14 @@ static void print_help (void)
 	printf ("\tabout\t\t\t\t\tAbout the programm.\n");
 	printf ("\tlist\t\t\t\t\tLists all tasks.\n");
 	printf ("\tsummary\t\t\t\t\tSummary of all projects.\n");
-	printf ("\tadd <priority> <project> <description>\tAdd a task.\n");
+	printf ("\tadd [priority] [PROJECT] [DESCRIPTION]\tAdd a task.\n");
 	
-	printf ("\tmod <id>\t\t\t\tModifies all tasks!\n");
-	printf ("\tfinish <id>\t\t\t\tSet the task to finished.\n");
-	printf ("\tstop <id>\t\t\t\tDeactivates (hide) the task.\n");
+	printf ("\tshow [id]\t\t\t\tShows informations about a single task.\n");
+	printf ("\tmod [id]\t\t\t\tModifies all tasks!\n");
+	printf ("\tfinish [id]\t\t\t\tSet the task to finished.\n");
+	printf ("\tstop [id]\t\t\t\tDeactivates (hide) the task.\n");
 	
-	printf ("\tsearch <searchtag>\t\t\tSearches through the tasks.\n");
-	printf ("\tsearch <view> <searchtag>\t\tSearches through the tasks and uses <view> to show the results.\n");
+	printf ("\tsearch <VIEW> [SEARCHTAG]\t\tSearches through the tasks and optional uses <VIEW> to show the results.\n");
 	
 	printf ("\nARGUMENTS\n");
 	printf ("\t-a [active]\t\tIf the task is active.\n");
@@ -280,6 +280,14 @@ static void print_help (void)
 	printf ("\nVIEWS:\n");
 	printf ("\ttasklist\t\tThe default view, a list of tasks.\n");
 	printf ("\tsummary\t\t\tA summary of projects.\n");
+	
+	printf ("\nPRIORITYS:\n");
+	printf ("\t0\tL\tNormal\n");
+	printf ("\t1\tI\tImportant\n");
+	printf ("\t2\tT\tToday\n");
+	printf ("\t3\tC\tCritical\n");
+	
+	printf ("\nLEGEND: <optional> [necessary] [integer] [STRING]\n");
 }
 
 /*
@@ -410,6 +418,10 @@ int main (int argc, char* argv[])
 		else if (strncmp (argv[optind], "stop", strlen ("stop")) == 0)
 		{
 			task_deactivate (&tcore, &first, atoi (argv[optind+1]));
+		}
+		else if (strncmp (argv[optind], "show", strlen ("show")) == 0)
+		{
+			view_single (&tcore, &first, atoi (argv[optind+1]));
 		}
 		else
 		{
