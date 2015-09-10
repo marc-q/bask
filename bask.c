@@ -111,8 +111,8 @@ static void search_view_summary (bask_core* tcore, struct bask_task** first, cha
    |--------------------------------------------| */
 
 /*
-	Function: bask_get_baskpath (bask_core* tcore);
-	Description: Set the tcore->baskpath to the bask dir in the home dir.
+	Function: bask_get_baskpath (char* out, char* filename);
+	Description: Set the out to the path of filename file in the bask dir.
 	InitVersion: 0.0.1
 */
 static void bask_get_baskpath (char* out, char* filename)
@@ -130,8 +130,8 @@ static void bask_get_baskpath (char* out, char* filename)
 }
 
 /*
-	Function: bask_init_local_file (char* filename);
-	Description: Creates a file if not exist.
+	Function: bask_init_local_file (char* filename, char* content);
+	Description: Creates a file if not exist filled the content.
 	InitVersion: 0.0.1
 */
 static int bask_init_local_file (char* filename, char* content)
@@ -184,8 +184,10 @@ static int bask_load_conf (bask_core* tcore)
 	
 	if (baskconf == NULL)
 	{
+		/* TODO: Put this message in its own function to reduce redundance. */
 		printf ("ERROR: Could'nt open the baskconfig!\n");
 		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
+		printf ("Warning: Overides all data.\n");
 		exit (EXIT_FAILURE);
 	}
 	
@@ -222,8 +224,10 @@ static int bask_init (bask_core* tcore, struct bask_task** first)
 
 	if (baskfile == NULL)
 	{
+		/* TODO: Put this message in its own function to reduce redundance. */
 		printf ("ERROR: Could'nt open the baskfile!\n");
 		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
+		printf ("Warning: Overides all data.\n");
 		exit (EXIT_FAILURE);
 	}
 	
@@ -281,8 +285,10 @@ int bask_write (bask_core* tcore, struct bask_task** first)
 
 	if (baskfile == NULL)
 	{
+		/* TODO: Put this message in its own function to reduce redundance. */
 		printf ("ERROR: Could'nt open the baskfile!\n");
 		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
+		printf ("Warning: Overides all data.\n");
 		exit (EXIT_FAILURE);
 	}
 	

@@ -139,7 +139,7 @@ void view_tasklist (bask_core* tcore, struct bask_task** first)
 	struct bask_task* ptr = *first;
 	
 	printf ("\n%s", BC_UND_WHITE);
-	view_tbl_print_title ("ID", -1, GETDIGITS (tcore->tc_amount)+1);
+	view_tbl_print_title ("ID", -1, GETDIGITS (tcore->baskbin_uid)+1);
 	view_tbl_print_title ("Project", 15, 1);
 	view_tbl_print_title ("Pri", 3, 1);
 	view_tbl_print_title ("Description", 50, 1);
@@ -185,7 +185,7 @@ void view_tasklist (bask_core* tcore, struct bask_task** first)
 			}
 		
 			printf ("%s", prefix);
-			view_tbl_print_field_int (ptr->t_id, GETDIGITS (tcore->tc_amount) - GETDIGITS (ptr->t_id), DENULL (GETDIGITS (tcore->tc_amount))+1);
+			view_tbl_print_field_int (ptr->t_id, GETDIGITS (tcore->baskbin_uid) - GETDIGITS (ptr->t_id), DENULL (GETDIGITS (tcore->baskbin_uid))+1);
 			view_tbl_print_field_str (ptr->t_project, 1, 16);
 			view_tbl_print_field_str (pri, -1, 4);
 			view_tbl_print_field_str (ptr->t_description, -1, 50);
