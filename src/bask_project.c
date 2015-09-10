@@ -74,6 +74,7 @@ int project_insert (struct bask_project** first, int t_active, int t_id, int t_s
 				{
 					preobj->p_complete++;
 				}
+				
 				preobj->p_tasks++;
 				free (newobj);
 				break;

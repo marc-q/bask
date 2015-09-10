@@ -15,7 +15,8 @@
 #define P_CMD "bask"
 #define P_VERSION "0.0.1"
 #define BASKSEP "=;"
-#define BASKFILE "baskbin.txt"
+#define BASKBINFILE "baskbin.txt"
+#define BASKCONFFILE "bask.txt"
 
 /* |--------------------------------------------|
    |			Utils			|
@@ -114,18 +115,45 @@ static void search_view_summary (bask_core* tcore, struct bask_task** first, cha
 	Description: Set the tcore->baskpath to the bask dir in the home dir.
 	InitVersion: 0.0.1
 */
-static void bask_get_baskpath (bask_core* tcore)
+static void bask_get_baskpath (char* out, char* filename)
 {
-	strcpy (tcore->baskpath, getenv("HOME"));
+	strcpy (out, getenv("HOME"));
 	
-	if (tcore->baskpath == NULL || *tcore->baskpath == '\0')
+	if (out == NULL || *out == '\0')
 	{
 		printf ("ERROR: Cannot get home directory!\n");
 		exit (EXIT_FAILURE);
 	}
 	
-	strcat (tcore->baskpath, "/.local/share/bask/");
-	strcat (tcore->baskpath, BASKFILE);
+	strcat (out, "/.local/share/bask/");
+	strcat (out, filename);
+}
+
+/*
+	Function: bask_init_local_file (char* filename);
+	Description: Creates a file if not exist.
+	InitVersion: 0.0.1
+*/
+static int bask_init_local_file (char* filename, char* content)
+{
+	FILE *baskfile;
+	
+	baskfile = fopen (filename, "w+");
+	
+	if (baskfile == NULL)
+	{
+		printf ("ERROR: Could'nt write the baskfile!\n");
+		return -1;
+	}
+	
+	if (content != NULL)
+	{
+		fprintf (baskfile, "%s", content);
+	}
+	
+	fclose (baskfile);
+	
+	return 0;
 }
 
 /*
@@ -135,17 +163,45 @@ static void bask_get_baskpath (bask_core* tcore)
 */
 static int bask_init_local (bask_core* tcore)
 {
-	tcore->baskfile = fopen (tcore->baskpath, "w+");
-	
-	if (tcore->baskfile == NULL)
-	{
-		printf ("ERROR: Could'nt write the baskfile!\n");
-		return -1;
-	}
-	
-	fclose (tcore->baskfile);
+	bask_init_local_file (tcore->path_baskconf, "baskbin=default;");
+	bask_init_local_file (tcore->path_baskbin, "");
 	
 	return 0;
+}
+
+/*
+	Function: bask_load_conf (bask_core* tcore);
+	Description: Loads the config file from bask.
+	InitVersion: 0.0.1
+*/
+static int bask_load_conf (bask_core* tcore)
+{
+	char line[200], baskbin[151];
+	char *token, *saveptr;
+	FILE *baskconf;
+	
+	baskconf = fopen (tcore->path_baskconf, "r");
+	
+	if (baskconf == NULL)
+	{
+		printf ("ERROR: Could'nt open the baskconfig!\n");
+		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
+		exit (EXIT_FAILURE);
+	}
+	
+	while (fgets (line, sizeof (line)-1, baskconf) != NULL)
+	{
+		token = strtok_r (line, BASKSEP, &saveptr);
+		
+		parser_get_str (token, "baskbin", baskbin, 150, saveptr);
+	}
+	
+	if (strncmp (baskbin, "default", strlen(baskbin)) != 0)
+	{
+		strcpy (tcore->path_baskbin, baskbin);
+	}
+	
+	fclose (baskconf);
 }
 
 /*
@@ -157,20 +213,21 @@ static int bask_init (bask_core* tcore, struct bask_task** first)
 {
 	int i, tid, tactive, tpriority, tstate, bb_state;
 	char line[200], tproject[50], tdescription[200];
-	char *token, *saveptr, *home;
+	char *token, *saveptr;
+	FILE* baskfile;
 
 	i = bb_state = 0;
 
-	tcore->baskfile = fopen (tcore->baskpath, "r");
+	baskfile = fopen (tcore->path_baskbin, "r");
 
-	if (tcore->baskfile == NULL)
+	if (baskfile == NULL)
 	{
 		printf ("ERROR: Could'nt open the baskfile!\n");
 		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
 		exit (EXIT_FAILURE);
 	}
 	
-	while (fgets (line, sizeof (line)-1, tcore->baskfile) != NULL)
+	while (fgets (line, sizeof (line)-1, baskfile) != NULL)
 	{
 		token = strtok_r (line, BASKSEP, &saveptr);
 		
@@ -205,7 +262,7 @@ static int bask_init (bask_core* tcore, struct bask_task** first)
 
 	tcore->tc_amount = i;
 	
-	fclose (tcore->baskfile);
+	fclose (baskfile);
 	
 	return 0;
 }
@@ -217,34 +274,35 @@ static int bask_init (bask_core* tcore, struct bask_task** first)
 */
 int bask_write (bask_core* tcore, struct bask_task** first)
 {
+	FILE* baskfile;
 	struct bask_task* ptr = *first;
 	
-	tcore->baskfile = fopen (tcore->baskpath, "w");
+	baskfile = fopen (tcore->path_baskbin, "w");
 
-	if (tcore->baskfile == NULL)
+	if (baskfile == NULL)
 	{
 		printf ("ERROR: Could'nt open the baskfile!\n");
 		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
 		exit (EXIT_FAILURE);
 	}
 	
-	fprintf (tcore->baskfile, "BASKBIN\n");
-	fprintf (tcore->baskfile, "bbuid=%i;\n", tcore->baskbin_uid);
-	fprintf (tcore->baskfile, "BBEND\n");
+	fprintf (baskfile, "BASKBIN\n");
+	fprintf (baskfile, "bbuid=%i;\n", tcore->baskbin_uid);
+	fprintf (baskfile, "BBEND\n");
 	
 	while (ptr != NULL)
 	{
-		fprintf (tcore->baskfile, "tid=%i;\n", ptr->t_id);
-		fprintf (tcore->baskfile, "tactive=%i;\n", ptr->t_active);
-		fprintf (tcore->baskfile, "tstate=%i;\n", ptr->t_state);
-		fprintf (tcore->baskfile, "tpriority=%i;\n", ptr->t_priority);
-		fprintf (tcore->baskfile, "tproject=%s;\n", ptr->t_project);
-		fprintf (tcore->baskfile, "tdescription=%s;\n", ptr->t_description);
-		fprintf (tcore->baskfile, "END\n");
+		fprintf (baskfile, "tid=%i;\n", ptr->t_id);
+		fprintf (baskfile, "tactive=%i;\n", ptr->t_active);
+		fprintf (baskfile, "tstate=%i;\n", ptr->t_state);
+		fprintf (baskfile, "tpriority=%i;\n", ptr->t_priority);
+		fprintf (baskfile, "tproject=%s;\n", ptr->t_project);
+		fprintf (baskfile, "tdescription=%s;\n", ptr->t_description);
+		fprintf (baskfile, "END\n");
 		ptr = ptr->next;
 	}
 	
-	fclose (tcore->baskfile);
+	fclose (baskfile);
 }
 
 /*
@@ -337,7 +395,8 @@ int main (int argc, char* argv[])
 	strcpy (pproject, "");
 	strcpy (pdescription, "");
 	
-	bask_get_baskpath (&tcore);
+	bask_get_baskpath (tcore.path_baskconf, BASKCONFFILE);
+	bask_get_baskpath (tcore.path_baskbin, BASKBINFILE);
 	
 	if (argc == 2)
 	{
@@ -348,6 +407,7 @@ int main (int argc, char* argv[])
 		}
 	}
 	
+	bask_load_conf (&tcore);
 	bask_init (&tcore, &first);
 	
 	while ((optc = getopt (argc, argv, "p:P:a:D:s:")) != -1)
