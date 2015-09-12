@@ -5,6 +5,7 @@
 #include <string.h>
 #include <math.h>
 #include <getopt.h>
+#include <sys/stat.h>
 #include "lib/dutils.h"
 #include "src/bask_core.h"
 #include "src/bask_task.h"
@@ -59,17 +60,10 @@ static void search_view_summary (bask_core* tcore, bask_theme* btheme, struct ba
 	Description: Set the out to the path of filename file in the bask dir.
 	InitVersion: 0.0.1
 */
-static void bask_get_baskpath (char* out, char* filename)
+static void bask_get_baskpath (bask_core* tcore, char* out, char* filename)
 {
-	strcpy (out, getenv("HOME"));
-	
-	if (out == NULL || *out == '\0')
-	{
-		printf ("ERROR: Cannot get home directory!\n");
-		exit (EXIT_FAILURE);
-	}
-	
-	strcat (out, "/.local/share/bask/");
+	strcpy (out, tcore->path_baskpath);
+
 	strcat (out, filename);
 }
 
@@ -107,6 +101,15 @@ static int bask_init_local_file (char* filename, char* content)
 */
 static int bask_init_local (bask_core* tcore)
 {
+	struct stat sb;
+
+	if (stat (tcore->path_baskpath, &sb) == -1)
+	{
+		mkdir (tcore->path_baskpath, 0700);
+		bask_init_local (tcore);
+		return 1;
+	}
+
 	bask_init_local_file (tcore->path_baskconf, "baskbin=default;");
 	bask_init_local_file (tcore->path_baskbin, "");
 	bask_init_local_file (tcore->path_basktheme, "color_normal=default;\ncolor_important=default;\ncolor_today=default;\ncolor_critical=default;\ncolor_finished=default;\ncolor_pbarbak=default;");
@@ -347,9 +350,19 @@ int main (int argc, char* argv[])
 	strcpy (pproject, "");
 	strcpy (pdescription, "");
 	
-	bask_get_baskpath (tcore.path_baskconf, BASKCONFFILE);
-	bask_get_baskpath (tcore.path_basktheme, BASKTHEMEFILE);
-	bask_get_baskpath (tcore.path_baskbin, BASKBINFILE);
+	strcpy (tcore.path_baskpath, getenv("HOME"));
+	
+	if (tcore.path_baskpath == NULL || *tcore.path_baskpath == '\0')
+	{
+		printf ("ERROR: Cannot get home directory!\n");
+		exit (EXIT_FAILURE);
+	}
+
+	strcat (tcore.path_baskpath, "/.local/share/bask/");
+	
+	bask_get_baskpath (&tcore, tcore.path_baskconf, BASKCONFFILE);
+	bask_get_baskpath (&tcore, tcore.path_basktheme, BASKTHEMEFILE);
+	bask_get_baskpath (&tcore, tcore.path_baskbin, BASKBINFILE);
 	
 	if (argc == 2)
 	{
