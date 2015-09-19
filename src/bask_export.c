@@ -22,7 +22,6 @@ int export_web (bask_core* tcore, struct bask_task** first, char* filename)
 	
 	if (webfile == NULL)
 	{
-		/*printf ("ERROR: Couldn't write the export file.\n");*/
 		errors_filenotwritten (filename);
 		return -1;
 	}

@@ -230,7 +230,7 @@ int task_modificate (bask_core* tcore, struct bask_task** first, int id, int act
 	Description: Modifies a task!
 	InitVersion: 0.0.1
 */
-int task_modify (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* project, char* description)
+void task_modify (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* project, char* description)
 {
 	task_modificate (tcore, first, id, active, state, priority, project, description);
 	printf ("Modificated task %i.\n", id);
@@ -241,12 +241,10 @@ int task_modify (bask_core* tcore, struct bask_task** first, int id, int active,
 	Description: Deactivates a task!
 	InitVersion: 0.0.1
 */
-int task_deactivate (bask_core* tcore, struct bask_task** first, int id)
+void task_deactivate (bask_core* tcore, struct bask_task** first, int id)
 {	
 	task_modificate (tcore, first, id, 0, -1, -1, "", "");
 	printf ("Deactivated task %i.\n", id);
-	
-	return 0;
 }
 
 /*
@@ -254,12 +252,10 @@ int task_deactivate (bask_core* tcore, struct bask_task** first, int id)
 	Description: Finished a task!
 	InitVersion: 0.0.1
 */
-int task_finish (bask_core* tcore, struct bask_task** first, int id)
+void task_finish (bask_core* tcore, struct bask_task** first, int id)
 {
 	task_modificate (tcore, first, id, -1, 1, -1, "", "");
 	printf ("Finished task %i.\n", id);
-	
-	return 0;
 }
 
 /*

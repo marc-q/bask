@@ -129,10 +129,6 @@ int view_theme_load (bask_core* tcore, bask_theme* btheme)
 	
 	if (basktheme == NULL)
 	{
-		/* TODO: Put this message in its own function to reduce redundance. */
-		/*printf ("ERROR: Could'nt open the basktheme!\n");
-		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
-		printf ("Warning: Overides all data.\n");*/
 		errors_filenotopened (tcore->path_basktheme);
 		exit (EXIT_FAILURE);
 	}

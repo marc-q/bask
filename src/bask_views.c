@@ -20,7 +20,7 @@ void view_print_legend_tag (char* tagname, char* tagcolor, char* txtcolor)
 }
 
 /*
-	Function: view_legend (void);
+	Function: view_legend (bask_theme* btheme);
 	Description: Displays a legend for the meanings of colors.
 	InitVersion: 0.0.1
 */
@@ -55,7 +55,7 @@ void view_print_single (struct bask_task* task)
 }
 
 /*
-	Function: view_single (bask_core* tcore, struct bask_task* task, int id);
+	Function: view_single (bask_core* tcore, struct bask_task** first, int id);
 	Description: Displays a single task.
 	InitVersion: 0.0.1
 */
@@ -75,13 +75,13 @@ void view_single (bask_core* tcore, struct bask_task** first, int id)
 }
 
 /*
-	Function: view_summary (bask_core* tcore, struct bask_task** first);
+	Function: view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** first);
 	Description: Displays the summary of the projects!
 	InitVersion: 0.0.1
 */
 void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** first)
 {
-	int ppercent, premaining, pid;
+	int ppercent, premaining;
 	struct bask_project* tprojects = NULL, *pptr;
 	struct bask_task* ptr = *first;
 	

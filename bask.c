@@ -21,7 +21,7 @@
    |--------------------------------------------| */
 
 /*
-	Function: search_view_tasklist (bask_core* tcore, struct bask_task** first, char* searchtag);
+	Function: search_view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first, char* searchtag);
 	Description: Finds tasks with searchtag in the description and uses the view tasklist to display the results.
 	InitVersion: 0.0.1
 */
@@ -37,7 +37,7 @@ static void search_view_tasklist (bask_core* tcore, bask_theme* btheme, struct b
 }
 
 /*
-	Function: search_view_summary (bask_core* tcore, struct bask_task** first, char* searchtag);
+	Function: search_view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** first, char* searchtag);
 	Description: Finds tasks with searchtag in the description and uses the view summary to display the results.
 	InitVersion: 0.0.1
 */
@@ -57,7 +57,7 @@ static void search_view_summary (bask_core* tcore, bask_theme* btheme, struct ba
    |--------------------------------------------| */
 
 /*
-	Function: bask_get_baskpath (char* out, char* filename);
+	Function: bask_get_baskpath (bask_core* tcore, char* out, char* filename);
 	Description: Set the out to the path of filename file in the bask dir.
 	InitVersion: 0.0.1
 */
@@ -81,7 +81,6 @@ static int bask_init_local_file (char* filename, char* content)
 	
 	if (baskfile == NULL)
 	{
-		/*printf ("ERROR: Could'nt write the baskfile!\n");*/
 		errors_filenotwritten (filename);
 		return -1;
 	}
@@ -124,7 +123,7 @@ static int bask_init_local (bask_core* tcore)
 	Description: Loads the config file from bask.
 	InitVersion: 0.0.1
 */
-static int bask_load_conf (bask_core* tcore)
+static void bask_load_conf (bask_core* tcore)
 {
 	char line[200], baskbin[151];
 	char *token, *saveptr;
@@ -134,10 +133,6 @@ static int bask_load_conf (bask_core* tcore)
 	
 	if (baskconf == NULL)
 	{
-		/* TODO: Put this message in its own function to reduce redundance. */
-		/*printf ("ERROR: Could'nt open the baskconfig!\n");
-		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
-		printf ("Warning: Overides all data.\n");*/
 		errors_filenotopened (tcore->path_baskconf);
 		exit (EXIT_FAILURE);
 	}
@@ -162,23 +157,19 @@ static int bask_load_conf (bask_core* tcore)
 	Description: Inits Bask and loads the tasks from filename.
 	InitVersion: 0.0.1
 */
-static int bask_init (bask_core* tcore, struct bask_task** first)
+static void bask_init (bask_core* tcore, struct bask_task** first)
 {
 	int i, tid, tactive, tpriority, tstate, bb_state;
 	char line[200], tproject[50], tdescription[200];
 	char *token, *saveptr;
 	FILE* baskfile;
 
-	i = bb_state = 0;
+	i = bb_state = tid = tactive = tpriority = tstate = 0;
 
 	baskfile = fopen (tcore->path_baskbin, "r");
 
 	if (baskfile == NULL)
 	{
-		/* TODO: Put this message in its own function to reduce redundance. */
-		/*printf ("ERROR: Could'nt open the baskfile!\n");
-		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
-		printf ("Warning: Overides all data.\n");*/
 		errors_filenotopened (tcore->path_baskbin);
 		exit (EXIT_FAILURE);
 	}
@@ -219,8 +210,6 @@ static int bask_init (bask_core* tcore, struct bask_task** first)
 	tcore->tc_amount = i;
 	
 	fclose (baskfile);
-	
-	return 0;
 }
 
 /*
@@ -237,12 +226,10 @@ int bask_write (bask_core* tcore, struct bask_task** first)
 
 	if (baskfile == NULL)
 	{
-		/* TODO: Put this message in its own function to reduce redundance. */
-		/*printf ("ERROR: Could'nt open the baskfile!\n");
-		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
-		printf ("Warning: Overides all data.\n");*/
 		errors_filenotopened (tcore->path_baskbin);
-		exit (EXIT_FAILURE);
+		/* Note: At this point, were already have data in the linked list.
+			 So we must use this to free the allocated memory. */
+		return -1;
 	}
 	
 	fprintf (baskfile, "BASKBIN\n");
@@ -262,6 +249,8 @@ int bask_write (bask_core* tcore, struct bask_task** first)
 	}
 	
 	fclose (baskfile);
+	
+	return 0;
 }
 
 /*
@@ -359,7 +348,6 @@ int main (int argc, char* argv[])
 	
 	if (tcore.path_baskpath == NULL || *tcore.path_baskpath == '\0')
 	{
-		/*printf ("ERROR: Cannot get home directory!\n");*/
 		errors_homedirnotgot ();
 		exit (EXIT_FAILURE);
 	}
