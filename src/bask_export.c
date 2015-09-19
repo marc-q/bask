@@ -3,6 +3,7 @@
 #include <string.h>
 #include "../lib/dutils.h"
 #include "bask_core.h"
+#include "bask_errors.h"
 #include "bask_task.h"
 
 /*
@@ -21,7 +22,8 @@ int export_web (bask_core* tcore, struct bask_task** first, char* filename)
 	
 	if (webfile == NULL)
 	{
-		printf ("ERROR: Couldn't write the export file.\n");
+		/*printf ("ERROR: Couldn't write the export file.\n");*/
+		errors_filenotwritten (filename);
 		return -1;
 	}
 	

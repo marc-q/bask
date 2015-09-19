@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include "lib/dutils.h"
 #include "src/bask_core.h"
+#include "src/bask_errors.h"
 #include "src/bask_task.h"
 #include "src/bask_project.h"
 #include "src/bask_ui.h"
@@ -80,7 +81,8 @@ static int bask_init_local_file (char* filename, char* content)
 	
 	if (baskfile == NULL)
 	{
-		printf ("ERROR: Could'nt write the baskfile!\n");
+		/*printf ("ERROR: Could'nt write the baskfile!\n");*/
+		errors_filenotwritten (filename);
 		return -1;
 	}
 	
@@ -133,9 +135,10 @@ static int bask_load_conf (bask_core* tcore)
 	if (baskconf == NULL)
 	{
 		/* TODO: Put this message in its own function to reduce redundance. */
-		printf ("ERROR: Could'nt open the baskconfig!\n");
+		/*printf ("ERROR: Could'nt open the baskconfig!\n");
 		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
-		printf ("Warning: Overides all data.\n");
+		printf ("Warning: Overides all data.\n");*/
+		errors_filenotopened (tcore->path_baskconf);
 		exit (EXIT_FAILURE);
 	}
 	
@@ -173,9 +176,10 @@ static int bask_init (bask_core* tcore, struct bask_task** first)
 	if (baskfile == NULL)
 	{
 		/* TODO: Put this message in its own function to reduce redundance. */
-		printf ("ERROR: Could'nt open the baskfile!\n");
+		/*printf ("ERROR: Could'nt open the baskfile!\n");
 		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
-		printf ("Warning: Overides all data.\n");
+		printf ("Warning: Overides all data.\n");*/
+		errors_filenotopened (tcore->path_baskbin);
 		exit (EXIT_FAILURE);
 	}
 	
@@ -234,9 +238,10 @@ int bask_write (bask_core* tcore, struct bask_task** first)
 	if (baskfile == NULL)
 	{
 		/* TODO: Put this message in its own function to reduce redundance. */
-		printf ("ERROR: Could'nt open the baskfile!\n");
+		/*printf ("ERROR: Could'nt open the baskfile!\n");
 		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
-		printf ("Warning: Overides all data.\n");
+		printf ("Warning: Overides all data.\n");*/
+		errors_filenotopened (tcore->path_baskbin);
 		exit (EXIT_FAILURE);
 	}
 	
@@ -354,7 +359,8 @@ int main (int argc, char* argv[])
 	
 	if (tcore.path_baskpath == NULL || *tcore.path_baskpath == '\0')
 	{
-		printf ("ERROR: Cannot get home directory!\n");
+		/*printf ("ERROR: Cannot get home directory!\n");*/
+		errors_homedirnotgot ();
 		exit (EXIT_FAILURE);
 	}
 

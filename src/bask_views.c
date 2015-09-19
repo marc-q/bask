@@ -128,7 +128,7 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 }
 
 /*
-	Function: view_tasklist (bask_core* tcore, struct bask_task** first);
+	Function: view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first);
 	Description: Displays all tasks in a table!
 	InitVersion: 0.0.1
 */

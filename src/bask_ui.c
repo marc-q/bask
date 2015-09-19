@@ -5,6 +5,7 @@
 #include <math.h>
 #include "../lib/dutils.h"
 #include "bask_core.h"
+#include "bask_errors.h"
 #include "bask_ui.h"
 
 /* |--------------------------------------------|
@@ -113,7 +114,7 @@ static void view_theme_get_color (char* color)
 }
 
 /*
-	Function: view_load_theme (bask_core* tcore, bask_theme* btheme);
+	Function: view_theme_load (bask_core* tcore, bask_theme* btheme);
 	Description: Loads the theme file.
 	InitVersion: 0.0.1
 */
@@ -129,9 +130,10 @@ int view_theme_load (bask_core* tcore, bask_theme* btheme)
 	if (basktheme == NULL)
 	{
 		/* TODO: Put this message in its own function to reduce redundance. */
-		printf ("ERROR: Could'nt open the basktheme!\n");
+		/*printf ("ERROR: Could'nt open the basktheme!\n");
 		printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
-		printf ("Warning: Overides all data.\n");
+		printf ("Warning: Overides all data.\n");*/
+		errors_filenotopened (tcore->path_basktheme);
 		exit (EXIT_FAILURE);
 	}
 	
