@@ -308,11 +308,11 @@ static void print_help (void)
 	printf ("\t-P [PROJECT]\t\tThe projectname of the task.\n");
 	printf ("\t-D [DESCRIPTION]\tThe description of the task.\n");
 	
-	printf ("\nVIEWS:\n");
+	printf ("\nVIEWS\n");
 	printf ("\ttasklist\t\tThe default view, a list of tasks.\n");
 	printf ("\tsummary\t\t\tA summary of projects.\n");
 	
-	printf ("\nPRIORITYS:\n");
+	printf ("\nPRIORITYS\n");
 	printf ("\t0\tL\tNormal\n");
 	printf ("\t1\tI\tImportant\n");
 	printf ("\t2\tT\tToday\n");
