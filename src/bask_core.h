@@ -3,6 +3,7 @@
 
 #define P_CMD "bask"
 #define P_VERSION "0.0.1"
+#define P_LICENCE "GNU GPL v.3"
 #define BASKSEP "=;"
 #define BASKBINFILE "baskbin.txt"
 #define BASKCONFFILE "bask.txt"
