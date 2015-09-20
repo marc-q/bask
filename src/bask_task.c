@@ -292,6 +292,11 @@ int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** 
 	
 	while (ptr != NULL)
 	{
+		if (strstr (ptr->t_finished, searchtag) != NULL)
+		{
+			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_finished, ptr->t_project, ptr->t_description);
+		}
+		
 		if (strstr (ptr->t_project, searchtag) != NULL)
 		{
 			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_finished, ptr->t_project, ptr->t_description);
