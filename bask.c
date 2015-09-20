@@ -303,6 +303,7 @@ static void print_help (void)
 	printf ("\tstop [id]\t\t\t\tDeactivates (hide) the task.\n");
 	
 	printf ("\tsearch <VIEW> [SEARCHTAG]\t\tSearches through the tasks and optional uses <VIEW> to show the results.\n");
+	printf ("\texport <EXPORT> [FILENAME]\t\tExports the data from baskbin to an file with the format <EXPORT> or csv.\n");
 	
 	printf ("\nARGUMENTS\n");
 	printf ("\t-a [active]\t\tIf the task is active.\n");
@@ -314,6 +315,9 @@ static void print_help (void)
 	printf ("\nVIEWS\n");
 	printf ("\ttasklist\t\tThe default view, a list of tasks.\n");
 	printf ("\tsummary\t\t\tA summary of projects.\n");
+	
+	printf ("\nEXPORTS\n");
+	printf ("\tcsv\t\t\tExports to an csv file. (default)\n");
 	
 	printf ("\nPRIORITYS\n");
 	printf ("\t0\tL\tNormal\n");
@@ -474,7 +478,7 @@ int main (int argc, char* argv[])
 		}
 		else if (strncmp (argv[optind], "export", strlen ("export")) == 0)
 		{
-			export_web (&tcore, &first, argv[optind+1]);
+			export_csv (&tcore, &first, argv[optind+1]);
 		}
 		else
 		{
@@ -492,6 +496,21 @@ int main (int argc, char* argv[])
 			else if (strncmp (argv[optind+1], "summary", strlen ("summary")) == 0)
 			{
 				search_view_summary (&tcore, &btheme, &first, argv[optind+2]);
+			}
+			else
+			{
+				usage ();
+			}
+		}
+		else if (strncmp (argv[optind], "export", strlen ("export")) == 0)
+		{
+			if (strncmp (argv[optind+1], "web", strlen ("web")) == 0)
+			{
+				export_web (&tcore, &first, argv[optind+2]);
+			}
+			else if (strncmp (argv[optind+1], "csv", strlen ("csv")) == 0)
+			{
+				export_csv (&tcore, &first, argv[optind+2]);
 			}
 			else
 			{

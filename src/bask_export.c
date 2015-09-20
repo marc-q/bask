@@ -6,7 +6,12 @@
 #include "bask_errors.h"
 #include "bask_task.h"
 
-static void export_strrpl (char* str)
+/*
+	Function: export_web_strrpl (char* str);
+	Description: Replaces incompatible char for the web export.
+	InitVersion: 0.0.1
+*/
+static void export_web_strrpl (char* str)
 {
 	/* TODO: Find a solution to this problem! */
 	if (str != NULL)
@@ -86,7 +91,7 @@ int export_web (bask_core* tcore, struct bask_task** first, char* filename)
 			if (ptr->t_description != NULL)
 			{
 				strcpy (description, ptr->t_description);
-				export_strrpl (description);
+				export_web_strrpl (description);
 			}
 
 			fprintf (webfile, "<tr><td>%i</td><td>%s</td><td>%s</td><td>%s</td></tr>\n", ptr->t_id, ptr->t_project, pri, description);
@@ -100,6 +105,38 @@ int export_web (bask_core* tcore, struct bask_task** first, char* filename)
 	fprintf (webfile, "</tbody>\n</table>\n</body>\n</html>\n");
 	
 	fclose (webfile);
+	
+	return 0;
+}
+
+/*
+	Function: export_csv (bask_core* tcore, struct bask_task** first, char* filename);
+	Description: Exports all tasks to an csv file named filename.
+	InitVersion: 0.0.1
+*/
+int export_csv (bask_core* tcore, struct bask_task** first, char* filename)
+{
+	FILE *exportfile;
+	struct bask_task* ptr = *first;
+	
+	exportfile = fopen (filename, "w");
+	
+	if (exportfile == NULL)
+	{
+		errors_filenotwritten (filename);
+		return -1;
+	}
+	
+	fprintf (exportfile, "ID;Active;State;Priority;Finished;Project;Description\n");
+	
+	while (ptr != NULL)
+	{
+		fprintf (exportfile, "%i;%i;%i;%i;%s;%s;%s\n", ptr->t_id, ptr->t_active, ptr->t_state, ptr->t_priority, ptr->t_finished, ptr->t_project, ptr->t_description);
+		
+		ptr = ptr->next;
+	}
+	
+	fclose (exportfile);
 	
 	return 0;
 }

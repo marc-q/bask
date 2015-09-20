@@ -8,6 +8,7 @@
 bask
 baskbin.txt
 testexport.html
+testexport.csv
 
 # IDE files to ignore (Netbeans, Eclipse)
 nbproject/private/
