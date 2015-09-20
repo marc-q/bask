@@ -132,7 +132,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 		strcpy (colors[i], "default");
 	}
 	
-	basktheme = fopen (tcore->path_basktheme, "r+");
+	basktheme = fopen (tcore->path_basktheme, "r");
 	
 	if (basktheme == NULL)
 	{
