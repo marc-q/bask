@@ -118,14 +118,21 @@ static void view_theme_get_color (char* color)
 	Description: Loads the theme file.
 	InitVersion: 0.0.1
 */
-int view_theme_load (bask_core* tcore, bask_theme* btheme)
+void view_theme_load (bask_core* tcore, bask_theme* btheme)
 {
+	int i;
 	char line[200];
 	char colors[10][11];
 	char *token, *saveptr;
 	FILE *basktheme;
 	
-	basktheme = fopen (tcore->path_basktheme, "r");
+	/* NOTE: If an config doesn't exist, f.e. an old config is used, its using the default value instead of crashing. */
+	for (i = 0; i < 10; i++)
+	{
+		strcpy (colors[i], "default");
+	}
+	
+	basktheme = fopen (tcore->path_basktheme, "r+");
 	
 	if (basktheme == NULL)
 	{
@@ -143,6 +150,7 @@ int view_theme_load (bask_core* tcore, bask_theme* btheme)
 		parser_get_str (token, "color_critical", colors[3], 10, saveptr);
 		parser_get_str (token, "color_finished", colors[4], 10, saveptr);
 		parser_get_str (token, "color_pbarbak", colors[5], 10, saveptr);
+		parser_get_str (token, "color_seclinesbak", colors[6], 10, saveptr);
 	}
 	
 	if (strncmp (colors[0], "default", strlen(colors[0])) != 0)
@@ -203,6 +211,16 @@ int view_theme_load (bask_core* tcore, bask_theme* btheme)
 	else
 	{
 		strcpy (btheme->color_pbarbak, BC_BAK_GREEN);
+	}
+	
+	if (strncmp (colors[6], "default", strlen(colors[6])) != 0)
+	{
+		view_theme_get_color (colors[6]);
+		strcpy (btheme->color_seclinesbak, colors[6]);
+	}
+	else
+	{
+		strcpy (btheme->color_seclinesbak, "");
 	}
 	
 	fclose (basktheme);

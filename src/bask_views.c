@@ -180,7 +180,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 		
 			if (i%2 == 1)
 			{	
-				strcat (prefix, T_COLOR_LINEBAK);
+				strcat (prefix, btheme->color_seclinesbak);
 			
 			}
 		

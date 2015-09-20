@@ -113,7 +113,7 @@ static int bask_init_local (bask_core* tcore)
 
 	bask_init_local_file (tcore->path_baskconf, "baskbin=default;");
 	bask_init_local_file (tcore->path_baskbin, "");
-	bask_init_local_file (tcore->path_basktheme, "color_normal=default;\ncolor_important=default;\ncolor_today=default;\ncolor_critical=default;\ncolor_finished=default;\ncolor_pbarbak=default;");
+	bask_init_local_file (tcore->path_basktheme, "color_normal=default;\ncolor_important=default;\ncolor_today=default;\ncolor_critical=default;\ncolor_finished=default;\ncolor_pbarbak=default;\ncolor_seclinesbak=default;");
 	
 	return 0;
 }
@@ -375,8 +375,8 @@ int main (int argc, char* argv[])
 	}
 	
 	bask_load_conf (&tcore);
-	bask_init (&tcore, &first);
 	view_theme_load (&tcore, &btheme);
+	bask_init (&tcore, &first);
 	
 	while ((optc = getopt (argc, argv, "p:P:a:D:s:")) != -1)
 	{

@@ -24,13 +24,14 @@ struct _bask_theme
 	char color_critical[11];
 	char color_finished[11];
 	char color_pbarbak[11];
+	char color_seclinesbak[11];
 };
 
 typedef struct _bask_theme bask_theme;
 
 void view_print_nspaces (int);
 void view_print_nspaces_str (char*, int);
-int view_theme_load (bask_core*, bask_theme*);
+void view_theme_load (bask_core*, bask_theme*);
 void view_misc_print_progress (float, char*);
 void view_tbl_print_title (char*, int, int);
 void view_tbl_print_field_str (char*, int, int);
