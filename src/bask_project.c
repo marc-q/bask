@@ -40,7 +40,7 @@ int project_insert (struct bask_project** first, int t_active, int t_id, int t_s
 	newobj->p_id = 0;
 	newobj->next = NULL;
 	
-	if (strlen (t_project) > 50)
+	if (strlen (t_project) >= T_S_PROJECT)
 	{
 		return -1;
 	}

@@ -6,6 +6,29 @@
 #include "bask_errors.h"
 #include "bask_task.h"
 
+static void export_strrpl (char* str)
+{
+	/* TODO: Find a solution to this problem! */
+	if (str != NULL)
+	{
+		while (*str)
+		{
+			switch (*str)
+			{
+				case '<':
+					*str = ' ';
+					break;
+				case '>':
+					*str = ' ';
+					break;
+				default:
+					break;
+			}
+			*str++;
+		}
+	}
+}
+
 /*
 	Function: export_web (bask_core* tcore, struct bask_task** first, char* filename);
 	Description: Exports all tasks to an html file named filename.
@@ -14,7 +37,7 @@
 int export_web (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	int i = 0;
-	char prefix[30], pri[4];
+	char prefix[30], pri[4], description[200];
 	FILE *webfile;
 	struct bask_task* ptr = *first;
 	
@@ -59,7 +82,14 @@ int export_web (bask_core* tcore, struct bask_task** first, char* filename)
 					break;
 			}
 
-			fprintf (webfile, "<tr><td>%i</td><td>%s</td><td>%s</td><td>%s</td></tr>\n", ptr->t_id, ptr->t_project, pri, ptr->t_description);
+			/* TODO: Find a solution to this problem! */
+			if (ptr->t_description != NULL)
+			{
+				strcpy (description, ptr->t_description);
+				export_strrpl (description);
+			}
+
+			fprintf (webfile, "<tr><td>%i</td><td>%s</td><td>%s</td><td>%s</td></tr>\n", ptr->t_id, ptr->t_project, pri, description);
 			
 			i++;
 		}
@@ -70,4 +100,6 @@ int export_web (bask_core* tcore, struct bask_task** first, char* filename)
 	fprintf (webfile, "</tbody>\n</table>\n</body>\n</html>\n");
 	
 	fclose (webfile);
+	
+	return 0;
 }

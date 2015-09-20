@@ -67,3 +67,13 @@ void errors_homedirnotgot (void)
 {
 	printf ("ERROR: Cannot get home directory!\n");
 }
+
+/*
+	Function: errors_timenotgot (void);
+	Description: Prints the error for when we can't get the time.
+	InitVersion: 0.0.1
+*/
+void errors_timenotgot (void)
+{
+	printf ("ERROR: Cannot get the time!\n");
+}

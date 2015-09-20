@@ -7,6 +7,9 @@
 #define BASKBINFILE "baskbin.txt"
 #define BASKCONFFILE "bask.txt"
 #define BASKTHEMEFILE "basktheme.txt"
+#define T_S_FINISHED 51
+#define T_S_PROJECT 51
+#define T_S_DESCRIPTION 201
 
 struct _bask_core
 {
@@ -22,5 +25,6 @@ typedef struct _bask_core bask_core;
 
 int parser_get_str (char*, char*, char*, size_t, char*);
 int parser_get_int (char*, char*, int*, char*);
+int utils_time_get_str (char*, size_t);
 
 #endif /* __BASK_CORE_H__ */

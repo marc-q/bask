@@ -7,6 +7,7 @@
 *.out
 bask
 baskbin.txt
+testexport.html
 
 # IDE files to ignore (Netbeans, Eclipse)
 nbproject/private/

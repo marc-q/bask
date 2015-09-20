@@ -31,16 +31,16 @@ void task_free_ll (struct bask_task** first)
 */
 static int task_upgrade (struct bask_task* task)
 {
-	
+	return 0;
 } 
 
 
 /*
-	Function: task_insert (struct bask_task** first, int n, int tid, int tactive, int tpriority, int tstate, char* tproject, char* tdescription);
+	Function: task_insert (struct bask_task** first, int n, int tid, int tactive, int tpriority, int tstate, char* tfinished, char* tproject, char* tdescription);
 	Description: Inserts a new task with data.
 	InitVersion: 0.0.1
 */
-int task_insert (struct bask_task** first, int n, int tid, int tactive, int tpriority, int tstate, char* tproject, char* tdescription)
+int task_insert (struct bask_task** first, int n, int tid, int tactive, int tpriority, int tstate, char* tfinished, char* tproject, char* tdescription)
 {
 	struct bask_task *newobj = malloc (sizeof (struct bask_task)), *preobj;
 	
@@ -56,11 +56,12 @@ int task_insert (struct bask_task** first, int n, int tid, int tactive, int tpri
 	newobj->t_state = tstate;
 	newobj->next = NULL;
 	
-	if (strlen (tproject) > 50 || strlen (tdescription) > 200)
+	if (strlen (tfinished) >= T_S_FINISHED || strlen (tproject) >= T_S_PROJECT || strlen (tdescription) >= T_S_DESCRIPTION)
 	{
 		return -1;
 	}
 
+	strcpy (newobj->t_finished, tfinished);
 	strcpy (newobj->t_project, tproject);
 	strcpy (newobj->t_description, tdescription);
 	
@@ -110,7 +111,7 @@ void task_create (bask_core* tcore, struct bask_task** first, int priority, char
 	tcore->tc_amount++;
 	tcore->baskbin_uid++;
 	
-	task_insert (first, tcore->tc_amount-1, tcore->baskbin_uid, 1, priority, 0, project, description);
+	task_insert (first, tcore->tc_amount-1, tcore->baskbin_uid, 1, priority, 0, "", project, description);
 	
 	printf ("Created task %i.\n", tcore->baskbin_uid);
 	
@@ -166,11 +167,11 @@ int task_remove (bask_core* tcore, struct bask_task** first, int id)
 }
 
 /*
-	Function: task_modificate (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* project, char* description);
+	Function: task_modificate (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* finished, char* project, char* description);
 	Description: Modificates a task!
 	InitVersion: 0.0.1
 */
-int task_modificate (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* project, char* description)
+int task_modificate (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* finished, char* project, char* description)
 {
 	struct bask_task* ptr = *first;
 	
@@ -198,10 +199,17 @@ int task_modificate (bask_core* tcore, struct bask_task** first, int id, int act
 				ptr->t_priority = priority;
 			}
 			
+			if (finished != NULL)
+			{
+				if (strlen (finished) < T_S_FINISHED && strcmp (finished, "") != 0 )
+				{
+					strcpy (ptr->t_finished, finished);
+				}
+			}
 			
 			if (project != NULL)
 			{
-				if (strlen (project) < 50 && strcmp (project, "") != 0 )
+				if (strlen (project) < T_S_PROJECT && strcmp (project, "") != 0 )
 				{
 					strcpy (ptr->t_project, project);
 				}
@@ -209,7 +217,7 @@ int task_modificate (bask_core* tcore, struct bask_task** first, int id, int act
 			
 			if (description != NULL)
 			{
-				if (strlen (description) < 200 && strcmp (description, "") != 0)
+				if (strlen (description) < T_S_DESCRIPTION && strcmp (description, "") != 0)
 				{
 					strcpy (ptr->t_description, description);
 				}
@@ -232,7 +240,7 @@ int task_modificate (bask_core* tcore, struct bask_task** first, int id, int act
 */
 void task_modify (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* project, char* description)
 {
-	task_modificate (tcore, first, id, active, state, priority, project, description);
+	task_modificate (tcore, first, id, active, state, priority, "", project, description);
 	printf ("Modificated task %i.\n", id);
 }
 
@@ -243,7 +251,7 @@ void task_modify (bask_core* tcore, struct bask_task** first, int id, int active
 */
 void task_deactivate (bask_core* tcore, struct bask_task** first, int id)
 {	
-	task_modificate (tcore, first, id, 0, -1, -1, "", "");
+	task_modificate (tcore, first, id, 0, -1, -1, "", "", "");
 	printf ("Deactivated task %i.\n", id);
 }
 
@@ -252,10 +260,19 @@ void task_deactivate (bask_core* tcore, struct bask_task** first, int id)
 	Description: Finished a task!
 	InitVersion: 0.0.1
 */
-void task_finish (bask_core* tcore, struct bask_task** first, int id)
+int task_finish (bask_core* tcore, struct bask_task** first, int id)
 {
-	task_modificate (tcore, first, id, -1, 1, -1, "", "");
+	char finished[T_S_FINISHED];
+
+	if (utils_time_get_str (finished, sizeof (finished)) != 0)
+	{
+		return -1;
+	}
+	
+	task_modificate (tcore, first, id, -1, 1, -1, finished, "", "");
 	printf ("Finished task %i.\n", id);
+	
+	return 0;
 }
 
 /*
@@ -268,7 +285,7 @@ int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** 
 	int i = 0;
 	struct bask_task* ptr = *first;
 	
-	if (first == NULL)
+	if (ptr == NULL)
 	{
 		return -1;
 	}
@@ -277,12 +294,12 @@ int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** 
 	{
 		if (strstr (ptr->t_project, searchtag) != NULL)
 		{
-			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_project, ptr->t_description);
+			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
 		
 		if (strstr (ptr->t_description, searchtag) != NULL)
 		{
-			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_project, ptr->t_description);
+			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
 		
 		i++;

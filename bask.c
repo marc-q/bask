@@ -137,7 +137,7 @@ static void bask_load_conf (bask_core* tcore)
 		exit (EXIT_FAILURE);
 	}
 	
-	while (fgets (line, sizeof (line)-1, baskconf) != NULL)
+	while (fgets (line, sizeof (line), baskconf) != NULL)
 	{
 		token = strtok_r (line, BASKSEP, &saveptr);
 		
@@ -160,7 +160,7 @@ static void bask_load_conf (bask_core* tcore)
 static void bask_init (bask_core* tcore, struct bask_task** first)
 {
 	int i, tid, tactive, tpriority, tstate, bb_state;
-	char line[200], tproject[50], tdescription[200];
+	char line[200], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char *token, *saveptr;
 	FILE* baskfile;
 
@@ -174,7 +174,7 @@ static void bask_init (bask_core* tcore, struct bask_task** first)
 		exit (EXIT_FAILURE);
 	}
 	
-	while (fgets (line, sizeof (line)-1, baskfile) != NULL)
+	while (fgets (line, sizeof (line), baskfile) != NULL)
 	{
 		token = strtok_r (line, BASKSEP, &saveptr);
 		
@@ -193,7 +193,7 @@ static void bask_init (bask_core* tcore, struct bask_task** first)
 		}
 		else if (strncmp (token, "END", strlen ("END")) == 0)
 		{
-			task_insert (first, i, tid, tactive, tpriority, tstate, tproject, tdescription);
+			task_insert (first, i, tid, tactive, tpriority, tstate, tfinished, tproject, tdescription);
 			i++;
 		}
 		else
@@ -202,8 +202,9 @@ static void bask_init (bask_core* tcore, struct bask_task** first)
 			parser_get_int (token, "tactive", &tactive, saveptr);
 			parser_get_int (token, "tstate", &tstate, saveptr);
 			parser_get_int (token, "tpriority", &tpriority, saveptr);
-			parser_get_str (token, "tproject", tproject, 50, saveptr);
-			parser_get_str (token, "tdescription", tdescription, 200, saveptr);
+			parser_get_str (token, "tfinished", tfinished, sizeof (tfinished), saveptr);
+			parser_get_str (token, "tproject", tproject, sizeof (tproject), saveptr);
+			parser_get_str (token, "tdescription", tdescription, sizeof (tdescription), saveptr);
 		}
 	}
 
@@ -242,6 +243,7 @@ int bask_write (bask_core* tcore, struct bask_task** first)
 		fprintf (baskfile, "tactive=%i;\n", ptr->t_active);
 		fprintf (baskfile, "tstate=%i;\n", ptr->t_state);
 		fprintf (baskfile, "tpriority=%i;\n", ptr->t_priority);
+		fprintf (baskfile, "tfinished=%s;\n", ptr->t_finished);
 		fprintf (baskfile, "tproject=%s;\n", ptr->t_project);
 		fprintf (baskfile, "tdescription=%s;\n", ptr->t_description);
 		fprintf (baskfile, "END\n");
@@ -254,13 +256,13 @@ int bask_write (bask_core* tcore, struct bask_task** first)
 }
 
 /*
-	Function: bask_unload (bask_core* tcore);
+	Function: bask_unload (struct bask_task** first);
 	Description: Unloads the Bask application.
 	InitVersion: 0.0.1
 */
-static void bask_unload (bask_core* tcore)
+static void bask_unload (struct bask_task** first)
 {
-
+	task_free_ll (first);
 }
 
 /* |--------------------------------------------|
@@ -334,7 +336,7 @@ static void usage (void)
 int main (int argc, char* argv[])
 {
 	int optc, ppri, pact, pstate;
-	char pproject[50], pdescription[200];
+	char pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
 	struct bask_task* first = NULL;
@@ -516,7 +518,6 @@ int main (int argc, char* argv[])
 		usage ();
 	}
 	
-	bask_unload (&tcore);
-	task_free_ll (&first);
+	bask_unload (&first);
 	return 0;
 }

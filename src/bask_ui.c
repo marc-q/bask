@@ -61,19 +61,19 @@ static void view_theme_get_color (char* color)
 	{
 		if (strncmp (precolor, "txt", strlen ("txt")) == 0)
 		{
-			strcpy (color, "\e[0;3");
+			strcpy (color, "\033[0;3");
 		}
 		else if (strncmp (precolor, "bld", strlen ("bld")) == 0)
 		{
-			strcpy (color, "\e[1;3");
+			strcpy (color, "\033[1;3");
 		}
 		else if (strncmp (precolor, "und", strlen ("und")) == 0)
 		{
-			strcpy (color, "\e[4;3");
+			strcpy (color, "\033[4;3");
 		}
 		else if (strncmp (precolor, "bak", strlen ("bak")) == 0)
 		{
-			strcpy (color, "\e[4");
+			strcpy (color, "\033[4");
 		}
 		
 		if (strstr (precolor, "black") != NULL)

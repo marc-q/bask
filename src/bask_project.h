@@ -8,7 +8,7 @@ struct bask_project
 	int p_id;
 	float p_complete;
 	float p_tasks;
-	char p_name[50];
+	char p_name[T_S_PROJECT];
 	struct bask_project* next;
 };
 
