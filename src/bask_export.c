@@ -13,7 +13,7 @@
 */
 static void export_web_strrpl (char* str)
 {
-	/* TODO: Find a solution to this problem! */
+	/* TODO: Find a solution for this problem! */
 	if (str != NULL)
 	{
 		while (*str)
@@ -87,7 +87,7 @@ int export_web (bask_core* tcore, struct bask_task** first, char* filename)
 					break;
 			}
 
-			/* TODO: Find a solution to this problem! */
+			/* TODO: Find a solution for this problem! */
 			if (ptr->t_description != NULL)
 			{
 				strcpy (description, ptr->t_description);
