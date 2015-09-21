@@ -153,6 +153,8 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 		parser_get_str (token, "color_seclinesbak", colors[6], 10, saveptr);
 	}
 	
+	fclose (basktheme);
+	
 	if (strncmp (colors[0], "default", strlen(colors[0])) != 0)
 	{
 		view_theme_get_color (colors[0]);
@@ -222,8 +224,6 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 	{
 		strcpy (btheme->color_seclinesbak, "");
 	}
-	
-	fclose (basktheme);
 }
 
 /* |--------------------------------------------|

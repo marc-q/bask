@@ -1,8 +1,6 @@
 #ifndef __BASK_UI_H__
 #define __BASK_UI_H__
 
-#define T_COLOR_LINEBAK ""
-
 #define BC_BLACK "0"
 #define BC_RED "1"
 #define BC_GREEN "2"
@@ -17,7 +15,6 @@
 
 struct _bask_theme
 {
-	int id;
 	char color_normal[11];
 	char color_important[11];
 	char color_today[11];
