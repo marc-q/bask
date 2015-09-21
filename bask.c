@@ -14,6 +14,7 @@
 #include "src/bask_ui.h"
 #include "src/bask_views.h"
 #include "src/bask_export.h"
+#include "src/bask_import.h"
 #include "bask.h"
 
 /* |--------------------------------------------|
@@ -304,6 +305,7 @@ static void print_help (void)
 	
 	printf ("\tsearch <VIEW> [SEARCHTAG]\t\tSearches through the tasks and optional uses <VIEW> to show the results.\n");
 	printf ("\texport <EXPORT> [FILENAME]\t\tExports the data from baskbin to an file with the format <EXPORT> or csv.\n");
+	printf ("\timport <IMPORT> [FILENAME]\t\tImports the data from an file with the format <EXPORT> or csv to the baskbin.\n");
 	
 	printf ("\nARGUMENTS\n");
 	printf ("\t-a [active]\t\tIf the task is active.\n");
@@ -318,6 +320,9 @@ static void print_help (void)
 	
 	printf ("\nEXPORTS\n");
 	printf ("\tcsv\t\t\tExports to an csv file. (default)\n");
+	
+	printf ("\nIMPORTS\n");
+	printf ("\tcsv\t\t\tImports from an csv file. (default)\n");
 	
 	printf ("\nPRIORITYS\n");
 	printf ("\t0\tL\tNormal\n");
@@ -432,7 +437,6 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 2)
 	{
-		
 		if (strncmp (argv[optind], "help", strlen ("help")) == 0)
 		{
 			print_help ();
@@ -480,6 +484,10 @@ int main (int argc, char* argv[])
 		{
 			export_csv (&tcore, &first, argv[optind+1]);
 		}
+		else if (strncmp (argv[optind], "import", strlen ("import")) == 0)
+		{
+			import_csv (&tcore, &first, argv[optind+1]);
+		}
 		else
 		{
 			usage ();
@@ -511,6 +519,17 @@ int main (int argc, char* argv[])
 			else if (strncmp (argv[optind+1], "csv", strlen ("csv")) == 0)
 			{
 				export_csv (&tcore, &first, argv[optind+2]);
+			}
+			else
+			{
+				usage ();
+			}
+		}
+		else if (strncmp (argv[optind], "import", strlen ("import")) == 0)
+		{
+			if (strncmp (argv[optind+1], "csv", strlen ("csv")) == 0)
+			{
+				import_csv (&tcore, &first, argv[optind+2]);
 			}
 			else
 			{

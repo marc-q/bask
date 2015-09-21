@@ -7,7 +7,7 @@
 /* |--------------------------------------------|
    |			Utils			|
    |--------------------------------------------| */
-   
+
 /*
 	Function: parser_get_str (char* token, char* key, char* out, size_t outsize, char* saveptr);
 	Description: Parses a row and return the value if the key is right.
