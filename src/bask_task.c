@@ -111,7 +111,7 @@ void task_create (bask_core* tcore, struct bask_task** first, int priority, char
 	tcore->tc_amount++;
 	tcore->baskbin_uid++;
 	
-	task_insert (first, tcore->tc_amount-1, tcore->baskbin_uid, 1, priority, 0, "", project, description);
+	task_insert (first, tcore->tc_amount-1, tcore->baskbin_uid, 1, priority, 0, " ", project, description);
 	
 	printf ("Created task %i.\n", tcore->baskbin_uid);
 	
