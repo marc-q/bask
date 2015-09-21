@@ -95,12 +95,6 @@ int project_insert (struct bask_project** first, int t_active, int t_id, int t_s
 				preobj->next = newobj;
 				break;
 			}
-			else if (preobj->next->n > newobj->n)
-			{
-				newobj->next = preobj->next;
-				preobj->next = newobj;
-				break;
-			}
 			
 			preobj = preobj->next;
 		}
