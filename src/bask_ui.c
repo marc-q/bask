@@ -122,12 +122,12 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 {
 	int i;
 	char line[200];
-	char colors[10][11];
+	char colors[7][11];
 	char *token, *saveptr;
 	FILE *basktheme;
 	
 	/* NOTE: If an config doesn't exist, f.e. an old config is used, its using the default value instead of crashing. */
-	for (i = 0; i < 10; i++)
+	for (i = 0; i < 7; i++)
 	{
 		strcpy (colors[i], "default");
 	}

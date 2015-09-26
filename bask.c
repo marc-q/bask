@@ -22,33 +22,28 @@
    |--------------------------------------------| */
 
 /*
-	Function: search_view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first, char* searchtag);
-	Description: Finds tasks with searchtag in the description and uses the view tasklist to display the results.
+	Function: search_view (bask_core* tcore, bask_theme* btheme, struct bask_task** first, char* searchtag, int view);
+	Description: Finds tasks with searchtag in the description, project or finished and uses the view <view> to display the results.
 	InitVersion: 0.0.1
 */
-static void search_view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first, char* searchtag)
+static void search_view (bask_core* tcore, bask_theme* btheme, struct bask_task** first, char* searchtag, int view)
 {
 	struct bask_task* haystack = NULL;
 	
 	task_search (tcore, first, &haystack, searchtag);
 	
-	view_tasklist (tcore, btheme, &haystack);
-	
-	task_free_ll (&haystack);
-}
-
-/*
-	Function: search_view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** first, char* searchtag);
-	Description: Finds tasks with searchtag in the description and uses the view summary to display the results.
-	InitVersion: 0.0.1
-*/
-static void search_view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** first, char* searchtag)
-{
-	struct bask_task* haystack = NULL;
-	
-	task_search (tcore, first, &haystack, searchtag);
-	
-	view_summary (tcore, btheme, &haystack);
+	switch (view)
+	{
+		case BVIEW_TASKLIST:
+			view_tasklist (tcore, btheme, &haystack);
+			break;
+		case BVIEW_SUMMARY:
+			view_summary (tcore, btheme, &haystack);
+			break;
+		default:
+			view_tasklist (tcore, btheme, &haystack);
+			break;
+	}
 	
 	task_free_ll (&haystack);
 }
@@ -384,7 +379,7 @@ int main (int argc, char* argv[])
 		}
 		else if (strncmp (argv[optind], "search", strlen ("search")) == 0)
 		{
-			search_view_tasklist (&tcore, &btheme, &first, argv[optind+1]);
+			search_view (&tcore, &btheme, &first, argv[optind+1], BVIEW_TASKLIST);
 		}
 		else if (strncmp (argv[optind], "stop", strlen ("stop")) == 0)
 		{
@@ -413,11 +408,11 @@ int main (int argc, char* argv[])
 		{
 			if (strncmp (argv[optind+1], "tasklist", strlen ("tasklist")) == 0)
 			{
-				search_view_tasklist (&tcore, &btheme, &first, argv[optind+2]);
+				search_view (&tcore, &btheme, &first, argv[optind+2], BVIEW_TASKLIST);
 			}
 			else if (strncmp (argv[optind+1], "summary", strlen ("summary")) == 0)
 			{
-				search_view_summary (&tcore, &btheme, &first, argv[optind+2]);
+				search_view (&tcore, &btheme, &first, argv[optind+2], BVIEW_SUMMARY);
 			}
 			else
 			{
