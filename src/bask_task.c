@@ -5,7 +5,7 @@
 #include <time.h>
 #include "bask_core.h"
 #include "bask_task.h"
-#include "../bask.h"
+#include "bask_export.h"
 
 /*
 	Function: task_free_ll (struct bask_task** first);
@@ -115,7 +115,7 @@ void task_create (bask_core* tcore, struct bask_task** first, int priority, char
 	
 	printf ("Created task %i.\n", tcore->baskbin_uid);
 	
-	bask_write (tcore, first);
+	export_baskbin (tcore, first, tcore->path_baskbin);
 }
 
 /*
@@ -161,7 +161,7 @@ int task_remove (bask_core* tcore, struct bask_task** first, int id)
 		}
 	}
 	
-	bask_write (tcore, first);
+	export_baskbin (tcore, first, tcore->path_baskbin);
 	
 	return 0;
 }
@@ -228,7 +228,7 @@ int task_modificate (bask_core* tcore, struct bask_task** first, int id, int act
 		ptr = ptr->next;
 	}
 
-	bask_write (tcore, first);
+	export_baskbin (tcore, first, tcore->path_baskbin);
 	
 	return 0;
 }

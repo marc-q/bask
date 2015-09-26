@@ -4,7 +4,80 @@
 #include "bask_core.h"
 #include "bask_errors.h"
 #include "bask_task.h"
+#include "bask_export.h"
 #include "bask_import.h"
+
+/*
+	Function: import_baskbin (bask_core* tcore, struct bask_task** first, char* filename);
+	Description: Imports the tasks from a baskbin formatet file.
+	InitVersion: 0.0.1
+*/
+int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
+{
+	int tid, tactive, tpriority, tstate, bb_state;
+	char line[200], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
+	char *token, *saveptr;
+	FILE* importfile;
+
+	bb_state = tid = tactive = tpriority = tstate = 0;
+
+	importfile = fopen (filename, "r");
+
+	if (importfile == NULL)
+	{
+		errors_filenotopened (filename);
+		return -1;
+	}
+	
+	while (fgets (line, sizeof (line), importfile) != NULL)
+	{
+		token = strtok_r (line, BASKSEP, &saveptr);
+		
+		if (strncmp (token, "BASKBIN", strlen ("BASKBIN")) == 0)
+		{
+			bb_state = 1;
+		}
+		else if (strncmp (token, "BBEND", strlen ("BBEND")) == 0)
+		{
+			bb_state = 0;
+		}
+		
+		if (bb_state == 1)
+		{
+			parser_get_int (token, "bbuid", &tcore->baskbin_uid, saveptr);
+		}
+		else if (strncmp (token, "END", strlen ("END")) == 0)
+		{
+			task_insert (first, tcore->tc_amount, tid, tactive, tpriority, tstate, tfinished, tproject, tdescription);
+			tcore->tc_amount++;
+		}
+		else
+		{
+			parser_get_int (token, "tid", &tid, saveptr);
+			parser_get_int (token, "tactive", &tactive, saveptr);
+			parser_get_int (token, "tstate", &tstate, saveptr);
+			parser_get_int (token, "tpriority", &tpriority, saveptr);
+			parser_get_str (token, "tfinished", tfinished, sizeof (tfinished), saveptr);
+			parser_get_str (token, "tproject", tproject, sizeof (tproject), saveptr);
+			parser_get_str (token, "tdescription", tdescription, sizeof (tdescription), saveptr);
+		}
+	}
+	
+	fclose (importfile);
+	
+	return 0;
+}
+
+/*
+	Function: import_baskbin_cmd (bask_core* tcore, struct bask_task** first, char* filename);
+	Description: Cmd handle for importing tasks from a baskbin formated file.
+	InitVersion: 0.0.1
+*/
+void import_baskbin_cmd (bask_core* tcore, struct bask_task** first, char* filename)
+{
+	import_baskbin (tcore, first, filename);
+	export_baskbin (tcore, first, tcore->path_baskbin);
+}
 
 /*
 	Function: import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, char* saveptr);
@@ -99,7 +172,16 @@ int import_csv (bask_core* tcore, struct bask_task** first, char* filename)
 	
 	fclose (importfile);
 	
-	bask_write (tcore, first);
-	
 	return 0;
+}
+
+/*
+	Function: import_csv_cmd (bask_core* tcore, struct bask_task** first, char* filename);
+	Description: Cmd handle for importing tasks from a csv formated file.
+	InitVersion: 0.0.1
+*/
+void import_csv_cmd (bask_core* tcore, struct bask_task** first, char* filename)
+{
+	import_csv (tcore, first, filename);
+	export_baskbin (tcore, first, tcore->path_baskbin);
 }

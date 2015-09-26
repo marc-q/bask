@@ -7,6 +7,80 @@
 #include "bask_task.h"
 
 /*
+	Function: export_baskbin (bask_core* tcore, struct bask_task** first, char* filename);
+	Description: Exports all tasks to the baskbin <filename>.
+	InitVersion: 0.0.1
+*/
+int export_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
+{
+	FILE* exportfile;
+	struct bask_task* ptr = *first;
+	
+	exportfile = fopen (filename, "w");
+
+	if (exportfile == NULL)
+	{
+		errors_filenotwritten (filename);
+		/* Note: At this point, were already have data in the linked list.
+			 So we must use this to free the allocated memory. */
+		return -1;
+	}
+	
+	fprintf (exportfile, "BASKBIN\n");
+	fprintf (exportfile, "bbuid=%i;\n", tcore->baskbin_uid);
+	fprintf (exportfile, "BBEND\n");
+	
+	while (ptr != NULL)
+	{
+		fprintf (exportfile, "tid=%i;\n", ptr->t_id);
+		fprintf (exportfile, "tactive=%i;\n", ptr->t_active);
+		fprintf (exportfile, "tstate=%i;\n", ptr->t_state);
+		fprintf (exportfile, "tpriority=%i;\n", ptr->t_priority);
+		fprintf (exportfile, "tfinished=%s;\n", ptr->t_finished);
+		fprintf (exportfile, "tproject=%s;\n", ptr->t_project);
+		fprintf (exportfile, "tdescription=%s;\n", ptr->t_description);
+		fprintf (exportfile, "END\n");
+		ptr = ptr->next;
+	}
+	
+	fclose (exportfile);
+	
+	return 0;
+}
+
+/*
+	Function: export_csv (bask_core* tcore, struct bask_task** first, char* filename);
+	Description: Exports all tasks to an csv file named filename.
+	InitVersion: 0.0.1
+*/
+int export_csv (bask_core* tcore, struct bask_task** first, char* filename)
+{
+	FILE *exportfile;
+	struct bask_task* ptr = *first;
+	
+	exportfile = fopen (filename, "w");
+	
+	if (exportfile == NULL)
+	{
+		errors_filenotwritten (filename);
+		return -1;
+	}
+	
+	fprintf (exportfile, "ID;Active;State;Priority;Finished;Project;Description\n");
+	
+	while (ptr != NULL)
+	{
+		fprintf (exportfile, "%i;%i;%i;%i;%s;%s;%s\n", ptr->t_id, ptr->t_active, ptr->t_state, ptr->t_priority, ptr->t_finished, ptr->t_project, ptr->t_description);
+		
+		ptr = ptr->next;
+	}
+	
+	fclose (exportfile);
+	
+	return 0;
+}
+
+/*
 	Function: export_web_strrpl (char* str);
 	Description: Replaces incompatible char for the web export.
 	InitVersion: 0.0.1
@@ -105,38 +179,6 @@ int export_web (bask_core* tcore, struct bask_task** first, char* filename)
 	fprintf (webfile, "</tbody>\n</table>\n</body>\n</html>\n");
 	
 	fclose (webfile);
-	
-	return 0;
-}
-
-/*
-	Function: export_csv (bask_core* tcore, struct bask_task** first, char* filename);
-	Description: Exports all tasks to an csv file named filename.
-	InitVersion: 0.0.1
-*/
-int export_csv (bask_core* tcore, struct bask_task** first, char* filename)
-{
-	FILE *exportfile;
-	struct bask_task* ptr = *first;
-	
-	exportfile = fopen (filename, "w");
-	
-	if (exportfile == NULL)
-	{
-		errors_filenotwritten (filename);
-		return -1;
-	}
-	
-	fprintf (exportfile, "ID;Active;State;Priority;Finished;Project;Description\n");
-	
-	while (ptr != NULL)
-	{
-		fprintf (exportfile, "%i;%i;%i;%i;%s;%s;%s\n", ptr->t_id, ptr->t_active, ptr->t_state, ptr->t_priority, ptr->t_finished, ptr->t_project, ptr->t_description);
-		
-		ptr = ptr->next;
-	}
-	
-	fclose (exportfile);
 	
 	return 0;
 }

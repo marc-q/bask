@@ -3,7 +3,8 @@
 
 #define EXPORT_CSV_SPLIT ";"
 
-int export_web (bask_core*, struct bask_task**, char*);
+int export_baskbin (bask_core*, struct bask_task**, char*);
 int export_csv (bask_core*, struct bask_task**, char*);
+int export_web (bask_core*, struct bask_task**, char*);
 
 #endif /* __BASK_EXPORT_H__ */

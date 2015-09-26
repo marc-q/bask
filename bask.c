@@ -160,100 +160,12 @@ static void bask_load_conf (bask_core* tcore)
 */
 static void bask_init (bask_core* tcore, struct bask_task** first)
 {
-	int i, tid, tactive, tpriority, tstate, bb_state;
-	char line[200], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
-	char *token, *saveptr;
-	FILE* baskfile;
-
-	i = bb_state = tid = tactive = tpriority = tstate = 0;
-
-	baskfile = fopen (tcore->path_baskbin, "r");
-
-	if (baskfile == NULL)
+	tcore->tc_amount = 0;
+	
+	if (import_baskbin (tcore, first, tcore->path_baskbin) != 0)
 	{
-		errors_filenotopened (tcore->path_baskbin);
 		exit (EXIT_FAILURE);
 	}
-	
-	while (fgets (line, sizeof (line), baskfile) != NULL)
-	{
-		token = strtok_r (line, BASKSEP, &saveptr);
-		
-		if (strncmp (token, "BASKBIN", strlen ("BASKBIN")) == 0)
-		{
-			bb_state = 1;
-		}
-		else if (strncmp (token, "BBEND", strlen ("BBEND")) == 0)
-		{
-			bb_state = 0;
-		}
-		
-		if (bb_state == 1)
-		{
-			parser_get_int (token, "bbuid", &tcore->baskbin_uid, saveptr);
-		}
-		else if (strncmp (token, "END", strlen ("END")) == 0)
-		{
-			task_insert (first, i, tid, tactive, tpriority, tstate, tfinished, tproject, tdescription);
-			i++;
-		}
-		else
-		{
-			parser_get_int (token, "tid", &tid, saveptr);
-			parser_get_int (token, "tactive", &tactive, saveptr);
-			parser_get_int (token, "tstate", &tstate, saveptr);
-			parser_get_int (token, "tpriority", &tpriority, saveptr);
-			parser_get_str (token, "tfinished", tfinished, sizeof (tfinished), saveptr);
-			parser_get_str (token, "tproject", tproject, sizeof (tproject), saveptr);
-			parser_get_str (token, "tdescription", tdescription, sizeof (tdescription), saveptr);
-		}
-	}
-
-	tcore->tc_amount = i;
-	
-	fclose (baskfile);
-}
-
-/*
-	Function: bask_write (bask_core* tcore, struct bask_task** first);
-	Description: Writes all tasks to the baskfile.
-	InitVersion: 0.0.1
-*/
-int bask_write (bask_core* tcore, struct bask_task** first)
-{
-	FILE* baskfile;
-	struct bask_task* ptr = *first;
-	
-	baskfile = fopen (tcore->path_baskbin, "w");
-
-	if (baskfile == NULL)
-	{
-		errors_filenotopened (tcore->path_baskbin);
-		/* Note: At this point, were already have data in the linked list.
-			 So we must use this to free the allocated memory. */
-		return -1;
-	}
-	
-	fprintf (baskfile, "BASKBIN\n");
-	fprintf (baskfile, "bbuid=%i;\n", tcore->baskbin_uid);
-	fprintf (baskfile, "BBEND\n");
-	
-	while (ptr != NULL)
-	{
-		fprintf (baskfile, "tid=%i;\n", ptr->t_id);
-		fprintf (baskfile, "tactive=%i;\n", ptr->t_active);
-		fprintf (baskfile, "tstate=%i;\n", ptr->t_state);
-		fprintf (baskfile, "tpriority=%i;\n", ptr->t_priority);
-		fprintf (baskfile, "tfinished=%s;\n", ptr->t_finished);
-		fprintf (baskfile, "tproject=%s;\n", ptr->t_project);
-		fprintf (baskfile, "tdescription=%s;\n", ptr->t_description);
-		fprintf (baskfile, "END\n");
-		ptr = ptr->next;
-	}
-	
-	fclose (baskfile);
-	
-	return 0;
 }
 
 /*
@@ -529,7 +441,7 @@ int main (int argc, char* argv[])
 		{
 			if (strncmp (argv[optind+1], "csv", strlen ("csv")) == 0)
 			{
-				import_csv (&tcore, &first, argv[optind+2]);
+				import_csv_cmd (&tcore, &first, argv[optind+2]);
 			}
 			else
 			{
