@@ -216,8 +216,8 @@ static void print_help (void)
 	printf ("\tstop [id]\t\t\t\tDeactivates (hide) the task.\n");
 	
 	printf ("\tsearch <VIEW> [SEARCHTAG]\t\tSearches through the tasks and optional uses <VIEW> to show the results.\n");
-	printf ("\texport <EXPORT> [FILENAME]\t\tExports the data from baskbin to an file with the format <EXPORT> or csv.\n");
-	printf ("\timport <IMPORT> [FILENAME]\t\tImports the data from an file with the format <EXPORT> or csv to the baskbin.\n");
+	printf ("\texport <EXPORT> [FILENAME]\t\tExports the data from baskbin to an file with the format <EXPORT> or baskbin.\n");
+	printf ("\timport <IMPORT> [FILENAME]\t\tImports the data from an file with the format <EXPORT> or baskbin to the baskbin.\n");
 	
 	printf ("\nARGUMENTS\n");
 	printf ("\t-a [active]\t\tIf the task is active.\n");
