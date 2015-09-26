@@ -206,7 +206,7 @@ static void print_help (void)
 	printf ("\tremove [id]\t\t\t\tRemoves the task with id [id].\n");
 	
 	printf ("\tshow [id]\t\t\t\tShows informations about a single task.\n");
-	printf ("\tmod [id] ARGS\t\t\t\tModifies all tasks!\n");
+	printf ("\tmod [id] ARGS\t\t\t\tModifies a task!\n");
 	printf ("\tfinish [id]\t\t\t\tSet the task to finished.\n");
 	printf ("\tstop [id]\t\t\t\tDeactivates (hide) the task.\n");
 	
@@ -220,6 +220,7 @@ static void print_help (void)
 	printf ("\t-p [priority]\t\tThe priority of the task.\n");
 	printf ("\t-P [PROJECT]\t\tThe projectname of the task.\n");
 	printf ("\t-D [DESCRIPTION]\tThe description of the task.\n");
+	printf ("\t-F [FINISHED]\t\tThe finished date of the task.\n");
 	
 	printf ("\nVIEWS\n");
 	printf ("\ttasklist\t\tThe default view, a list of tasks.\n");
@@ -255,13 +256,14 @@ static void usage (void)
 int main (int argc, char* argv[])
 {
 	int optc, ppri, pact, pstate;
-	char pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
+	char pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
 	struct bask_task* first = NULL;
 	
 	ppri = pact = pstate = -1;
 	
+	strcpy (pfinished, "");
 	strcpy (pproject, "");
 	strcpy (pdescription, "");
 	
@@ -279,20 +281,34 @@ int main (int argc, char* argv[])
 	bask_get_baskpath (&tcore, tcore.path_basktheme, BASKTHEMEFILE);
 	bask_get_baskpath (&tcore, tcore.path_baskbin, BASKBINFILE);
 	
+	/* NOTE: These are cmd's that don't need the tasks data, so it wont be loaded. */
 	if (argc == 2)
 	{
-		if (strncmp (argv[optind], "init", strlen ("init")) == 0)
+		if (strncmp (argv[optind], "help", strlen ("help")) == 0)
+		{
+			print_help ();
+		}
+		else if (strncmp (argv[optind], "about", strlen ("about")) == 0)
+		{
+			print_about ();
+		}
+		else if (strncmp (argv[optind], "init", strlen ("init")) == 0)
 		{
 			bask_init_local (&tcore);
-			exit (EXIT_SUCCESS);
 		}
+		else
+		{
+			usage ();
+		}
+		
+		exit (EXIT_SUCCESS);
 	}
 	
 	bask_load_conf (&tcore);
 	view_theme_load (&tcore, &btheme);
 	bask_init (&tcore, &first);
 	
-	while ((optc = getopt (argc, argv, "p:P:a:D:s:")) != -1)
+	while ((optc = getopt (argc, argv, "p:P:a:D:s:F:")) != -1)
 	{
 		switch (optc)
 		{
@@ -317,6 +333,12 @@ int main (int argc, char* argv[])
 			case 's':
 				pstate = atoi (optarg);
 				break;
+			case 'F':
+				if (strlen (optarg) < sizeof (pfinished))
+				{
+					strcpy (pfinished, optarg);
+				}
+				break;
 			default:
 				break;
 		}
@@ -332,7 +354,7 @@ int main (int argc, char* argv[])
 		{
 			if (strncmp (argv[optind], "mod", strlen ("mod")) == 0)
 			{
-				task_modify (&tcore, &first, atoi (argv[optind+1]), pact, pstate, ppri, pproject, pdescription);
+				task_modify (&tcore, &first, atoi (argv[optind+1]), pact, pstate, ppri, pfinished, pproject, pdescription);
 			}
 			else
 			{
@@ -346,15 +368,7 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 2)
 	{
-		if (strncmp (argv[optind], "help", strlen ("help")) == 0)
-		{
-			print_help ();
-		}
-		else if (strncmp (argv[optind], "about", strlen ("about")) == 0)
-		{
-			print_about ();
-		}
-		else if (strncmp (argv[optind], "list", strlen ("list")) == 0)
+		if (strncmp (argv[optind], "list", strlen ("list")) == 0)
 		{
 			view_tasklist (&tcore, &btheme, &first);
 		}

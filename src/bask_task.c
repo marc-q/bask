@@ -234,13 +234,13 @@ int task_modificate (bask_core* tcore, struct bask_task** first, int id, int act
 }
 
 /*
-	Function: task_modify (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* project, char* description);
+	Function: task_modify (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* finished, char* project, char* description);
 	Description: Modifies a task!
 	InitVersion: 0.0.1
 */
-void task_modify (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* project, char* description)
+void task_modify (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* finished, char* project, char* description)
 {
-	task_modificate (tcore, first, id, active, state, priority, "", project, description);
+	task_modificate (tcore, first, id, active, state, priority, finished, project, description);
 	printf ("Modificated task %i.\n", id);
 }
 

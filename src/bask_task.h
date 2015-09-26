@@ -20,7 +20,7 @@ void task_create (bask_core*, struct bask_task**, int, char*, char*);
 int task_remove (bask_core*, struct bask_task**, int);
 int task_modificate (bask_core*, struct bask_task**, int, int, int, int, char*, char*, char*);
 void task_deactivate (bask_core*, struct bask_task**, int);
-void task_modify (bask_core*, struct bask_task**, int, int, int, int, char*, char*);
+void task_modify (bask_core*, struct bask_task**, int, int, int, int, char*, char*, char*);
 int task_finish (bask_core* tcore, struct bask_task**, int); 
 int task_search (bask_core*, struct bask_task**, struct bask_task**, char*);
 
