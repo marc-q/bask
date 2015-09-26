@@ -137,7 +137,7 @@ static void bask_load_conf (bask_core* tcore)
 	{
 		token = strtok_r (line, BASKSEP, &saveptr);
 		
-		parser_get_str (token, "baskbin", baskbin, 150, saveptr);
+		parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), saveptr);
 	}
 	
 	if (strncmp (baskbin, "default", strlen(baskbin)) != 0)
@@ -150,7 +150,7 @@ static void bask_load_conf (bask_core* tcore)
 
 /*
 	Function: bask_init (bask_core* tcore, struct bask_task** first);
-	Description: Inits Bask and loads the tasks from filename.
+	Description: Inits Bask and loads the tasks from the baskbin.
 	InitVersion: 0.0.1
 */
 static void bask_init (bask_core* tcore, struct bask_task** first)
@@ -206,7 +206,7 @@ static void print_help (void)
 	printf ("\tremove [id]\t\t\t\tRemoves the task with id [id].\n");
 	
 	printf ("\tshow [id]\t\t\t\tShows informations about a single task.\n");
-	printf ("\tmod [id] ARGS\t\t\t\tModifies a task!\n");
+	printf ("\tmod [id] ARGS\t\t\t\tModifies a task.\n");
 	printf ("\tfinish [id]\t\t\t\tSet the task to finished.\n");
 	printf ("\tstop [id]\t\t\t\tDeactivates (hide) the task.\n");
 	
