@@ -231,10 +231,12 @@ static void print_help (void)
 	printf ("\tsummary\t\t\tA summary of projects.\n");
 	
 	printf ("\nEXPORTS\n");
-	printf ("\tcsv\t\t\tExports to an csv file. (default)\n");
+	printf ("\tbaskbin\t\t\tExports to an baskbin file. (default)\n");
+	printf ("\tcsv\t\t\tExports to an csv file.\n");
 	
 	printf ("\nIMPORTS\n");
-	printf ("\tcsv\t\t\tImports from an csv file. (default)\n");
+	printf ("\tbaskbin\t\t\tImports from an baskbin file. (default)\n");
+	printf ("\tcsv\t\t\tImports from an csv file.\n");
 	
 	printf ("\nPRIORITYS\n");
 	printf ("\t0\tL\tNormal\n");
@@ -394,11 +396,11 @@ int main (int argc, char* argv[])
 		}
 		else if (strncmp (argv[optind], "export", strlen ("export")) == 0)
 		{
-			export_csv (&tcore, &first, argv[optind+1]);
+			export_baskbin (&tcore, &first, argv[optind+1]);
 		}
 		else if (strncmp (argv[optind], "import", strlen ("import")) == 0)
 		{
-			import_csv (&tcore, &first, argv[optind+1]);
+			import_baskbin_cmd (&tcore, &first, argv[optind+1]);
 		}
 		else
 		{
@@ -424,13 +426,17 @@ int main (int argc, char* argv[])
 		}
 		else if (strncmp (argv[optind], "export", strlen ("export")) == 0)
 		{
-			if (strncmp (argv[optind+1], "web", strlen ("web")) == 0)
+			if (strncmp (argv[optind+1], "baskbin", strlen ("baskbin")) == 0)
 			{
-				export_web (&tcore, &first, argv[optind+2]);
+				export_baskbin (&tcore, &first, argv[optind+2]);
 			}
 			else if (strncmp (argv[optind+1], "csv", strlen ("csv")) == 0)
 			{
 				export_csv (&tcore, &first, argv[optind+2]);
+			}
+			else if (strncmp (argv[optind+1], "web", strlen ("web")) == 0)
+			{
+				export_web (&tcore, &first, argv[optind+2]);
 			}
 			else
 			{
@@ -439,7 +445,11 @@ int main (int argc, char* argv[])
 		}
 		else if (strncmp (argv[optind], "import", strlen ("import")) == 0)
 		{
-			if (strncmp (argv[optind+1], "csv", strlen ("csv")) == 0)
+			if (strncmp (argv[optind+1], "baskbin", strlen ("baskbin")) == 0)
+			{
+				import_baskbin_cmd (&tcore, &first, argv[optind+2]);
+			}
+			else if (strncmp (argv[optind+1], "csv", strlen ("csv")) == 0)
 			{
 				import_csv_cmd (&tcore, &first, argv[optind+2]);
 			}

@@ -9,7 +9,7 @@
 
 /*
 	Function: import_baskbin (bask_core* tcore, struct bask_task** first, char* filename);
-	Description: Imports the tasks from a baskbin formatet file.
+	Description: Imports the tasks from a baskbin formated file.
 	InitVersion: 0.0.1
 */
 int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
