@@ -287,21 +287,18 @@ int main (int argc, char* argv[])
 		if (strncmp (argv[optind], "help", strlen ("help")) == 0)
 		{
 			print_help ();
+			exit (EXIT_SUCCESS);
 		}
 		else if (strncmp (argv[optind], "about", strlen ("about")) == 0)
 		{
 			print_about ();
+			exit (EXIT_SUCCESS);
 		}
 		else if (strncmp (argv[optind], "init", strlen ("init")) == 0)
 		{
 			bask_init_local (&tcore);
+			exit (EXIT_SUCCESS);
 		}
-		else
-		{
-			usage ();
-		}
-		
-		exit (EXIT_SUCCESS);
 	}
 	
 	bask_load_conf (&tcore);
