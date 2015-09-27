@@ -83,9 +83,11 @@ void view_single (bask_core* tcore, struct bask_task** first, int id)
 */
 void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** first)
 {
-	int ppercent, premaining;
+	int i, ppercent, premaining;
 	struct bask_project* tprojects = NULL, *pptr;
 	struct bask_task* ptr = *first;
+	
+	i = ppercent = premaining = 0;
 	
 	view_tbl_print_title ("Project", 15, 1);
 	view_tbl_print_title ("Remaining", 0, 1);
@@ -123,7 +125,18 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 			view_misc_print_progress (100.0*(pptr->p_complete/pptr->p_tasks), btheme->color_pbarbak);
 		}
 		
+		i++;
+		
 		pptr = pptr->next;
+	}
+	
+	if (i == 1)
+	{
+		printf ("\n%i project\n", i);
+	}
+	else
+	{
+		printf ("\n%i projects\n", i);
 	}
 	
 	project_free_ll (&tprojects);
