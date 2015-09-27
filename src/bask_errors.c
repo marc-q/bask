@@ -32,7 +32,7 @@ static void errors_print_useinit (void)
 */
 void errors_filenotfound (char* filename)
 {
-	printf ("ERROR: File %s not found.\n", filename);
+	printf ("ERROR: File %s not found!\n", filename);
 	errors_print_useinit ();
 }
 
@@ -43,7 +43,7 @@ void errors_filenotfound (char* filename)
 */
 void errors_filenotopened (char* filename)
 {
-	printf ("ERROR: File %s could'nt be opened.\n", filename);
+	printf ("ERROR: File %s could'nt be opened!\n", filename);
 	errors_print_useinit ();
 }
 
@@ -54,7 +54,7 @@ void errors_filenotopened (char* filename)
 */
 void errors_filenotwritten (char* filename)
 {
-	printf ("ERROR: File %s could'nt be written.\n", filename);
+	printf ("ERROR: File %s could'nt be written!\n", filename);
 	errors_print_useinit ();
 }
 
