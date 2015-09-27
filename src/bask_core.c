@@ -83,3 +83,13 @@ int utils_time_get_str (char* out, size_t outsize)
 	
 	return 0;
 }
+
+/*
+	Function: utils_streq (char* one, char* two);
+	Description: Check's if two strings are equal ignoring the length of them.
+	InitVersion: 0.0.1
+*/
+int utils_streq (char* one, char* two)
+{
+	return strncmp (one, two, BIGGEST (strlen (one), strlen (two)));
+}

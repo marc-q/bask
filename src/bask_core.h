@@ -13,6 +13,8 @@
 #define T_S_PROJECT 51
 #define T_S_DESCRIPTION 201
 
+#define BIGGEST(a,b) ((a>b) ? (a) : (b))
+
 struct _bask_core
 {
 	int tc_amount;
@@ -28,5 +30,6 @@ typedef struct _bask_core bask_core;
 int parser_get_str (char*, char*, char*, size_t, char*);
 int parser_get_int (char*, char*, int*, char*);
 int utils_time_get_str (char*, size_t);
+int utils_streq (char*, char*);
 
 #endif /* __BASK_CORE_H__ */

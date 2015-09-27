@@ -286,17 +286,17 @@ int main (int argc, char* argv[])
 	/* NOTE: These are cmd's that don't need the tasks data, so it wont be loaded. */
 	if (argc == 2)
 	{
-		if (strncmp (argv[optind], "help", strlen ("help")) == 0)
+		if (utils_streq (argv[optind], "help") == 0)
 		{
 			print_help ();
 			exit (EXIT_SUCCESS);
 		}
-		else if (strncmp (argv[optind], "about", strlen ("about")) == 0)
+		else if (utils_streq (argv[optind], "about") == 0)
 		{
 			print_about ();
 			exit (EXIT_SUCCESS);
 		}
-		else if (strncmp (argv[optind], "init", strlen ("init")) == 0)
+		else if (utils_streq (argv[optind], "init") == 0)
 		{
 			bask_init_local (&tcore);
 			exit (EXIT_SUCCESS);
@@ -357,7 +357,7 @@ int main (int argc, char* argv[])
 	{
 		if (argc-optind == 2)
 		{
-			if (strncmp (argv[optind], "mod", strlen ("mod")) == 0)
+			if (utils_streq (argv[optind], "mod") == 0)
 			{
 				task_modify (&tcore, &first, atoi (argv[optind+1]), pact, pstate, ppri, padded, pfinished, pproject, pdescription);
 			}
@@ -373,11 +373,11 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 2)
 	{
-		if (strncmp (argv[optind], "list", strlen ("list")) == 0)
+		if (utils_streq (argv[optind], "list") == 0)
 		{
 			view_tasklist (&tcore, &btheme, &first);
 		}
-		else if (strncmp (argv[optind], "summary", strlen ("summary")) == 0)
+		else if (utils_streq (argv[optind], "summary") == 0)
 		{
 			view_summary (&tcore, &btheme, &first);
 		}
@@ -388,31 +388,31 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 3)
 	{
-		if (strncmp (argv[optind], "finish", strlen ("finish")) == 0)
+		if (utils_streq (argv[optind], "finish") == 0)
 		{
 			task_finish (&tcore, &first, atoi (argv[optind+1]));
 		}
-		else if (strncmp (argv[optind], "remove", strlen ("remove")) == 0)
+		else if (utils_streq (argv[optind], "remove") == 0)
 		{
 			task_remove_cmd (&tcore, &first, atoi (argv[optind+1]));
 		}
-		else if (strncmp (argv[optind], "search", strlen ("search")) == 0)
+		else if (utils_streq (argv[optind], "search") == 0)
 		{
 			search_view (&tcore, &btheme, &first, argv[optind+1], BVIEW_TASKLIST);
 		}
-		else if (strncmp (argv[optind], "stop", strlen ("stop")) == 0)
+		else if (utils_streq (argv[optind], "stop") == 0)
 		{
 			task_deactivate (&tcore, &first, atoi (argv[optind+1]));
 		}
-		else if (strncmp (argv[optind], "show", strlen ("show")) == 0)
+		else if (utils_streq (argv[optind], "show") == 0)
 		{
 			view_single (&tcore, &first, atoi (argv[optind+1]));
 		}
-		else if (strncmp (argv[optind], "export", strlen ("export")) == 0)
+		else if (utils_streq (argv[optind], "export") == 0)
 		{
 			export_baskbin (&tcore, &first, argv[optind+1]);
 		}
-		else if (strncmp (argv[optind], "import", strlen ("import")) == 0)
+		else if (utils_streq (argv[optind], "import") == 0)
 		{
 			import_baskbin_cmd (&tcore, &first, argv[optind+1]);
 		}
@@ -423,13 +423,13 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 4)
 	{
-		if (strncmp (argv[optind], "search", strlen ("search")) == 0)
+		if (utils_streq (argv[optind], "search") == 0)
 		{
-			if (strncmp (argv[optind+1], "tasklist", strlen ("tasklist")) == 0)
+			if (utils_streq (argv[optind+1], "tasklist") == 0)
 			{
 				search_view (&tcore, &btheme, &first, argv[optind+2], BVIEW_TASKLIST);
 			}
-			else if (strncmp (argv[optind+1], "summary", strlen ("summary")) == 0)
+			else if (utils_streq (argv[optind+1], "summary") == 0)
 			{
 				search_view (&tcore, &btheme, &first, argv[optind+2], BVIEW_SUMMARY);
 			}
@@ -438,17 +438,17 @@ int main (int argc, char* argv[])
 				usage ();
 			}
 		}
-		else if (strncmp (argv[optind], "export", strlen ("export")) == 0)
+		else if (utils_streq (argv[optind], "export") == 0)
 		{
-			if (strncmp (argv[optind+1], "baskbin", strlen ("baskbin")) == 0)
+			if (utils_streq (argv[optind+1], "baskbin") == 0)
 			{
 				export_baskbin (&tcore, &first, argv[optind+2]);
 			}
-			else if (strncmp (argv[optind+1], "csv", strlen ("csv")) == 0)
+			else if (utils_streq (argv[optind+1], "csv") == 0)
 			{
 				export_csv (&tcore, &first, argv[optind+2]);
 			}
-			else if (strncmp (argv[optind+1], "web", strlen ("web")) == 0)
+			else if (utils_streq (argv[optind+1], "web") == 0)
 			{
 				export_web (&tcore, &first, argv[optind+2]);
 			}
@@ -457,13 +457,13 @@ int main (int argc, char* argv[])
 				usage ();
 			}
 		}
-		else if (strncmp (argv[optind], "import", strlen ("import")) == 0)
+		else if (utils_streq (argv[optind], "import") == 0)
 		{
-			if (strncmp (argv[optind+1], "baskbin", strlen ("baskbin")) == 0)
+			if (utils_streq (argv[optind+1], "baskbin") == 0)
 			{
 				import_baskbin_cmd (&tcore, &first, argv[optind+2]);
 			}
-			else if (strncmp (argv[optind+1], "csv", strlen ("csv")) == 0)
+			else if (utils_streq (argv[optind+1], "csv") == 0)
 			{
 				import_csv_cmd (&tcore, &first, argv[optind+2]);
 			}
@@ -479,7 +479,7 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 5)
 	{	
-		if (strncmp (argv[optind], "add", strlen ("add")) == 0)
+		if (utils_streq (argv[optind], "add") == 0)
 		{
 			task_create (&tcore, &first, atoi (argv[optind+1]), argv[optind+2], argv[optind+3]);
 		}
