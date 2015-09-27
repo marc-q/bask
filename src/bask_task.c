@@ -186,11 +186,11 @@ void task_remove_cmd (bask_core* tcore, struct bask_task** first, int id)
 }
 
 /*
-	Function: task_modificate (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* finished, char* project, char* description);
+	Function: task_modificate (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description);
 	Description: Modificates a task!
 	InitVersion: 0.0.1
 */
-int task_modificate (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* finished, char* project, char* description)
+int task_modificate (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
 {
 	struct bask_task* ptr = *first;
 	
@@ -216,6 +216,14 @@ int task_modificate (bask_core* tcore, struct bask_task** first, int id, int act
 			if (priority >= 0)
 			{
 				ptr->t_priority = priority;
+			}
+			
+			if (added != NULL)
+			{
+				if (strlen (added) < T_S_ADDED && strcmp (added, "") != 0 )
+				{
+					strcpy (ptr->t_added, added);
+				}
 			}
 			
 			if (finished != NULL)
@@ -253,13 +261,13 @@ int task_modificate (bask_core* tcore, struct bask_task** first, int id, int act
 }
 
 /*
-	Function: task_modify (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* finished, char* project, char* description);
+	Function: task_modify (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description);
 	Description: Modifies a task!
 	InitVersion: 0.0.1
 */
-void task_modify (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* finished, char* project, char* description)
+void task_modify (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
 {
-	task_modificate (tcore, first, id, active, state, priority, finished, project, description);
+	task_modificate (tcore, first, id, active, state, priority, added, finished, project, description);
 	printf ("Modificated task %i.\n", id);
 }
 
@@ -270,7 +278,7 @@ void task_modify (bask_core* tcore, struct bask_task** first, int id, int active
 */
 void task_deactivate (bask_core* tcore, struct bask_task** first, int id)
 {	
-	task_modificate (tcore, first, id, 0, -1, -1, "", "", "");
+	task_modificate (tcore, first, id, 0, -1, -1, "", "", "", "");
 	printf ("Deactivated task %i.\n", id);
 }
 
@@ -288,7 +296,7 @@ int task_finish (bask_core* tcore, struct bask_task** first, int id)
 		return -1;
 	}
 	
-	task_modificate (tcore, first, id, -1, 1, -1, finished, "", "");
+	task_modificate (tcore, first, id, -1, 1, -1, "", finished, "", "");
 	printf ("Finished task %i.\n", id);
 	
 	return 0;

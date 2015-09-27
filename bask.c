@@ -221,6 +221,7 @@ static void print_help (void)
 	printf ("\t-P [PROJECT]\t\tThe projectname of the task.\n");
 	printf ("\t-D [DESCRIPTION]\tThe description of the task.\n");
 	printf ("\t-F [FINISHED]\t\tThe finished date of the task.\n");
+	printf ("\t-A [ADDED]\t\tThe added date of the task.\n");
 	
 	printf ("\nVIEWS\n");
 	printf ("\ttasklist\t\tThe default view, a list of tasks.\n");
@@ -256,13 +257,14 @@ static void usage (void)
 int main (int argc, char* argv[])
 {
 	int optc, ppri, pact, pstate;
-	char pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
+	char padded[T_S_ADDED], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
 	struct bask_task* first = NULL;
 	
 	ppri = pact = pstate = -1;
 	
+	strcpy (padded, "");
 	strcpy (pfinished, "");
 	strcpy (pproject, "");
 	strcpy (pdescription, "");
@@ -305,7 +307,7 @@ int main (int argc, char* argv[])
 	view_theme_load (&tcore, &btheme);
 	bask_init (&tcore, &first);
 	
-	while ((optc = getopt (argc, argv, "p:P:a:D:s:F:")) != -1)
+	while ((optc = getopt (argc, argv, "p:P:a:D:s:F:A:")) != -1)
 	{
 		switch (optc)
 		{
@@ -336,6 +338,12 @@ int main (int argc, char* argv[])
 					strcpy (pfinished, optarg);
 				}
 				break;
+			case 'A':
+				if (strlen (optarg) < sizeof (padded))
+				{
+					strcpy (padded, optarg);
+				}
+				break;
 			default:
 				break;
 		}
@@ -351,7 +359,7 @@ int main (int argc, char* argv[])
 		{
 			if (strncmp (argv[optind], "mod", strlen ("mod")) == 0)
 			{
-				task_modify (&tcore, &first, atoi (argv[optind+1]), pact, pstate, ppri, pfinished, pproject, pdescription);
+				task_modify (&tcore, &first, atoi (argv[optind+1]), pact, pstate, ppri, padded, pfinished, pproject, pdescription);
 			}
 			else
 			{
