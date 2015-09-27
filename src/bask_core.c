@@ -15,7 +15,7 @@
 */
 int parser_get_str (char* token, char* key, char* out, size_t outsize, char* saveptr)
 {
-	if (strncmp (token, key, strlen (token)) == 0)
+	if (utils_streq (token, key) == 0)
 	{
 		token = strtok_r (NULL, BASKSEP, &saveptr);
 
@@ -39,7 +39,7 @@ int parser_get_str (char* token, char* key, char* out, size_t outsize, char* sav
 */
 int parser_get_int (char* token, char* key, int* out, char* saveptr)
 {
-	if (strncmp (token, key, strlen (token)) == 0)
+	if (utils_streq (token, key) == 0)
 	{
 		token = strtok_r (NULL, BASKSEP, &saveptr);
 
