@@ -8,6 +8,7 @@ struct bask_task
 	int t_id;
 	int t_priority;
 	int t_state;
+	char t_added[T_S_ADDED];
 	char t_finished[T_S_FINISHED];
 	char t_project[T_S_PROJECT];
 	char t_description[T_S_DESCRIPTION];
@@ -15,9 +16,10 @@ struct bask_task
 };
 
 void task_free_ll (struct bask_task**);
-int task_insert (struct bask_task**, int, int, int, int, int, char*, char*, char*);
-void task_create (bask_core*, struct bask_task**, int, char*, char*);
+int task_insert (struct bask_task**, int, int, int, int, int, char*, char*, char*, char*);
+int task_create (bask_core*, struct bask_task**, int, char*, char*);
 int task_remove (bask_core*, struct bask_task**, int);
+void task_remove_cmd (bask_core*, struct bask_task**, int);
 int task_modificate (bask_core*, struct bask_task**, int, int, int, int, char*, char*, char*);
 void task_deactivate (bask_core*, struct bask_task**, int);
 void task_modify (bask_core*, struct bask_task**, int, int, int, int, char*, char*, char*);

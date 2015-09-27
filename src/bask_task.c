@@ -36,11 +36,11 @@ static int task_upgrade (struct bask_task* task)
 
 
 /*
-	Function: task_insert (struct bask_task** first, int n, int tid, int tactive, int tpriority, int tstate, char* tfinished, char* tproject, char* tdescription);
+	Function: task_insert (struct bask_task** first, int n, int tid, int tactive, int tpriority, int tstate, char* tadded, char* tfinished, char* tproject, char* tdescription);
 	Description: Inserts a new task with data.
 	InitVersion: 0.0.1
 */
-int task_insert (struct bask_task** first, int n, int tid, int tactive, int tpriority, int tstate, char* tfinished, char* tproject, char* tdescription)
+int task_insert (struct bask_task** first, int n, int tid, int tactive, int tpriority, int tstate, char* tadded, char* tfinished, char* tproject, char* tdescription)
 {
 	struct bask_task *newobj = malloc (sizeof (struct bask_task)), *preobj;
 	
@@ -56,11 +56,12 @@ int task_insert (struct bask_task** first, int n, int tid, int tactive, int tpri
 	newobj->t_state = tstate;
 	newobj->next = NULL;
 	
-	if (strlen (tfinished) >= T_S_FINISHED || strlen (tproject) >= T_S_PROJECT || strlen (tdescription) >= T_S_DESCRIPTION)
+	if (strlen (tadded) >= T_S_ADDED || strlen (tfinished) >= T_S_FINISHED || strlen (tproject) >= T_S_PROJECT || strlen (tdescription) >= T_S_DESCRIPTION)
 	{
 		return -1;
 	}
 
+	strcpy (newobj->t_added, tadded);
 	strcpy (newobj->t_finished, tfinished);
 	strcpy (newobj->t_project, tproject);
 	strcpy (newobj->t_description, tdescription);
@@ -106,16 +107,25 @@ int task_insert (struct bask_task** first, int n, int tid, int tactive, int tpri
 	Description: Creates a task!
 	InitVersion: 0.0.1
 */
-void task_create (bask_core* tcore, struct bask_task** first, int priority, char* project, char* description)
+int task_create (bask_core* tcore, struct bask_task** first, int priority, char* project, char* description)
 {	
+	char added[T_S_ADDED];
+
+	if (utils_time_get_str (added, sizeof (added)) != 0)
+	{
+		return -1;
+	}
+	
 	tcore->tc_amount++;
 	tcore->baskbin_uid++;
 	
-	task_insert (first, tcore->tc_amount-1, tcore->baskbin_uid, 1, priority, 0, " ", project, description);
+	task_insert (first, tcore->tc_amount-1, tcore->baskbin_uid, 1, priority, 0, added, " ", project, description);
 	
 	printf ("Created task %i.\n", tcore->baskbin_uid);
 	
 	export_baskbin (tcore, first, tcore->path_baskbin);
+	
+	return 0;
 }
 
 /*
@@ -161,9 +171,18 @@ int task_remove (bask_core* tcore, struct bask_task** first, int id)
 		}
 	}
 	
-	export_baskbin (tcore, first, tcore->path_baskbin);
-	
 	return 0;
+}
+
+/*
+	Function: task_remove_cmd (bask_core* tcore, struct bask_task** first, int id);
+	Description: Cmd handle for removing a task!
+	InitVersion: 0.0.1
+*/
+void task_remove_cmd (bask_core* tcore, struct bask_task** first, int id)
+{
+	task_remove (tcore, first, id);
+	export_baskbin (tcore, first, tcore->path_baskbin);
 }
 
 /*
@@ -294,17 +313,15 @@ int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** 
 	{
 		if (strstr (ptr->t_finished, searchtag) != NULL)
 		{
-			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_finished, ptr->t_project, ptr->t_description);
+			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
-		
-		if (strstr (ptr->t_project, searchtag) != NULL)
+		else if (strstr (ptr->t_project, searchtag) != NULL)
 		{
-			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_finished, ptr->t_project, ptr->t_description);
+			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
-		
-		if (strstr (ptr->t_description, searchtag) != NULL)
+		else if (strstr (ptr->t_description, searchtag) != NULL)
 		{
-			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_finished, ptr->t_project, ptr->t_description);
+			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
 		
 		i++;

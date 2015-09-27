@@ -386,7 +386,7 @@ int main (int argc, char* argv[])
 		}
 		else if (strncmp (argv[optind], "remove", strlen ("remove")) == 0)
 		{
-			task_remove (&tcore, &first, atoi (argv[optind+1]));
+			task_remove_cmd (&tcore, &first, atoi (argv[optind+1]));
 		}
 		else if (strncmp (argv[optind], "search", strlen ("search")) == 0)
 		{

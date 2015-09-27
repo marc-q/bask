@@ -8,6 +8,7 @@
 #define BASKBINFILE "baskbin.txt"
 #define BASKCONFFILE "bask.txt"
 #define BASKTHEMEFILE "basktheme.txt"
+#define T_S_ADDED 51
 #define T_S_FINISHED 51
 #define T_S_PROJECT 51
 #define T_S_DESCRIPTION 201
