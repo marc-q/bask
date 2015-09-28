@@ -75,7 +75,7 @@ int utils_time_get_str (char* out, size_t outsize)
 		return -1;
 	}
 	
-	if (strftime (out, outsize, "%H/%M/%S/%d/%m/%y", tmp) == 0)
+	if (strftime (out, outsize, "%H/%M/%S/%d/%m/%Y", tmp) == 0)
 	{
 		errors_timenotgot ();
 		return -2;

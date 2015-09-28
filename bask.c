@@ -230,6 +230,7 @@ static void print_help (void)
 	printf ("\nEXPORTS\n");
 	printf ("\tbaskbin\t\t\tExports to an baskbin file. (default)\n");
 	printf ("\tcsv\t\t\tExports to an csv file.\n");
+	printf ("\tical\t\t\tExports to an iCalendar file.\n");
 	
 	printf ("\nIMPORTS\n");
 	printf ("\tbaskbin\t\t\tImports from an baskbin file. (default)\n");
@@ -447,6 +448,10 @@ int main (int argc, char* argv[])
 			else if (utils_streq (argv[optind+1], "csv") == 0)
 			{
 				export_csv (&tcore, &first, argv[optind+2]);
+			}
+			else if (utils_streq (argv[optind+1], "ical") == 0)
+			{
+				export_ical (&tcore, &first, argv[optind+2]);
 			}
 			else if (utils_streq (argv[optind+1], "web") == 0)
 			{

@@ -82,6 +82,119 @@ int export_csv (bask_core* tcore, struct bask_task** first, char* filename)
 }
 
 /*
+	Function: export_ical_getdatestr (char* out, char* datestr);
+	Description: Converts an baskbin datestr to an ical datestr.
+	InitVersion: 0.0.1
+*/
+static int export_ical_getdatestr (char* out, char* datestr)
+{	
+	char idate[16];
+	
+	if (strlen (datestr) != 19)
+	{
+		return -1;
+	}
+	
+	idate[0] = datestr[15]; /* Year */
+	idate[1] = datestr[16];
+	idate[2] = datestr[17];
+	idate[3] = datestr[18];
+	idate[4] = datestr[12]; /* Month */
+	idate[5] = datestr[13];
+	idate[6] = datestr[9];  /* Day */
+	idate[7] = datestr[10];
+	idate[8] = 'T';
+	idate[9] = datestr[0];  /* Hour */
+	idate[10] = datestr[1];
+	idate[11] = datestr[3]; /* Minute */
+	idate[12] = datestr[4];
+	idate[13] = datestr[6]; /* Second */
+	idate[14] = datestr[7];
+	idate[15] = '\0';
+	
+	strcpy (out, idate);
+	
+	return 0;
+}
+
+/*
+	Function: export_ical_event (FILE* exportfile, struct bask_task* task);
+	Description: Exports a tasks with an vevent to an ical file.
+	InitVersion: 0.0.1
+*/
+static int export_ical_event (FILE* exportfile, struct bask_task* task)
+{
+	char tadded[16];
+	char tfinished[16];
+	
+	if (exportfile == NULL)
+	{
+		return -1;
+	}
+	
+	strcpy (tadded, "");
+	strcpy (tfinished, "");
+	
+	export_ical_getdatestr (tadded, task->t_added);
+	export_ical_getdatestr (tfinished, task->t_finished);
+	
+	if (strlen (tadded) == 0 && strlen (tfinished) == 0 || strlen (tadded) == 0)
+	{
+		return -2;
+	}
+	else if (strlen (tadded) != 0 && strlen (tfinished) == 0)
+	{
+		strcpy (tfinished, tadded);
+	}
+	
+	fprintf (exportfile, "BEGIN:VEVENT\n");
+	fprintf (exportfile, "DTSTART:%s\n", tadded);
+	fprintf (exportfile, "DTEND:%s\n", tfinished);
+	fprintf (exportfile, "DSTSTAMP:%s\n", tadded);
+	fprintf (exportfile, "CREATET:%s\n", tadded);
+	fprintf (exportfile, "DESCRIPTION:%s\n", task->t_description);
+	fprintf (exportfile, "LAST-MODIFIED:%s\n", tadded);
+	fprintf (exportfile, "SUMMARY:%s - %s\n", task->t_project, task->t_description);
+	fprintf (exportfile, "END:VEVENT\n");
+	
+	return 0;
+}
+
+/*
+	Function: export_ical (bask_core* tcore, struct bask_task** first, char* filename);
+	Description: Exports all tasks to an ical file named filename.
+	InitVersion: 0.0.1
+*/
+int export_ical (bask_core* tcore, struct bask_task** first, char* filename)
+{
+	FILE *exportfile;
+	struct bask_task* ptr = *first;
+	
+	exportfile = fopen (filename, "w");
+	
+	if (exportfile == NULL)
+	{
+		errors_filenotwritten (filename);
+		return -1;
+	}
+	
+	fprintf (exportfile, "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Bask//NONSGML Baskbin//EN\n");
+	
+	while (ptr != NULL)
+	{
+		export_ical_event (exportfile, ptr);
+		
+		ptr = ptr->next;
+	}
+	
+	fprintf (exportfile, "END:VCALENDAR");
+	
+	fclose (exportfile);
+	
+	return 0;
+}
+
+/*
 	Function: export_web_strrpl (char* str);
 	Description: Replaces incompatible char for the web export.
 	InitVersion: 0.0.1
