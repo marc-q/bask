@@ -141,7 +141,7 @@ static void bask_load_conf (bask_core* tcore)
 		parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), BASKSEP, saveptr);
 	}
 	
-	if (strncmp (baskbin, "default", strlen(baskbin)) != 0)
+	if (utils_streq (baskbin, "default") != 0)
 	{
 		strcpy (tcore->path_baskbin, baskbin);
 	}

@@ -265,13 +265,13 @@ static int import_ical_getdatestr (char* out, char* datestr)
 */
 int import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 {
-	int tid, tactive, tpriority, tstate;
+	int tstate;
 	char line[200], tadded[T_S_ADDED], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char tt_tmp[50];
 	char *token, *saveptr;
 	FILE* importfile;
 	
-	tid = tactive = tpriority = tstate = 0;
+	tstate = 0;
 	
 	strcpy (tt_tmp, " ");
 	strcpy (tadded, " ");
@@ -295,7 +295,8 @@ int import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 		{
 			if (utils_streq (tt_tmp, "VEVENT") == 0)
 			{
-				task_insert (first, tcore->tc_amount, tid, tactive, tpriority, tstate, tadded, tfinished, tproject, tdescription);
+				tcore->baskbin_uid++;
+				task_insert (first, tcore->baskbin_uid, tcore->baskbin_uid, 1, 0, tstate, tadded, tfinished, tproject, tdescription);
 				tcore->tc_amount++;
 			}
 		}
