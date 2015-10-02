@@ -104,7 +104,7 @@ static void view_theme_get_color (char* color)
 		{
 			strcat (color, BC_CYAN);
 		}
-		else if (strcat (precolor, "white") != NULL)
+		else if (strstr (precolor, "white") != NULL)
 		{
 			strcat (color, BC_WHITE);
 		}
@@ -137,6 +137,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 	if (basktheme == NULL)
 	{
 		errors_filenotopened (tcore->path_basktheme);
+		errors_useinit ();
 		exit (EXIT_FAILURE);
 	}
 	
@@ -144,18 +145,18 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 	{
 		token = strtok_r (line, BASKSEP, &saveptr);
 		
-		parser_get_str (token, "color_normal", colors[0], 10, saveptr);
-		parser_get_str (token, "color_important", colors[1], 10, saveptr);
-		parser_get_str (token, "color_today", colors[2], 10, saveptr);
-		parser_get_str (token, "color_critical", colors[3], 10, saveptr);
-		parser_get_str (token, "color_finished", colors[4], 10, saveptr);
-		parser_get_str (token, "color_pbarbak", colors[5], 10, saveptr);
-		parser_get_str (token, "color_seclinesbak", colors[6], 10, saveptr);
+		parser_get_str (token, "color_normal", colors[0], 10, BASKSEP, saveptr);
+		parser_get_str (token, "color_important", colors[1], 10, BASKSEP, saveptr);
+		parser_get_str (token, "color_today", colors[2], 10, BASKSEP, saveptr);
+		parser_get_str (token, "color_critical", colors[3], 10, BASKSEP, saveptr);
+		parser_get_str (token, "color_finished", colors[4], 10, BASKSEP, saveptr);
+		parser_get_str (token, "color_pbarbak", colors[5], 10, BASKSEP, saveptr);
+		parser_get_str (token, "color_seclinesbak", colors[6], 10, BASKSEP, saveptr);
 	}
 	
 	fclose (basktheme);
 	
-	if (strncmp (colors[0], "default", strlen(colors[0])) != 0)
+	if (utils_streq (colors[0], "default") != 0)
 	{
 		view_theme_get_color (colors[0]);
 		strcpy (btheme->color_normal, colors[0]);
@@ -165,7 +166,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 		strcpy (btheme->color_normal, BC_TXT_RST);
 	}
 	
-	if (strncmp (colors[1], "default", strlen(colors[1])) != 0)
+	if (utils_streq (colors[1], "default") != 0)
 	{
 		view_theme_get_color (colors[1]);
 		strcpy (btheme->color_important, colors[1]);
@@ -175,7 +176,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 		strcpy (btheme->color_important, BC_BLD_GREEN);
 	}
 	
-	if (strncmp (colors[2], "default", strlen(colors[2])) != 0)
+	if (utils_streq (colors[2], "default") != 0)
 	{
 		view_theme_get_color (colors[2]);
 		strcpy (btheme->color_today, colors[2]);
@@ -185,7 +186,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 		strcpy (btheme->color_today, BC_BLD_BLUE);
 	}
 	
-	if (strncmp (colors[3], "default", strlen(colors[3])) != 0)
+	if (utils_streq (colors[3], "default") != 0)
 	{
 		view_theme_get_color (colors[3]);
 		strcpy (btheme->color_critical, colors[3]);
@@ -195,7 +196,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 		strcpy (btheme->color_critical, BC_BLD_RED);
 	}
 	
-	if (strncmp (colors[4], "default", strlen(colors[4])) != 0)
+	if (utils_streq (colors[4], "default") != 0)
 	{
 		view_theme_get_color (colors[4]);
 		strcpy (btheme->color_finished, colors[4]);
@@ -205,7 +206,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 		strcpy (btheme->color_finished, BC_BLD_BLACK);
 	}
 	
-	if (strncmp (colors[5], "default", strlen(colors[5])) != 0)
+	if (utils_streq (colors[5], "default") != 0)
 	{
 		view_theme_get_color (colors[5]);
 		strcpy (btheme->color_pbarbak, colors[5]);
@@ -215,7 +216,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 		strcpy (btheme->color_pbarbak, BC_BAK_GREEN);
 	}
 	
-	if (strncmp (colors[6], "default", strlen(colors[6])) != 0)
+	if (utils_streq (colors[6], "default") != 0)
 	{
 		view_theme_get_color (colors[6]);
 		strcpy (btheme->color_seclinesbak, colors[6]);

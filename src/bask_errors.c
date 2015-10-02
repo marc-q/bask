@@ -15,11 +15,11 @@ static void errors_print_errormsg (char* errormsg)
 }
 
 /*
-	Function: errors_print_useinit (void);
+	Function: errors_useinit (void);
 	Description: Prints the use bask init message.
 	InitVersion: 0.0.1
 */
-static void errors_print_useinit (void)
+void errors_useinit (void)
 {
 	printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
 	printf ("Warning: Overides all data.\n");
@@ -33,7 +33,6 @@ static void errors_print_useinit (void)
 void errors_filenotfound (char* filename)
 {
 	printf ("ERROR: File %s not found!\n", filename);
-	errors_print_useinit ();
 }
 
 /*
@@ -44,7 +43,6 @@ void errors_filenotfound (char* filename)
 void errors_filenotopened (char* filename)
 {
 	printf ("ERROR: File %s could'nt be opened!\n", filename);
-	errors_print_useinit ();
 }
 
 /*
@@ -55,7 +53,6 @@ void errors_filenotopened (char* filename)
 void errors_filenotwritten (char* filename)
 {
 	printf ("ERROR: File %s could'nt be written!\n", filename);
-	errors_print_useinit ();
 }
 
 /*

@@ -108,7 +108,7 @@ static int bask_init_local (bask_core* tcore)
 	}
 
 	bask_init_local_file (tcore->path_baskconf, "baskbin=default;");
-	bask_init_local_file (tcore->path_baskbin, "");
+	bask_init_local_file (tcore->path_baskbin, "BASKBIN\nbbuid=0;\nBBEND");
 	bask_init_local_file (tcore->path_basktheme, "color_normal=default;\ncolor_important=default;\ncolor_today=default;\ncolor_critical=default;\ncolor_finished=default;\ncolor_pbarbak=default;\ncolor_seclinesbak=default;");
 	
 	return 0;
@@ -130,6 +130,7 @@ static void bask_load_conf (bask_core* tcore)
 	if (baskconf == NULL)
 	{
 		errors_filenotopened (tcore->path_baskconf);
+		errors_useinit ();
 		exit (EXIT_FAILURE);
 	}
 	
@@ -137,7 +138,7 @@ static void bask_load_conf (bask_core* tcore)
 	{
 		token = strtok_r (line, BASKSEP, &saveptr);
 		
-		parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), saveptr);
+		parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), BASKSEP, saveptr);
 	}
 	
 	if (strncmp (baskbin, "default", strlen(baskbin)) != 0)
@@ -157,8 +158,9 @@ static void bask_init (bask_core* tcore, struct bask_task** first)
 {
 	tcore->tc_amount = 0;
 	
-	if (import_baskbin (tcore, first, tcore->path_baskbin) != 0)
+	if (import_baskbin (tcore, first, tcore->path_baskbin) == -1)
 	{
+		errors_useinit ();
 		exit (EXIT_FAILURE);
 	}
 }
@@ -471,6 +473,10 @@ int main (int argc, char* argv[])
 			else if (utils_streq (argv[optind+1], "csv") == 0)
 			{
 				import_csv_cmd (&tcore, &first, argv[optind+2]);
+			}
+			else if (utils_streq (argv[optind+1], "ical") == 0)
+			{
+				import_ical_cmd (&tcore, &first, argv[optind+2]);
 			}
 			else
 			{

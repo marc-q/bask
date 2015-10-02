@@ -27,8 +27,8 @@ struct _bask_core
 
 typedef struct _bask_core bask_core;
 
-int parser_get_str (char*, char*, char*, size_t, char*);
-int parser_get_int (char*, char*, int*, char*);
+int parser_get_str (char*, char*, char*, size_t, char*, char*);
+int parser_get_int (char*, char*, int*, char*, char*);
 int utils_time_get_str (char*, size_t);
 int utils_streq (char*, char*);
 

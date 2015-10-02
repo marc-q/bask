@@ -68,7 +68,7 @@ int project_insert (struct bask_project** first, int t_active, int t_id, int t_s
 		
 		while (1)
 		{
-			if (strncmp (preobj->p_name, newobj->p_name, strlen (preobj->p_name)) == 0)
+			if (utils_streq (preobj->p_name, newobj->p_name) == 0)
 			{
 				if (t_state == 1)
 				{

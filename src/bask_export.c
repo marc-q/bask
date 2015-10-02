@@ -151,7 +151,7 @@ static int export_ical_event (FILE* exportfile, struct bask_task* task)
 	fprintf (exportfile, "DTSTART:%s\n", tadded);
 	fprintf (exportfile, "DTEND:%s\n", tfinished);
 	fprintf (exportfile, "DSTSTAMP:%s\n", tadded);
-	fprintf (exportfile, "CREATET:%s\n", tadded);
+	fprintf (exportfile, "CREATED:%s\n", tadded);
 	fprintf (exportfile, "DESCRIPTION:%s\n", task->t_description);
 	fprintf (exportfile, "LAST-MODIFIED:%s\n", tadded);
 	fprintf (exportfile, "SUMMARY:%s - %s\n", task->t_project, task->t_description);
