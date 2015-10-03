@@ -9,6 +9,10 @@
 #include "bask_ui.h"
 #include "bask_views.h"
 
+/* |--------------------------------------------|
+   |			Legend			|
+   |--------------------------------------------| */
+
 /*
 	Function: view_print_legend_tag (char* tagname, char* tagcolor, char* txtcolor);
 	Description: Prints a single tag labeld tagname with bg color tagcolor and txt color txtcolor.
@@ -34,6 +38,10 @@ void view_legend (bask_theme* btheme)
 	view_print_legend_tag ("Finished", btheme->color_finished, BC_TXT_WHITE);
 	printf ("\n");
 }
+
+/* |--------------------------------------------|
+   |		    ViewSingle			|
+   |--------------------------------------------| */
 
 /*
 	Function: view_print_single (struct bask_task* task);
@@ -75,6 +83,10 @@ void view_single (bask_core* tcore, struct bask_task** first, int id)
 		ptr = ptr->next;
 	}
 }
+
+/* |--------------------------------------------|
+   |		    ViewSummary			|
+   |--------------------------------------------| */
 
 /*
 	Function: view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** first);
@@ -141,6 +153,10 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 	
 	project_free_ll (&tprojects);
 }
+
+/* |--------------------------------------------|
+   |		   ViewTasklist			|
+   |--------------------------------------------| */
 
 /*
 	Function: view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first);
