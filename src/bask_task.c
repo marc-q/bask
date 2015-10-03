@@ -147,7 +147,6 @@ int task_remove (bask_core* tcore, struct bask_task** first, int id)
 	{
 		if (ptr->t_id == id)
 		{
-		
 			if (ptr == *first)
 			{
 				*first = ptr->next;

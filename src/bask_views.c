@@ -211,7 +211,6 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 			if (i%2 == 1)
 			{	
 				strcat (prefix, btheme->color_seclinesbak);
-			
 			}
 		
 			printf ("%s", prefix);
