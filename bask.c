@@ -362,7 +362,7 @@ int main (int argc, char* argv[])
 		{
 			if (utils_streq (argv[optind], "mod") == 0)
 			{
-				task_modify (&tcore, &first, atoi (argv[optind+1]), pact, pstate, ppri, padded, pfinished, pproject, pdescription);
+				task_modificate_cmd (&tcore, &first, atoi (argv[optind+1]), pact, pstate, ppri, padded, pfinished, pproject, pdescription);
 			}
 			else
 			{
@@ -393,7 +393,7 @@ int main (int argc, char* argv[])
 	{
 		if (utils_streq (argv[optind], "finish") == 0)
 		{
-			task_finish (&tcore, &first, atoi (argv[optind+1]));
+			task_finish_cmd (&tcore, &first, atoi (argv[optind+1]));
 		}
 		else if (utils_streq (argv[optind], "remove") == 0)
 		{
@@ -405,7 +405,7 @@ int main (int argc, char* argv[])
 		}
 		else if (utils_streq (argv[optind], "stop") == 0)
 		{
-			task_deactivate (&tcore, &first, atoi (argv[optind+1]));
+			task_deactivate_cmd (&tcore, &first, atoi (argv[optind+1]));
 		}
 		else if (utils_streq (argv[optind], "show") == 0)
 		{
@@ -492,7 +492,7 @@ int main (int argc, char* argv[])
 	{	
 		if (utils_streq (argv[optind], "add") == 0)
 		{
-			task_create (&tcore, &first, atoi (argv[optind+1]), argv[optind+2], argv[optind+3]);
+			task_create_cmd (&tcore, &first, atoi (argv[optind+1]), argv[optind+2], argv[optind+3]);
 		}
 		else
 		{

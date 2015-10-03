@@ -17,13 +17,19 @@ struct bask_task
 
 void task_free_ll (struct bask_task**);
 int task_insert (struct bask_task**, int, int, int, int, int, char*, char*, char*, char*);
-int task_create (bask_core*, struct bask_task**, int, char*, char*);
 int task_remove (bask_core*, struct bask_task**, int);
-void task_remove_cmd (bask_core*, struct bask_task**, int);
 int task_modificate (bask_core*, struct bask_task**, int, int, int, int, char*, char*, char*, char*);
+
+int task_create (bask_core*, struct bask_task**, int, char*, char*);
 void task_deactivate (bask_core*, struct bask_task**, int);
-void task_modify (bask_core*, struct bask_task**, int, int, int, int, char*, char*, char*, char*);
 int task_finish (bask_core* tcore, struct bask_task**, int); 
+
 int task_search (bask_core*, struct bask_task**, struct bask_task**, char*);
+
+void task_create_cmd (bask_core*, struct bask_task**, int, char*, char*);
+void task_remove_cmd (bask_core*, struct bask_task**, int);
+void task_modificate_cmd (bask_core*, struct bask_task**, int, int, int, int, char*, char*, char*, char*);
+void task_deactivate_cmd (bask_core*, struct bask_task**, int);
+void task_finish_cmd (bask_core* tcore, struct bask_task**, int); 
 
 #endif /* __BASK_TASK_H__ */
