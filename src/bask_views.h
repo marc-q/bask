@@ -4,7 +4,7 @@
 #define BVIEW_TASKLIST 0
 #define BVIEW_SUMMARY 1
 
-void view_print_legend_tag (char*, char*, char*);
+void view_print_legend_tag (char*, char*);
 void view_legend (bask_theme*);
 void view_print_single (struct bask_task*);
 void view_single (bask_core*, struct bask_task**, int);

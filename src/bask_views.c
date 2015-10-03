@@ -14,13 +14,13 @@
    |--------------------------------------------| */
 
 /*
-	Function: view_print_legend_tag (char* tagname, char* tagcolor, char* txtcolor);
-	Description: Prints a single tag labeld tagname with bg color tagcolor and txt color txtcolor.
+	Function: view_print_legend_tag (char* tagname, char* tagcolor);
+	Description: Prints a single tag labeld tagname with txt color tagcolor.
 	InitVersion: 0.0.1
 */
-void view_print_legend_tag (char* tagname, char* tagcolor, char* txtcolor)
+void view_print_legend_tag (char* tagname, char* tagcolor)
 {
-	printf ("%s \b%s \b%s \b%s, ", txtcolor, tagcolor, tagname, BC_TXT_RST);
+	printf ("%s \b%s \b%s, ", tagcolor, tagname, BC_TXT_RST);
 }
 
 /*
@@ -31,11 +31,11 @@ void view_print_legend_tag (char* tagname, char* tagcolor, char* txtcolor)
 void view_legend (bask_theme* btheme)
 {
 	printf ("\n\nLegend: ");
-	view_print_legend_tag ("Normal", btheme->color_normal, BC_BLD_WHITE);
-	view_print_legend_tag ("Critical", btheme->color_critical, BC_BLD_WHITE);
-	view_print_legend_tag ("Today", btheme->color_today, BC_BLD_WHITE);
-	view_print_legend_tag ("Important", btheme->color_important, BC_TXT_BLACK);
-	view_print_legend_tag ("Finished", btheme->color_finished, BC_TXT_WHITE);
+	view_print_legend_tag ("Normal", btheme->color_normal);
+	view_print_legend_tag ("Critical", btheme->color_critical);
+	view_print_legend_tag ("Today", btheme->color_today);
+	view_print_legend_tag ("Important", btheme->color_important);
+	view_print_legend_tag ("Finished", btheme->color_finished);
 	printf ("\n");
 }
 
