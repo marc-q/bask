@@ -345,7 +345,7 @@ void task_create_cmd (bask_core* tcore, struct bask_task** first, int priority, 
 void task_remove_cmd (bask_core* tcore, struct bask_task** first, int id)
 {
 	task_remove (tcore, first, id);
-	printf ("Removed task %i.\n", tcore->baskbin_uid);
+	printf ("Removed task %i.\n", id);
 	export_baskbin (tcore, first, tcore->path_baskbin);
 }
 
