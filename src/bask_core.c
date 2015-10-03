@@ -9,7 +9,7 @@
    |--------------------------------------------| */
 
 /*
-	Function: parser_get_str (char* token, char* key, char* out, size_t outsize, char* saveptr);
+	Function: parser_get_str (char* token, char* key, char* out, size_t outsize, char* septags, char* saveptr);
 	Description: Parses a row and return the value if the key is right.
 	InitVersion: 0.0.1
 */
@@ -33,7 +33,7 @@ int parser_get_str (char* token, char* key, char* out, size_t outsize, char* sep
 }
 
 /*
-	Function: parser_get_int (char* token, char* key, int* out, char* saveptr);
+	Function: parser_get_int (char* token, char* key, int* out, char* septags, char* saveptr);
 	Description: Parses a row and return the value if the key is right.
 	InitVersion: 0.0.1
 */
