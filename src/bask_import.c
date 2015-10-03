@@ -7,6 +7,10 @@
 #include "bask_export.h"
 #include "bask_import.h"
 
+/* |--------------------------------------------|
+   |			Baskbin			|
+   |--------------------------------------------| */
+
 /*
 	Function: import_baskbin (bask_core* tcore, struct bask_task** first, char* filename);
 	Description: Imports the tasks from a baskbin formated file.
@@ -84,6 +88,10 @@ void import_baskbin_cmd (bask_core* tcore, struct bask_task** first, char* filen
 	import_baskbin (tcore, first, filename);
 	export_baskbin (tcore, first, tcore->path_baskbin);
 }
+
+/* |--------------------------------------------|
+   |			CSV			|
+   |--------------------------------------------| */
 
 /*
 	Function: import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, char* saveptr);
@@ -213,6 +221,10 @@ void import_csv_cmd (bask_core* tcore, struct bask_task** first, char* filename)
 	import_csv (tcore, first, filename);
 	export_baskbin (tcore, first, tcore->path_baskbin);
 }
+
+/* |--------------------------------------------|
+   |			iCal			|
+   |--------------------------------------------| */
 
 /* Warning: The ical import functions are under construction,
 	    Dont use them until this warning is gone!

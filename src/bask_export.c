@@ -6,6 +6,10 @@
 #include "bask_errors.h"
 #include "bask_task.h"
 
+/* |--------------------------------------------|
+   |			Baskbin			|
+   |--------------------------------------------| */
+   
 /*
 	Function: export_baskbin (bask_core* tcore, struct bask_task** first, char* filename);
 	Description: Exports all tasks to the baskbin <filename>.
@@ -49,6 +53,10 @@ int export_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 	return 0;
 }
 
+/* |--------------------------------------------|
+   |			CSV			|
+   |--------------------------------------------| */
+
 /*
 	Function: export_csv (bask_core* tcore, struct bask_task** first, char* filename);
 	Description: Exports all tasks to an csv file named filename.
@@ -80,6 +88,10 @@ int export_csv (bask_core* tcore, struct bask_task** first, char* filename)
 	
 	return 0;
 }
+
+/* |--------------------------------------------|
+   |			iCal			|
+   |--------------------------------------------| */
 
 /*
 	Function: export_ical_getdatestr (char* out, char* datestr);
@@ -193,6 +205,10 @@ int export_ical (bask_core* tcore, struct bask_task** first, char* filename)
 	
 	return 0;
 }
+
+/* |--------------------------------------------|
+   |			Web			|
+   |--------------------------------------------| */
 
 /*
 	Function: export_web_strrpl (char* str);
