@@ -58,7 +58,7 @@ int task_insert (struct bask_task** first, int n, int tid, int tactive, int tpri
 	
 	if (strlen (tadded) >= T_S_ADDED || strlen (tfinished) >= T_S_FINISHED || strlen (tproject) >= T_S_PROJECT || strlen (tdescription) >= T_S_DESCRIPTION)
 	{
-		return -1;
+		return -2;
 	}
 
 	strcpy (newobj->t_added, tadded);
@@ -116,10 +116,11 @@ int task_create (bask_core* tcore, struct bask_task** first, int priority, char*
 		return -1;
 	}
 	
-	tcore->tc_amount++;
 	tcore->baskbin_uid++;
 	
-	task_insert (first, tcore->tc_amount-1, tcore->baskbin_uid, 1, priority, 0, added, " ", project, description);
+	task_insert (first, tcore->tc_amount, tcore->baskbin_uid, 1, priority, 0, added, " ", project, description);
+	
+	tcore->tc_amount++;
 	
 	printf ("Created task %i.\n", tcore->baskbin_uid);
 	
@@ -141,8 +142,6 @@ int task_remove (bask_core* tcore, struct bask_task** first, int id)
 	{
 		return -1;
 	}
-	
-	tcore->tc_amount--;
 	
 	while (ptr != NULL)
 	{

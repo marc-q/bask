@@ -3,9 +3,7 @@
 
 struct bask_project
 {
-	int n;
 	int p_active;
-	int p_id;
 	float p_complete;
 	float p_tasks;
 	char p_name[T_S_PROJECT];
@@ -13,6 +11,6 @@ struct bask_project
 };
 
 void project_free_ll (struct bask_project**);
-int project_insert (struct bask_project**, int, int, int, char*);
+int project_insert (struct bask_project**, int, int, char*);
 
 #endif /* __BASK_PROJECT_H__ */

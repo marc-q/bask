@@ -96,7 +96,7 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 	
 	while (ptr != NULL)
 	{
-		project_insert (&tprojects, 1, ptr->t_id, ptr->t_state, ptr->t_project);
+		project_insert (&tprojects, 1, ptr->t_state, ptr->t_project);
 		
 		ptr = ptr->next;
 	}

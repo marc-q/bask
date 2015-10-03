@@ -97,8 +97,6 @@ static int import_csv_parser (bask_core* tcore, struct bask_task** first, char* 
 	
 	tid = tactive = tpriority = tstate = 0;
 	
-	tcore->baskbin_uid++;
-	
 	tid = atoi (token);
 	
 	token = strtok_r (NULL, ";", &saveptr);
@@ -157,7 +155,9 @@ static int import_csv_parser (bask_core* tcore, struct bask_task** first, char* 
 		strcpy (tdescription, " ");
 	}
 	
-	task_insert (first, tcore->baskbin_uid, tid, tactive, tpriority, tstate, tadded, tfinished, tproject, tdescription);
+	tcore->baskbin_uid++;
+	task_insert (first, tcore->tc_amount, tid, tactive, tpriority, tstate, tadded, tfinished, tproject, tdescription);
+	tcore->tc_amount++;
 	
 	return 0;
 }
@@ -192,11 +192,10 @@ int import_csv (bask_core* tcore, struct bask_task** first, char* filename)
 		{
 			tt_state = 1;
 		}
-		else if (import_csv_parser (tcore, first, token, saveptr) == 0)
+		else
 		{
-			tcore->tc_amount++;
+			import_csv_parser (tcore, first, token, saveptr);
 		}
-		
 	}
 	
 	fclose (importfile);
@@ -265,13 +264,10 @@ static int import_ical_getdatestr (char* out, char* datestr)
 */
 int import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 {
-	int tstate;
 	char line[200], tadded[T_S_ADDED], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char tt_tmp[50];
 	char *token, *saveptr;
 	FILE* importfile;
-	
-	tstate = 0;
 	
 	strcpy (tt_tmp, " ");
 	strcpy (tadded, " ");
@@ -296,7 +292,7 @@ int import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 			if (utils_streq (tt_tmp, "VEVENT") == 0)
 			{
 				tcore->baskbin_uid++;
-				task_insert (first, tcore->baskbin_uid, tcore->baskbin_uid, 1, 0, tstate, tadded, tfinished, tproject, tdescription);
+				task_insert (first, tcore->tc_amount, tcore->baskbin_uid, 1, 0, 0, tadded, tfinished, tproject, tdescription);
 				tcore->tc_amount++;
 			}
 		}
