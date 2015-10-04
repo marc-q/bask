@@ -205,15 +205,15 @@ static void print_help (void)
 	printf ("\tsummary\t\t\t\t\tSummary of all projects.\n");
 	
 	printf ("\tadd [priority] [PROJECT] [DESCRIPTION]\tAdd a task.\n");
-	printf ("\tremove [id]\t\t\t\tRemoves the task with id [id].\n");
+	printf ("\tremove [id]\t\t\t\tRemoves a task.\n");
 	
 	printf ("\tshow [id]\t\t\t\tShows informations about a single task.\n");
 	printf ("\tmod [id] ARGS\t\t\t\tModifies a task.\n");
-	printf ("\tfinish [id]\t\t\t\tSet the task to finished.\n");
-	printf ("\tstop [id]\t\t\t\tDeactivates (hide) the task.\n");
+	printf ("\tfinish [id]\t\t\t\tSet's a task to finished.\n");
+	printf ("\tstop [id]\t\t\t\tDeactivates (hides) a task.\n");
 	
 	printf ("\tsearch <VIEW> [SEARCHTAG]\t\tSearches through the tasks and optional uses <VIEW> to show the results.\n");
-	printf ("\texport <EXPORT> [FILENAME]\t\tExports the data from baskbin to an file with the format <EXPORT> or baskbin.\n");
+	printf ("\texport <EXPORT> [FILENAME]\t\tExports the data from the baskbin to an file with the format <EXPORT> or baskbin.\n");
 	printf ("\timport <IMPORT> [FILENAME]\t\tImports the data from an file with the format <IMPORT> or baskbin to the baskbin.\n");
 	
 	printf ("\nARGUMENTS\n");

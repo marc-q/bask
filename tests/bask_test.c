@@ -166,7 +166,7 @@ static int tst_ui_getcolor (char* colorname, char* colorcode)
 	
 	view_theme_get_color (color);
 	
-	if (utils_streq (color , colorcode) == 0)
+	if (utils_streq (color, colorcode) == 0)
 	{
 		printf ("UI_GetColor_%s:\t%sSUCCESS%s\n", colorname, BC_BLD_GREEN, BC_TXT_RST);
 	}
