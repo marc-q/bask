@@ -28,6 +28,7 @@ typedef struct _bask_theme bask_theme;
 
 void view_print_nspaces (int);
 void view_print_nspaces_str (char*, int);
+void view_theme_get_color (char*);
 void view_theme_load (bask_core*, bask_theme*);
 void view_misc_print_progress (float, char*);
 void view_tbl_print_title (char*, int, int);

@@ -51,7 +51,7 @@ void view_print_nspaces_str (char* tag, int length)
 	Description: Replaces the color name with its code.
 	InitVersion: 0.0.1
 */
-static void view_theme_get_color (char* color)
+void view_theme_get_color (char* color)
 {	
 	char precolor[11];
 	
