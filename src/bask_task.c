@@ -36,8 +36,7 @@ void task_free_ll (struct bask_task** first)
 static int task_upgrade (struct bask_task* task)
 {
 	return 0;
-} 
-
+}
 
 /*
 	Function: task_insert (struct bask_task** first, int n, int tid, int tactive, int tpriority, int tstate, char* tadded, char* tfinished, char* tproject, char* tdescription);
