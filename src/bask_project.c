@@ -41,7 +41,7 @@ int project_insert (struct bask_project** first, int t_active, int t_state, char
 	
 	if (strlen (t_project) >= T_S_PROJECT)
 	{
-		return -1;
+		return -2;
 	}
 
 	strcpy (newobj->p_name, t_project);

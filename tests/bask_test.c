@@ -109,6 +109,39 @@ static int tst_core_parser (void)
 	return 0;
 }
 
+/*
+	Function: tst_core_time (void);
+	Description: Tests the utils_time_get_str function from bask_core.c.
+	InitVersion: 0.0.1
+*/
+static int tst_core_time (void)
+{
+	char datestr[20];
+	
+	utils_time_get_str (datestr, sizeof (datestr));
+	
+	if (datestr == NULL)
+	{
+		tst_print_fail ("Core_Time_GetStr");
+		return -1;
+	}
+	
+	if (datestr[2] == '/' &&
+	    datestr[5] == '/' &&
+	    datestr[8] == '/' &&
+	    datestr[11] == '/' &&
+	    datestr[14] == '/')
+	{
+		tst_print_success ("Core_Time_GetStr");
+	}
+	else
+	{
+		tst_print_fail ("Core_Time_GetStr");
+	}
+	
+	return 0;
+}
+
 /* |--------------------------------------------|
    |		    Tests-UI			|
    |--------------------------------------------| */
@@ -150,6 +183,7 @@ int main (int argc, char* argv[])
 	
 	tst_core_streq ();
 	tst_core_parser ();
+	tst_core_time ();
 	
 	printf ("\n");
 	
