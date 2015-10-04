@@ -156,7 +156,7 @@ static int tst_ui_getcolor (char* colorname, char* colorcode)
 {
 	char color[11];
 	
-	if (strlen (colorname) > 11 || strlen (colorcode) > 11)
+	if (strlen (colorname) >= sizeof (color) || strlen (colorcode) >= sizeof (color))
 	{
 		printf ("UI_GetColor_%s:\t%sFAIL%s\n", colorname, BC_BLD_RED, BC_TXT_RST);
 		return -1;
