@@ -126,7 +126,8 @@ static int tst_core_time (void)
 		return -1;
 	}
 	
-	if (datestr[2] == '/' &&
+	if (strlen(datestr) == 19 &&
+	    datestr[2] == '/' &&
 	    datestr[5] == '/' &&
 	    datestr[8] == '/' &&
 	    datestr[11] == '/' &&
