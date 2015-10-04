@@ -143,15 +143,18 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 	
 	while (fgets (line, sizeof (line)-1, basktheme) != NULL)
 	{
-		token = strtok_r (line, BASKSEP, &saveptr);
+		if (line[0] != '#')
+		{
+			token = strtok_r (line, BASKSEP, &saveptr);
 		
-		parser_get_str (token, "color_normal", colors[0], sizeof (colors[0]), BASKSEP, saveptr);
-		parser_get_str (token, "color_important", colors[1], sizeof (colors[1]), BASKSEP, saveptr);
-		parser_get_str (token, "color_today", colors[2], sizeof (colors[2]), BASKSEP, saveptr);
-		parser_get_str (token, "color_critical", colors[3], sizeof (colors[3]), BASKSEP, saveptr);
-		parser_get_str (token, "color_finished", colors[4], sizeof (colors[4]), BASKSEP, saveptr);
-		parser_get_str (token, "color_pbarbak", colors[5], sizeof (colors[5]), BASKSEP, saveptr);
-		parser_get_str (token, "color_seclinesbak", colors[6], sizeof (colors[6]), BASKSEP, saveptr);
+			parser_get_str (token, "color_normal", colors[0], sizeof (colors[0]), BASKSEP, saveptr);
+			parser_get_str (token, "color_important", colors[1], sizeof (colors[1]), BASKSEP, saveptr);
+			parser_get_str (token, "color_today", colors[2], sizeof (colors[2]), BASKSEP, saveptr);
+			parser_get_str (token, "color_critical", colors[3], sizeof (colors[3]), BASKSEP, saveptr);
+			parser_get_str (token, "color_finished", colors[4], sizeof (colors[4]), BASKSEP, saveptr);
+			parser_get_str (token, "color_pbarbak", colors[5], sizeof (colors[5]), BASKSEP, saveptr);
+			parser_get_str (token, "color_seclinesbak", colors[6], sizeof (colors[6]), BASKSEP, saveptr);
+		}
 	}
 	
 	fclose (basktheme);
