@@ -107,7 +107,7 @@ static int bask_init_local (bask_core* tcore)
 		return 1;
 	}
 
-	bask_init_local_file (tcore->path_baskconf, "baskbin=default;");
+	bask_init_local_file (tcore->path_baskconf, "# Path to the baskbin.\nbaskbin=default;");
 	bask_init_local_file (tcore->path_baskbin, "BASKBIN\nbbuid=0;\nBBEND");
 	bask_init_local_file (tcore->path_basktheme, "color_normal=default;\ncolor_important=default;\ncolor_today=default;\ncolor_critical=default;\ncolor_finished=default;\ncolor_pbarbak=default;\ncolor_seclinesbak=default;");
 	
@@ -136,9 +136,12 @@ static void bask_load_conf (bask_core* tcore)
 	
 	while (fgets (line, sizeof (line), baskconf) != NULL)
 	{
-		token = strtok_r (line, BASKSEP, &saveptr);
+		if (line[0] != '#')
+		{
+			token = strtok_r (line, BASKSEP, &saveptr);
 		
-		parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), BASKSEP, saveptr);
+			parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), BASKSEP, saveptr);
+		}
 	}
 	
 	fclose (baskconf);
