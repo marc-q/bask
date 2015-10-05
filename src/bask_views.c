@@ -101,17 +101,17 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 	
 	i = ppercent = premaining = 0;
 	
-	view_tbl_print_title ("Project", 15, 1);
-	view_tbl_print_title ("Remaining", 0, 1);
-	view_tbl_print_title ("Complete", 0, 1);
-	printf ("%s0%%               100%%\n", BC_TXT_RST);
-	
 	while (ptr != NULL)
 	{
 		project_insert (&tprojects, 1, ptr->t_state, ptr->t_project);
 		
 		ptr = ptr->next;
 	}
+	
+	ui_tbl_print_title ("Project", 15, 1);
+	ui_tbl_print_title ("Remaining", 0, 1);
+	ui_tbl_print_title ("Complete", 0, 1);
+	printf ("%s0%%               100%%\n", BC_TXT_RST);
 	
 	pptr = tprojects;
 	while (pptr != NULL)
@@ -129,12 +129,12 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 			
 			premaining = (int)pptr->p_tasks - (int)pptr->p_complete;
 			
-			view_tbl_print_field_str (pptr->p_name, -1, 16);
-			view_tbl_print_field_int (premaining, 8-GETDIGITS (premaining), -1);
-			view_tbl_print_field_int (ppercent, 7-GETDIGITS (ppercent), -1);
-			view_tbl_print_field_str ("%", -1, 2);
+			ui_tbl_print_field_str (pptr->p_name, -1, 16);
+			ui_tbl_print_field_int (premaining, 8-GETDIGITS (premaining), -1);
+			ui_tbl_print_field_int (ppercent, 7-GETDIGITS (ppercent), -1);
+			ui_tbl_print_field_str ("%", -1, 2);
 			
-			view_misc_print_progress (100.0*(pptr->p_complete/pptr->p_tasks), btheme->color_pbarbak);
+			ui_misc_print_progress (100.0*(pptr->p_complete/pptr->p_tasks), btheme->color_pbarbak);
 		}
 		
 		i++;
@@ -169,10 +169,10 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	char prefix[30], pri[4];
 	struct bask_task* ptr = *first;
 	
-	view_tbl_print_title ("ID", -1, GETDIGITS (tcore->baskbin_uid)+1);
-	view_tbl_print_title ("Project", 15, 1);
-	view_tbl_print_title ("Pri", 3, 1);
-	view_tbl_print_title ("Description", 50, 1);
+	ui_tbl_print_title ("ID", -1, GETDIGITS (tcore->baskbin_uid)+1);
+	ui_tbl_print_title ("Project", 15, 1);
+	ui_tbl_print_title ("Pri", 3, 1);
+	ui_tbl_print_title ("Description", 50, 1);
 	printf ("%s\n", BC_TXT_RST);
 	
 	while (ptr != NULL)
@@ -214,10 +214,10 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 			}
 		
 			printf ("%s", prefix);
-			view_tbl_print_field_int (ptr->t_id, GETDIGITS (tcore->baskbin_uid) - GETDIGITS (ptr->t_id), 2);
-			view_tbl_print_field_str (ptr->t_project, -1, 16);
-			view_tbl_print_field_str (pri, -1, 4);
-			view_tbl_print_field_str (ptr->t_description, -1, 50);
+			ui_tbl_print_field_int (ptr->t_id, GETDIGITS (tcore->baskbin_uid) - GETDIGITS (ptr->t_id), 2);
+			ui_tbl_print_field_str (ptr->t_project, -1, 16);
+			ui_tbl_print_field_str (pri, -1, 4);
+			ui_tbl_print_field_str (ptr->t_description, -1, 50);
 			printf ("%s\n", BC_TXT_RST);
 			
 			i++;

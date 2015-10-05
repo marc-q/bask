@@ -26,13 +26,13 @@ struct _bask_theme
 
 typedef struct _bask_theme bask_theme;
 
-void view_print_nspaces (int);
-void view_print_nspaces_str (char*, int);
-void view_theme_get_color (char*);
-void view_theme_load (bask_core*, bask_theme*);
-void view_misc_print_progress (float, char*);
-void view_tbl_print_title (char*, int, int);
-void view_tbl_print_field_str (char*, int, int);
-void view_tbl_print_field_int (int, int, int);
+void ui_print_nspaces (int);
+void ui_print_nspaces_str (char*, int);
+void ui_theme_get_color (char*);
+void ui_theme_load (bask_core*, bask_theme*);
+void ui_misc_print_progress (float, char*);
+void ui_tbl_print_title (char*, int, int);
+void ui_tbl_print_field_str (char*, int, int);
+void ui_tbl_print_field_int (int, int, int);
 
 #endif /* __BASK_UI_H__ */

@@ -13,33 +13,33 @@
    |--------------------------------------------| */
 
 /*
-	Function: view_print_nspaces (int amount);
+	Function: ui_print_nspaces (int amount);
 	Description: Prints amount spaces.
 	InitVersion: 0.0.1
 */
-void view_print_nspaces (int amount)
+void ui_print_nspaces (int amount)
 {
 	int i;
 	
-	for (i = 0; i < amount; i++)
+	if (amount > 0)
 	{
-		printf (" ");
+		for (i = 0; i < amount; i++)
+		{
+			printf (" ");
+		}
 	}
 }
 
 /*
-	Function: view_print_nspaces_str (char* tag, int length);
+	Function: ui_print_nspaces_str (char* tag, int length);
 	Description: Prints length spaces minus the length of tag.
 	InitVersion: 0.0.1
 */
-void view_print_nspaces_str (char* tag, int length)
+void ui_print_nspaces_str (char* tag, int length)
 {
 	size_t tl = strlen (tag);
 	
-	if (length > 0)
-	{
-		view_print_nspaces (length-tl);
-	}
+	ui_print_nspaces (length-tl);
 }
 
 /* |--------------------------------------------|
@@ -47,11 +47,11 @@ void view_print_nspaces_str (char* tag, int length)
    |--------------------------------------------| */
 
 /*
-	Function: view_theme_get_color (char* color);
+	Function: ui_theme_get_color (char* color);
 	Description: Replaces the color name with its code.
 	InitVersion: 0.0.1
 */
-void view_theme_get_color (char* color)
+void ui_theme_get_color (char* color)
 {	
 	char precolor[11];
 	
@@ -114,11 +114,11 @@ void view_theme_get_color (char* color)
 }
 
 /*
-	Function: view_theme_load (bask_core* tcore, bask_theme* btheme);
+	Function: ui_theme_load (bask_core* tcore, bask_theme* btheme);
 	Description: Loads the theme file.
 	InitVersion: 0.0.1
 */
-void view_theme_load (bask_core* tcore, bask_theme* btheme)
+void ui_theme_load (bask_core* tcore, bask_theme* btheme)
 {
 	int i;
 	char line[200];
@@ -161,7 +161,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 	
 	if (utils_streq (colors[0], "default") != 0)
 	{
-		view_theme_get_color (colors[0]);
+		ui_theme_get_color (colors[0]);
 		strcpy (btheme->color_normal, colors[0]);
 	}
 	else
@@ -171,7 +171,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 	
 	if (utils_streq (colors[1], "default") != 0)
 	{
-		view_theme_get_color (colors[1]);
+		ui_theme_get_color (colors[1]);
 		strcpy (btheme->color_important, colors[1]);
 	}
 	else
@@ -181,7 +181,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 	
 	if (utils_streq (colors[2], "default") != 0)
 	{
-		view_theme_get_color (colors[2]);
+		ui_theme_get_color (colors[2]);
 		strcpy (btheme->color_today, colors[2]);
 	}
 	else
@@ -191,7 +191,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 	
 	if (utils_streq (colors[3], "default") != 0)
 	{
-		view_theme_get_color (colors[3]);
+		ui_theme_get_color (colors[3]);
 		strcpy (btheme->color_critical, colors[3]);
 	}
 	else
@@ -201,7 +201,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 	
 	if (utils_streq (colors[4], "default") != 0)
 	{
-		view_theme_get_color (colors[4]);
+		ui_theme_get_color (colors[4]);
 		strcpy (btheme->color_finished, colors[4]);
 	}
 	else
@@ -211,7 +211,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 	
 	if (utils_streq (colors[5], "default") != 0)
 	{
-		view_theme_get_color (colors[5]);
+		ui_theme_get_color (colors[5]);
 		strcpy (btheme->color_pbarbak, colors[5]);
 	}
 	else
@@ -221,7 +221,7 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
 	
 	if (utils_streq (colors[6], "default") != 0)
 	{
-		view_theme_get_color (colors[6]);
+		ui_theme_get_color (colors[6]);
 		strcpy (btheme->color_seclinesbak, colors[6]);
 	}
 	else
@@ -235,15 +235,15 @@ void view_theme_load (bask_core* tcore, bask_theme* btheme)
    |--------------------------------------------| */
 
 /*
-	Function: view_misc_print_progress (float p, char* bakcolor);
+	Function: ui_misc_print_progress (float p, char* bakcolor);
 	Description: Prints a progress bar filled p%.
 	InitVersion: 0.0.1
 */
-void view_misc_print_progress (float p, char* bakcolor)
+void ui_misc_print_progress (float p, char* bakcolor)
 {
 	printf ("%s", bakcolor);
 	
-	view_print_nspaces ((p/5)+1);
+	ui_print_nspaces ((p/5)+1);
 	
 	printf ("%s\n", BC_TXT_RST);
 }
@@ -253,51 +253,45 @@ void view_misc_print_progress (float p, char* bakcolor)
    |--------------------------------------------| */
 
 /*
-	Function: view_tbl_print_title (char* name, int len_underline, int len_normal);
+	Function: ui_tbl_print_title (char* name, int len_underline, int len_normal);
 	Description: Prints a table title.
 	InitVersion: 0.0.1
 */
-void view_tbl_print_title (char* name, int len_underline, int len_normal)
+void ui_tbl_print_title (char* name, int len_underline, int len_normal)
 {	
 	printf ("\033[4m%s", name);
-	view_print_nspaces_str (name, len_underline);
+	ui_print_nspaces_str (name, len_underline);
 	printf ("\033[0m");
 	
-	view_print_nspaces (len_normal);
+	ui_print_nspaces (len_normal);
 	
 	printf ("\033[4m");
 }
 
 /*
-	Function: view_tbl_print_field_str (char* value, int len_pre, int len_suf);
+	Function: ui_tbl_print_field_str (char* value, int len_pre, int len_suf);
 	Description: Prints a table field with a str value.
 	InitVersion: 0.0.1
 */
-void view_tbl_print_field_str (char* value, int len_pre, int len_suf)
+void ui_tbl_print_field_str (char* value, int len_pre, int len_suf)
 {
-	view_print_nspaces_str (value, len_pre);
+	ui_print_nspaces_str (value, len_pre);
 	
 	printf ("%s", value);
 	
-	view_print_nspaces_str (value, len_suf);
+	ui_print_nspaces_str (value, len_suf);
 }
 
 /*
-	Function: view_tbl_print_field_int (int value, int len_pre, int len_suf);
+	Function: ui_tbl_print_field_int (int value, int len_pre, int len_suf);
 	Description: Prints a table field with a int value.
 	InitVersion: 0.0.1
 */
-void view_tbl_print_field_int (int value, int len_pre, int len_suf)
+void ui_tbl_print_field_int (int value, int len_pre, int len_suf)
 {	
-	if (len_pre > 0)
-	{
-		view_print_nspaces (len_pre);
-	}
+	ui_print_nspaces (len_pre);
 	
 	printf ("%i", value);
 	
-	if (len_suf > 0)
-	{
-		view_print_nspaces (len_suf);
-	}
+	ui_print_nspaces (len_suf);
 }

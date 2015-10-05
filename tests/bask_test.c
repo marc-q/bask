@@ -196,7 +196,7 @@ static int tst_core_time (void)
 
 /*
 	Function: tst_ui_getcolor (char* colorname, char* colorcode);
-	Description: Tests the view_theme_get_color function from bask_ui.c.
+	Description: Tests the ui_theme_get_color function from bask_ui.c.
 	InitVersion: 0.0.1
 */
 static int tst_ui_getcolor (char* colorname, char* colorcode)
@@ -211,7 +211,7 @@ static int tst_ui_getcolor (char* colorname, char* colorcode)
 	
 	strcpy (color, colorname);
 	
-	view_theme_get_color (color);
+	ui_theme_get_color (color);
 	
 	if (utils_streq (color, colorcode) == 0)
 	{

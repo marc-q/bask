@@ -310,7 +310,7 @@ int main (int argc, char* argv[])
 	}
 	
 	bask_load_conf (&tcore);
-	view_theme_load (&tcore, &btheme);
+	ui_theme_load (&tcore, &btheme);
 	bask_init (&tcore, &first);
 	
 	while ((optc = getopt (argc, argv, "p:P:a:D:s:F:A:")) != -1)
