@@ -77,7 +77,7 @@ void errors_timenotgot (void)
 
 /*
 	Function: errors_lengthtobig (char* variable);
-	Description: Prints the error for when the length of something is big.
+	Description: Prints the error for when the length of something is to big.
 	InitVersion: 0.0.1
 */
 void errors_lengthtobig (char* variable)
