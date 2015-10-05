@@ -165,7 +165,7 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 */
 void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first)
 {
-	int i = 0, j;
+	int i = 0;
 	char prefix[30], pri[4];
 	struct bask_task* ptr = *first;
 	
