@@ -111,7 +111,7 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 	ui_tbl_print_title ("Project", 15, 1);
 	ui_tbl_print_title ("Remaining", 0, 1);
 	ui_tbl_print_title ("Complete", 0, 1);
-	printf ("%s0%%               100%%\n", BC_TXT_RST);
+	printf ("0%%               100%%\n");
 	
 	pptr = tprojects;
 	while (pptr != NULL)
@@ -173,7 +173,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	ui_tbl_print_title ("Project", 15, 1);
 	ui_tbl_print_title ("Pri", 3, 1);
 	ui_tbl_print_title ("Description", 50, 1);
-	printf ("%s\n", BC_TXT_RST);
+	printf ("\n");
 	
 	while (ptr != NULL)
 	{

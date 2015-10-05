@@ -264,8 +264,6 @@ void ui_tbl_print_title (char* name, int len_underline, int len_normal)
 	printf ("\033[0m");
 	
 	ui_print_nspaces (len_normal);
-	
-	printf ("\033[4m");
 }
 
 /*
