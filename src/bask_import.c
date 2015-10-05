@@ -234,7 +234,7 @@ void import_csv_cmd (bask_core* tcore, struct bask_task** first, char* filename)
 	Description: Converts an ical datestr to an baskbin datestr.
 	InitVersion: 0.0.1
 */
-static int import_ical_getdatestr (char* out, char* datestr)
+int import_ical_getdatestr (char* out, char* datestr)
 {	
 	char bdate[20];
 	

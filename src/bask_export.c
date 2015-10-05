@@ -98,7 +98,7 @@ int export_csv (bask_core* tcore, struct bask_task** first, char* filename)
 	Description: Converts an baskbin datestr to an ical datestr.
 	InitVersion: 0.0.1
 */
-static int export_ical_getdatestr (char* out, char* datestr)
+int export_ical_getdatestr (char* out, char* datestr)
 {	
 	char idate[16];
 	

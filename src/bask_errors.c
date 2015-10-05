@@ -22,7 +22,7 @@ static void errors_print_errormsg (char* errormsg)
 void errors_useinit (void)
 {
 	printf ("Use: '$ %s init' to use Bask.\n", P_CMD);
-	printf ("Warning: Overides all data.\n");
+	printf ("Warning: Overides all data!\n");
 }
 
 /*

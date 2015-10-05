@@ -4,7 +4,10 @@
 #include <string.h>
 #include "../lib/dutils.h"
 #include "../src/bask_core.h"
+#include "../src/bask_task.h"
 #include "../src/bask_ui.h"
+#include "../src/bask_export.h"
+#include "../src/bask_import.h"
 
 /* |--------------------------------------------|
    |			Utils			|
@@ -178,6 +181,72 @@ static int tst_ui_getcolor (char* colorname, char* colorcode)
 	return 0;
 }
 
+/* |--------------------------------------------|
+   |		   Tests-Export			|
+   |--------------------------------------------| */
+   
+/*
+	Function: tst_export_icaldate (void);
+	Description: Tests the export_ical_getdatestr function from bask_export.c.
+	InitVersion: 0.0.1
+*/
+static int tst_export_icaldate (void)
+{
+	char datestr[16];
+	
+	export_ical_getdatestr (datestr, "23/59/59/09/09/2015");
+	
+	if (datestr == NULL)
+	{
+		tst_print_fail ("Export_ICal_GetDateStr");
+		return -1;
+	}
+	
+	if (utils_streq (datestr, "20150909T235959") == 0)
+	{
+		tst_print_success ("Export_ICal_GetDateStr");
+	}
+	else
+	{
+		tst_print_fail ("Export_ICal_GetDateStr");
+	}
+	
+	return 0;
+}
+
+/* |--------------------------------------------|
+   |		   Tests-Import			|
+   |--------------------------------------------| */
+   
+/*
+	Function: tst_import_icaldate (void);
+	Description: Tests the import_ical_getdatestr function from bask_import.c.
+	InitVersion: 0.0.1
+*/
+static int tst_import_icaldate (void)
+{
+	char datestr[20];
+	
+	import_ical_getdatestr (datestr, "20150909T235959");
+	
+	if (datestr == NULL)
+	{
+		tst_print_fail ("Import_ICal_GetDateStr");
+		return -1;
+	}
+	
+	if (utils_streq (datestr, "23/59/59/09/09/2015") == 0)
+	{
+		tst_print_success ("Import_ICal_GetDateStr");
+	}
+	else
+	{
+		tst_print_fail ("Import_ICal_GetDateStr");
+	}
+	
+	return 0;
+}
+
 int main (int argc, char* argv[])
 {
 	printf ("Bask-Tests (c) 2015 Marc Volker Dickmann\n\n");
@@ -229,6 +298,14 @@ int main (int argc, char* argv[])
 	tst_ui_getcolor ("bak_purple", "\033[45m");
 	tst_ui_getcolor ("bak_cyan", "\033[46m");
 	tst_ui_getcolor ("bak_white", "\033[47m");
+	
+	printf ("\n");
+	
+	tst_export_icaldate ();
+	
+	printf ("\n");
+	
+	tst_import_icaldate ();
 	
 	return 0;
 }
