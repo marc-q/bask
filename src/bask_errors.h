@@ -7,5 +7,6 @@ void errors_filenotopened (char*);
 void errors_filenotwritten (char*);
 void errors_homedirnotgot (void);
 void errors_timenotgot (void);
+void errors_lengthtobig (char*);
 
 #endif /* __BASK_ERRORS_H__ */

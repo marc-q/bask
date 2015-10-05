@@ -331,9 +331,16 @@ int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** 
 */
 void task_create_cmd (bask_core* tcore, struct bask_task** first, int priority, char* project, char* description)
 {
-	task_create (tcore, first, priority, project, description);
-	printf ("Created task %i.\n", tcore->baskbin_uid);
-	export_baskbin (tcore, first, tcore->path_baskbin);
+	if (strlen (description) > 50)
+	{
+		errors_lengthtobig ("description");
+	}
+	else
+	{
+		task_create (tcore, first, priority, project, description);
+		printf ("Created task %i.\n", tcore->baskbin_uid);
+		export_baskbin (tcore, first, tcore->path_baskbin);
+	}
 }
 
 /*
@@ -355,9 +362,16 @@ void task_remove_cmd (bask_core* tcore, struct bask_task** first, int id)
 */
 void task_modificate_cmd (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
 {
-	task_modificate (tcore, first, id, active, state, priority, added, finished, project, description);
-	printf ("Modificated task %i.\n", id);
-	export_baskbin (tcore, first, tcore->path_baskbin);
+	if (strlen (description) > 50)
+	{
+		errors_lengthtobig ("description");
+	}
+	else
+	{
+		task_modificate (tcore, first, id, active, state, priority, added, finished, project, description);
+		printf ("Modificated task %i.\n", id);
+		export_baskbin (tcore, first, tcore->path_baskbin);
+	}
 }
 
 /*

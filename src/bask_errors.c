@@ -74,3 +74,13 @@ void errors_timenotgot (void)
 {
 	printf ("ERROR: Cannot get the time!\n");
 }
+
+/*
+	Function: errors_lengthtobig (char* variable);
+	Description: Prints the error for when the length of something is big.
+	InitVersion: 0.0.1
+*/
+void errors_lengthtobig (char* variable)
+{
+	printf ("ERROR: The length of the %s is to big!\n", variable);
+}
