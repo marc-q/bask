@@ -8,6 +8,53 @@
 #include "bask_export.h"
 
 /* |--------------------------------------------|
+   |			Utils			|
+   |--------------------------------------------| */
+
+/*
+	Function: task_check_input (char* added, char* finished, char* project, char* description, int printout);
+	Description: Checks if the input is correct and displays the error messages if printout equals 1!
+	InitVersion: 0.0.1
+*/
+int task_check_input (char* added, char* finished, char* project, char* description, int printout)
+{
+	if (strlen (added) >= T_S_ADDED)
+	{
+		if (printout == 1)
+		{
+			errors_lengthtobig ("added");
+		}
+		return -1;
+	}
+	else if (strlen (finished) >= T_S_FINISHED)
+	{
+		if (printout == 1)
+		{
+			errors_lengthtobig ("finished");
+		}
+		return -2;
+	}
+	else if (strlen (project) >= T_S_PROJECT)
+	{
+		if (printout == 1)
+		{
+			errors_lengthtobig ("project");
+		}
+		return -3;
+	}
+	else if (strlen (description) > 50)
+	{
+		if (printout == 1)
+		{
+			errors_lengthtobig ("description");
+		}
+		return -4;
+	}
+	
+	return 0;
+}
+
+/* |--------------------------------------------|
    |			Core			|
    |--------------------------------------------| */
 
@@ -29,8 +76,8 @@ void task_free_ll (struct bask_task** first)
 }
 
 /*
-	Function: task_upgrade (struct bask_obj* task);
-	Description: Upgrades a task. (Internal use f.e. new Versions upgrades.)
+	Function: task_upgrade (struct bask_task* task);
+	Description: Upgrades a task. (Internal use f.e. new versions upgrades.)
 	InitVersion: 0.0.1
 */
 static int task_upgrade (struct bask_task* task)
@@ -106,11 +153,11 @@ int task_insert (struct bask_task** first, int n, int tid, int tactive, int tpri
 }
 
 /*
-	Function: task_remove (bask_core* tcore, struct bask_task** first, int id);
+	Function: task_remove (struct bask_task** first, int id);
 	Description: Removes a task!
 	InitVersion: 0.0.1
 */
-int task_remove (bask_core* tcore, struct bask_task** first, int id)
+int task_remove (struct bask_task** first, int id)
 {
 	struct bask_task* ptr = *first, *pre = NULL;
 	
@@ -147,11 +194,11 @@ int task_remove (bask_core* tcore, struct bask_task** first, int id)
 }
 
 /*
-	Function: task_modificate (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description);
+	Function: task_modificate (struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description);
 	Description: Modificates a task!
 	InitVersion: 0.0.1
 */
-int task_modificate (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
+int task_modificate (struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
 {
 	struct bask_task* ptr = *first;
 	
@@ -247,21 +294,21 @@ int task_create (bask_core* tcore, struct bask_task** first, int priority, char*
 }
 
 /*
-	Function: task_deactivate (bask_core* tcore, struct bask_task** first, int id);
+	Function: task_deactivate (struct bask_task** first, int id);
 	Description: Deactivates a task!
 	InitVersion: 0.0.1
 */
-void task_deactivate (bask_core* tcore, struct bask_task** first, int id)
+void task_deactivate (struct bask_task** first, int id)
 {	
-	task_modificate (tcore, first, id, 0, -1, -1, "", "", "", "");
+	task_modificate (first, id, 0, -1, -1, "", "", "", "");
 }
 
 /*
-	Function: task_finish (bask_core* tcore, struct bask_task** first, int id);
+	Function: task_finish (struct bask_task** first, int id);
 	Description: Finished a task!
 	InitVersion: 0.0.1
 */
-int task_finish (bask_core* tcore, struct bask_task** first, int id)
+int task_finish (struct bask_task** first, int id)
 {
 	char finished[T_S_FINISHED];
 
@@ -270,7 +317,7 @@ int task_finish (bask_core* tcore, struct bask_task** first, int id)
 		return -1;
 	}
 	
-	task_modificate (tcore, first, id, -1, 1, -1, "", finished, "", "");
+	task_modificate (first, id, -1, 1, -1, "", finished, "", "");
 	
 	return 0;
 }
@@ -331,11 +378,7 @@ int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** 
 */
 void task_create_cmd (bask_core* tcore, struct bask_task** first, int priority, char* project, char* description)
 {
-	if (strlen (description) > 50)
-	{
-		errors_lengthtobig ("description");
-	}
-	else
+	if (task_check_input ("", "", project, description, 1) == 0)
 	{
 		task_create (tcore, first, priority, project, description);
 		printf ("Created task %i.\n", tcore->baskbin_uid);
@@ -350,7 +393,7 @@ void task_create_cmd (bask_core* tcore, struct bask_task** first, int priority, 
 */
 void task_remove_cmd (bask_core* tcore, struct bask_task** first, int id)
 {
-	task_remove (tcore, first, id);
+	task_remove (first, id);
 	printf ("Removed task %i.\n", id);
 	export_baskbin (tcore, first, tcore->path_baskbin);
 }
@@ -362,13 +405,9 @@ void task_remove_cmd (bask_core* tcore, struct bask_task** first, int id)
 */
 void task_modificate_cmd (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
 {
-	if (strlen (description) > 50)
+	if (task_check_input (added, finished, project, description, 1) == 0)
 	{
-		errors_lengthtobig ("description");
-	}
-	else
-	{
-		task_modificate (tcore, first, id, active, state, priority, added, finished, project, description);
+		task_modificate (first, id, active, state, priority, added, finished, project, description);
 		printf ("Modificated task %i.\n", id);
 		export_baskbin (tcore, first, tcore->path_baskbin);
 	}
@@ -381,7 +420,7 @@ void task_modificate_cmd (bask_core* tcore, struct bask_task** first, int id, in
 */
 void task_deactivate_cmd (bask_core* tcore, struct bask_task** first, int id)
 {	
-	task_deactivate (tcore, first, id);
+	task_deactivate (first, id);
 	printf ("Deactivated task %i.\n", id);
 	export_baskbin (tcore, first, tcore->path_baskbin);
 }
@@ -393,7 +432,7 @@ void task_deactivate_cmd (bask_core* tcore, struct bask_task** first, int id)
 */
 void task_finish_cmd (bask_core* tcore, struct bask_task** first, int id)
 {
-	task_finish (tcore, first, id);
+	task_finish (first, id);
 	printf ("Finished task %i.\n", id);
 	export_baskbin (tcore, first, tcore->path_baskbin);
 }

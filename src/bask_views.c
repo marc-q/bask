@@ -135,9 +135,9 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 			ui_tbl_print_field_str ("%", -1, 2);
 			
 			ui_misc_print_progress (100.0*(pptr->p_complete/pptr->p_tasks), btheme->color_pbarbak);
+			
+			i++;
 		}
-		
-		i++;
 		
 		pptr = pptr->next;
 	}
@@ -166,7 +166,7 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first)
 {
 	int i = 0;
-	char prefix[30], pri[4];
+	char prefix[22], pri[4];
 	struct bask_task* ptr = *first;
 	
 	ui_tbl_print_title ("ID", -1, GETDIGITS (tcore->baskbin_uid)+1);

@@ -9,7 +9,7 @@
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 38
+#define TESTS_AMOUNT 39
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -191,6 +191,35 @@ static int tst_core_time (void)
 }
 
 /* |--------------------------------------------|
+   |		    Tests-Task			|
+   |--------------------------------------------| */
+
+/*
+	Function: tst_task_checkinput (void);
+	Description: Tests the task_check_input function from bask_task.c.
+	InitVersion: 0.0.1
+*/
+static int tst_task_checkinput (void)
+{
+	if (task_check_input ("23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == 0 &&
+	    task_check_input ("23/59/59/09/09/02015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -1 &&
+	    task_check_input ("23/59/59/09/09/2015", "23/59/59/09/09/02015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -2 &&
+	    task_check_input ("23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -3 &&
+	    task_check_input ("23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", 0) == -4)
+	{
+		tst_print_success ("Task_Check_Input");
+		return TESTS_PASS;
+	}
+	else
+	{
+		tst_print_fail ("Task_Check_Input");
+		return TESTS_FAIL;
+	}
+	
+	return 0;
+}
+
+/* |--------------------------------------------|
    |		    Tests-UI			|
    |--------------------------------------------| */
 
@@ -309,6 +338,10 @@ int main (int argc, char* argv[])
 	points += tst_core_parser_str ();
 	points += tst_core_parser_int ();
 	points += tst_core_time ();
+	
+	printf ("\n");
+	
+	points += tst_task_checkinput ();
 	
 	printf ("\n");
 	
