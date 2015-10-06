@@ -53,12 +53,12 @@ void ui_print_nspaces_str (char* tag, int length)
 */
 void ui_theme_get_color (char* color)
 {	
-	char precolor[11];
+	char precolor[UI_S_THEMECOLOR];
 	
-	strcpy (precolor, color);
-	
-	if (color != NULL)
+	if (color != NULL && strlen (color) < UI_S_THEMECOLOR)
 	{
+		strcpy (precolor, color);
+		
 		if (strncmp (precolor, "txt", strlen ("txt")) == 0)
 		{
 			strcpy (color, "\033[0;3");
@@ -122,7 +122,7 @@ void ui_theme_load (bask_core* tcore, bask_theme* btheme)
 {
 	int i;
 	char line[200];
-	char colors[7][11];
+	char colors[7][UI_S_THEMECOLOR];
 	char *token, *saveptr;
 	FILE *basktheme;
 	
@@ -147,13 +147,13 @@ void ui_theme_load (bask_core* tcore, bask_theme* btheme)
 		{
 			token = strtok_r (line, BASKSEP, &saveptr);
 		
-			parser_get_str (token, "color_normal", colors[0], sizeof (colors[0]), BASKSEP, saveptr);
-			parser_get_str (token, "color_important", colors[1], sizeof (colors[1]), BASKSEP, saveptr);
-			parser_get_str (token, "color_today", colors[2], sizeof (colors[2]), BASKSEP, saveptr);
-			parser_get_str (token, "color_critical", colors[3], sizeof (colors[3]), BASKSEP, saveptr);
-			parser_get_str (token, "color_finished", colors[4], sizeof (colors[4]), BASKSEP, saveptr);
-			parser_get_str (token, "color_pbarbak", colors[5], sizeof (colors[5]), BASKSEP, saveptr);
-			parser_get_str (token, "color_seclinesbak", colors[6], sizeof (colors[6]), BASKSEP, saveptr);
+			parser_get_str (token, "color_normal", colors[0], UI_S_THEMECOLOR, BASKSEP, saveptr);
+			parser_get_str (token, "color_important", colors[1], UI_S_THEMECOLOR, BASKSEP, saveptr);
+			parser_get_str (token, "color_today", colors[2], UI_S_THEMECOLOR, BASKSEP, saveptr);
+			parser_get_str (token, "color_critical", colors[3], UI_S_THEMECOLOR, BASKSEP, saveptr);
+			parser_get_str (token, "color_finished", colors[4], UI_S_THEMECOLOR, BASKSEP, saveptr);
+			parser_get_str (token, "color_pbarbak", colors[5], UI_S_THEMECOLOR, BASKSEP, saveptr);
+			parser_get_str (token, "color_seclinesbak", colors[6], UI_S_THEMECOLOR, BASKSEP, saveptr);
 		}
 	}
 	

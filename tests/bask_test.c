@@ -230,7 +230,7 @@ static int tst_task_checkinput (void)
 */
 static int tst_ui_getcolor (char* colorname, char* colorcode)
 {
-	char color[11];
+	char color[UI_S_THEMECOLOR];
 	
 	if (strlen (colorname) >= sizeof (color) || strlen (colorcode) >= sizeof (color))
 	{
