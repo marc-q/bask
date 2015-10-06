@@ -72,13 +72,9 @@ static int tst_core_streq (void)
 		tst_print_success ("Core_Streq");
 		return TESTS_PASS;
 	}
-	else
-	{
-		tst_print_fail ("Core_Streq");
-		return TESTS_FAIL;
-	}
 	
-	return 0;
+	tst_print_fail ("Core_Streq");
+	return TESTS_FAIL;
 }
 
 /*
@@ -108,13 +104,9 @@ static int tst_core_parser_str (void)
 		tst_print_success ("Core_Parser_Str");
 		return TESTS_PASS;
 	}
-	else
-	{
-		tst_print_fail ("Core_Parser_Str");
-		return TESTS_FAIL;
-	}
 	
-	return 0;
+	tst_print_fail ("Core_Parser_Str");
+	return TESTS_FAIL;
 }
 
 /*
@@ -145,13 +137,9 @@ static int tst_core_parser_int (void)
 		tst_print_success ("Core_Parser_Int");
 		return TESTS_PASS;
 	}
-	else
-	{
-		tst_print_fail ("Core_Parser_Int");
-		return TESTS_FAIL;
-	}
-	
-	return 0;
+
+	tst_print_fail ("Core_Parser_Int");
+	return TESTS_FAIL;
 }
 
 /*
@@ -181,13 +169,9 @@ static int tst_core_time (void)
 		tst_print_success ("Core_Time_GetStr");
 		return TESTS_PASS;
 	}
-	else
-	{
-		tst_print_fail ("Core_Time_GetStr");
-		return TESTS_FAIL;
-	}
 	
-	return 0;
+	tst_print_fail ("Core_Time_GetStr");
+	return TESTS_FAIL;
 }
 
 /* |--------------------------------------------|
@@ -210,13 +194,9 @@ static int tst_task_checkinput (void)
 		tst_print_success ("Task_Check_Input");
 		return TESTS_PASS;
 	}
-	else
-	{
-		tst_print_fail ("Task_Check_Input");
-		return TESTS_FAIL;
-	}
-	
-	return 0;
+
+	tst_print_fail ("Task_Check_Input");
+	return TESTS_FAIL;
 }
 
 /* |--------------------------------------------|
@@ -247,13 +227,9 @@ static int tst_ui_getcolor (char* colorname, char* colorcode)
 		printf ("UI_GetColor_%s:\t%sSUCCESS%s\n", colorname, BC_BLD_GREEN, BC_TXT_RST);
 		return TESTS_PASS;
 	}
-	else
-	{
-		printf ("UI_GetColor_%s:\t%sFAIL%s\n", colorname, BC_BLD_RED, BC_TXT_RST);
-		return TESTS_FAIL;
-	}
 	
-	return 0;
+	printf ("UI_GetColor_%s:\t%sFAIL%s\n", colorname, BC_BLD_RED, BC_TXT_RST);
+	return TESTS_FAIL;
 }
 
 /* |--------------------------------------------|
@@ -282,13 +258,9 @@ static int tst_export_icaldate (void)
 		tst_print_success ("Export_ICal_GetDateStr");
 		return TESTS_PASS;
 	}
-	else
-	{
-		tst_print_fail ("Export_ICal_GetDateStr");
-		return TESTS_FAIL;
-	}
 	
-	return 0;
+	tst_print_fail ("Export_ICal_GetDateStr");
+	return TESTS_FAIL;
 }
 
 /* |--------------------------------------------|
@@ -317,13 +289,9 @@ static int tst_import_icaldate (void)
 		tst_print_success ("Import_ICal_GetDateStr");
 		return TESTS_PASS;
 	}
-	else
-	{
-		tst_print_fail ("Import_ICal_GetDateStr");
-		return TESTS_FAIL;
-	}
 	
-	return 0;
+	tst_print_fail ("Import_ICal_GetDateStr");
+	return TESTS_FAIL;
 }
 
 int main (int argc, char* argv[])

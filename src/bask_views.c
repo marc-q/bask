@@ -192,9 +192,9 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 			{
 				pprojectmax = i;
 			}
-		
-			ptr = ptr->next;
 		}
+		
+		ptr = ptr->next;
 	}
 	
 	ui_tbl_print_title ("ID", -1, GETDIGITS (tcore->baskbin_uid)+1);
