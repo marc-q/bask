@@ -236,9 +236,9 @@ void import_csv_cmd (bask_core* tcore, struct bask_task** first, char* filename)
 */
 int import_ical_getdatestr (char* out, char* datestr)
 {	
-	char bdate[20];
+	char bdate[F_BB_S_DATE];
 	
-	if (strlen (datestr) != ICAL_L_DATE)
+	if (strlen (datestr) != F_ICAL_S_DATE-1)
 	{
 		return -1;
 	}

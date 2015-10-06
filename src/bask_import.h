@@ -2,7 +2,6 @@
 #define __BASK_IMPORT_H__
 
 #define ICALSEP ":\n"
-#define ICAL_L_DATE 15
 
 int import_baskbin (bask_core*, struct bask_task**, char*);
 void import_baskbin_cmd (bask_core*, struct bask_task**, char*);

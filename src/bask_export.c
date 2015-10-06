@@ -100,9 +100,9 @@ int export_csv (bask_core* tcore, struct bask_task** first, char* filename)
 */
 int export_ical_getdatestr (char* out, char* datestr)
 {	
-	char idate[16];
+	char idate[F_ICAL_S_DATE];
 	
-	if (strlen (datestr) != 19)
+	if (strlen (datestr) != F_BB_S_DATE-1)
 	{
 		return -1;
 	}
@@ -136,8 +136,8 @@ int export_ical_getdatestr (char* out, char* datestr)
 */
 static int export_ical_event (FILE* exportfile, struct bask_task* task)
 {
-	char tadded[16];
-	char tfinished[16];
+	char tadded[F_ICAL_S_DATE];
+	char tfinished[F_ICAL_S_DATE];
 	
 	if (exportfile == NULL)
 	{

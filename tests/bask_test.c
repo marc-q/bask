@@ -149,7 +149,7 @@ static int tst_core_parser_int (void)
 */
 static int tst_core_time (void)
 {
-	char datestr[20];
+	char datestr[F_BB_S_DATE];
 	
 	utils_time_get_str (datestr, sizeof (datestr));
 	
@@ -159,7 +159,7 @@ static int tst_core_time (void)
 		return TESTS_FAIL;
 	}
 	
-	if (strlen(datestr) == 19 &&
+	if (strlen(datestr) == F_BB_S_DATE-1 &&
 	    datestr[2] == '/' &&
 	    datestr[5] == '/' &&
 	    datestr[8] == '/' &&
@@ -243,7 +243,7 @@ static int tst_ui_getcolor (char* colorname, char* colorcode)
 */
 static int tst_export_icaldate (void)
 {
-	char datestr[16];
+	char datestr[F_ICAL_S_DATE];
 	
 	export_ical_getdatestr (datestr, "23/59/59/09/09/2015");
 	
@@ -274,7 +274,7 @@ static int tst_export_icaldate (void)
 */
 static int tst_import_icaldate (void)
 {
-	char datestr[20];
+	char datestr[F_BB_S_DATE];
 	
 	import_ical_getdatestr (datestr, "20150909T235959");
 	

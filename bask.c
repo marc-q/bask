@@ -290,7 +290,12 @@ int main (int argc, char* argv[])
 	bask_get_baskpath (&tcore, tcore.path_baskbin, BASKBINFILE);
 	
 	/* NOTE: These are cmd's that don't need the tasks data, so it wont be loaded. */
-	if (argc == 2)
+	if (argc <= 1)
+	{
+		usage ();
+		exit (EXIT_FAILURE);
+	}
+	else if (argc == 2)
 	{
 		if (utils_streq (argv[optind], "help") == 0)
 		{
@@ -355,11 +360,7 @@ int main (int argc, char* argv[])
 		}
 	}
 	
-	if (argc <= 1)
-	{
-		usage ();
-	}
-	else if (optind > 1)
+	if (optind > 1)
 	{
 		if (argc-optind == 2)
 		{

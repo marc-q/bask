@@ -12,8 +12,8 @@
 #define F_BB_S_DATE 20
 #define F_ICAL_S_DATE 16
 
-#define T_S_ADDED 20
-#define T_S_FINISHED 20
+#define T_S_ADDED F_BB_S_DATE
+#define T_S_FINISHED F_BB_S_DATE
 #define T_S_PROJECT 51
 #define T_S_DESCRIPTION 201
 
