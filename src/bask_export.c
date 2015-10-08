@@ -1,9 +1,11 @@
 /* Copyright 2015 Marc Volker Dickmann */
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "../lib/dutils.h"
 #include "bask_core.h"
 #include "bask_errors.h"
+#include "bask_time.h"
 #include "bask_task.h"
 
 /* |--------------------------------------------|
@@ -99,7 +101,7 @@ int export_csv (bask_core* tcore, struct bask_task** first, char* filename)
 	InitVersion: 0.0.1
 */
 int export_ical_getdatestr (char* out, char* datestr)
-{	
+{
 	char idate[F_ICAL_S_DATE];
 	
 	if (strlen (datestr) != F_BB_S_DATE-1)

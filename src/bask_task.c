@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include "bask_core.h"
+#include "bask_time.h"
 #include "bask_task.h"
 #include "bask_export.h"
 
@@ -279,7 +280,7 @@ int task_create (bask_core* tcore, struct bask_task** first, int priority, char*
 {	
 	char added[T_S_ADDED];
 
-	if (utils_time_get_str (added, sizeof (added)) != 0)
+	if (time_get_str (added, sizeof (added)) != 0)
 	{
 		return -1;
 	}
@@ -312,7 +313,7 @@ int task_finish (struct bask_task** first, int id)
 {
 	char finished[T_S_FINISHED];
 
-	if (utils_time_get_str (finished, sizeof (finished)) != 0)
+	if (time_get_str (finished, sizeof (finished)) != 0)
 	{
 		return -1;
 	}

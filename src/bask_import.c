@@ -1,6 +1,7 @@
 /* Copyright 2015 Marc Volker Dickmann */
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "bask_core.h"
 #include "bask_errors.h"
 #include "bask_task.h"
