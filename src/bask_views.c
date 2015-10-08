@@ -175,12 +175,13 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 */
 void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first)
 {
-	int i, pprojectmax;
+	int i, tprojectmax, tdescriptionmax;
 	char prefix[22], pri[4];
 	struct bask_task* ptr = *first;
 	
 	i = 0;
-	pprojectmax = 15;
+	tprojectmax = 15;
+	tdescriptionmax = tcore->t_descriptionmax;
 	
 	while (ptr != NULL)
 	{
@@ -188,9 +189,16 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 		{
 			i = strlen (ptr->t_project);
 		
-			if (i > pprojectmax)
+			if (i > tprojectmax)
 			{
-				pprojectmax = i;
+				tprojectmax = i;
+			}
+			
+			i = strlen (ptr->t_description);
+			
+			if (i > tdescriptionmax)
+			{
+				tdescriptionmax = i;
 			}
 		}
 		
@@ -198,9 +206,9 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	}
 	
 	ui_tbl_print_title ("ID", -1, GETDIGITS (tcore->baskbin_uid)+1);
-	ui_tbl_print_title ("Project", pprojectmax, 1);
+	ui_tbl_print_title ("Project", tprojectmax, 1);
 	ui_tbl_print_title ("Pri", 3, 1);
-	ui_tbl_print_title ("Description", 50, 1);
+	ui_tbl_print_title ("Description", tdescriptionmax, 1);
 	printf ("\n");
 	
 	i = 0;
@@ -245,9 +253,9 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 		
 			printf ("%s", prefix);
 			ui_tbl_print_field_int (ptr->t_id, GETDIGITS (tcore->baskbin_uid) - GETDIGITS (ptr->t_id), 2);
-			ui_tbl_print_field_str (ptr->t_project, -1, pprojectmax+1);
+			ui_tbl_print_field_str (ptr->t_project, -1, tprojectmax+1);
 			ui_tbl_print_field_str (pri, -1, 4);
-			ui_tbl_print_field_str (ptr->t_description, -1, 50);
+			ui_tbl_print_field_str (ptr->t_description, -1, tdescriptionmax);
 			printf ("%s\n", BC_TXT_RST);
 			
 			i++;

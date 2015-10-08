@@ -23,6 +23,7 @@ struct _bask_core
 {
 	int tc_amount;
 	int baskbin_uid;
+	int t_descriptionmax;
 	char path_baskpath[200];
 	char path_baskconf[200];
 	char path_basktheme[200];

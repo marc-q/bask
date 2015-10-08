@@ -13,11 +13,11 @@
    |--------------------------------------------| */
 
 /*
-	Function: task_check_input (char* added, char* finished, char* project, char* description, int printout);
+	Function: task_check_input (bask_core* tcore, char* added, char* finished, char* project, char* description, int printout);
 	Description: Checks if the input is correct and displays the error messages if printout equals 1!
 	InitVersion: 0.0.1
 */
-int task_check_input (char* added, char* finished, char* project, char* description, int printout)
+int task_check_input (bask_core* tcore, char* added, char* finished, char* project, char* description, int printout)
 {
 	if (strlen (added) >= T_S_ADDED)
 	{
@@ -43,7 +43,8 @@ int task_check_input (char* added, char* finished, char* project, char* descript
 		}
 		return -3;
 	}
-	else if (strlen (description) > 50)
+	else if (strlen (description) >= T_S_DESCRIPTION ||
+		 strlen (description) > tcore->t_descriptionmax)
 	{
 		if (printout == 1)
 		{
@@ -379,7 +380,7 @@ int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** 
 */
 void task_create_cmd (bask_core* tcore, struct bask_task** first, int priority, char* project, char* description)
 {
-	if (task_check_input ("", "", project, description, 1) == 0)
+	if (task_check_input (tcore, "", "", project, description, 1) == 0)
 	{
 		task_create (tcore, first, priority, project, description);
 		printf ("Created task %i.\n", tcore->baskbin_uid);
@@ -406,7 +407,7 @@ void task_remove_cmd (bask_core* tcore, struct bask_task** first, int id)
 */
 void task_modificate_cmd (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
 {
-	if (task_check_input (added, finished, project, description, 1) == 0)
+	if (task_check_input (tcore, added, finished, project, description, 1) == 0)
 	{
 		task_modificate (first, id, active, state, priority, added, finished, project, description);
 		printf ("Modificated task %i.\n", id);

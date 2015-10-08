@@ -98,7 +98,7 @@ static int bask_init_local_file (char* filename, char* content)
 */
 static void bask_init_baskconf (bask_core* tcore)
 {
-	bask_init_local_file (tcore->path_baskconf, "# Path to the baskbin.\nbaskbin=default;");
+	bask_init_local_file (tcore->path_baskconf, "# Path to the baskbin.\nbaskbin=default;\n# The maximum length of descriptions (0-200; default: 50;)\ntask_description_max=50;");
 }
 
 /*
@@ -155,6 +155,8 @@ static void bask_load_conf (bask_core* tcore)
 	char *token, *saveptr;
 	FILE *baskconf;
 	
+	tcore->t_descriptionmax = 50;
+	
 	baskconf = fopen (tcore->path_baskconf, "r");
 	
 	if (baskconf == NULL)
@@ -171,10 +173,13 @@ static void bask_load_conf (bask_core* tcore)
 			token = strtok_r (line, BASKSEP, &saveptr);
 		
 			parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), BASKSEP, saveptr);
+			parser_get_int (token, "task_description_max", &tcore->t_descriptionmax, BASKSEP, saveptr);
 		}
 	}
 	
 	fclose (baskconf);
+	
+	
 	
 	if (utils_streq (baskbin, "default") != 0)
 	{

@@ -15,7 +15,7 @@ struct bask_task
 	struct bask_task* next;
 };
 
-int task_check_input (char*, char*, char*, char*, int);
+int task_check_input (bask_core* tcore, char*, char*, char*, char*, int);
 
 void task_free_ll (struct bask_task**);
 int task_insert (struct bask_task**, int, int, int, int, int, char*, char*, char*, char*);
