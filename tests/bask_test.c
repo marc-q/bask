@@ -9,7 +9,7 @@
 #include "../src/bask_task.h"
 #include "../src/bask_ui.h"
 #include "../src/bask_export.h"
-#include "../src/bask_import.h"ma
+#include "../src/bask_import.h"
 
 #define TESTS_AMOUNT 40
 #define TESTS_FAIL 0
