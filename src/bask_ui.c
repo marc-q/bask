@@ -141,7 +141,7 @@ void ui_theme_load (bask_core* tcore, bask_theme* btheme)
 		exit (EXIT_FAILURE);
 	}
 	
-	while (fgets (line, sizeof (line)-1, basktheme) != NULL)
+	while (fgets (line, sizeof (line), basktheme) != NULL)
 	{
 		if (line[0] != '#')
 		{

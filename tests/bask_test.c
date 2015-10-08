@@ -200,7 +200,8 @@ static int tst_time_gettm_str (void)
 	    out.tm_sec == 59 &&
 	    out.tm_mday == 9 &&
 	    out.tm_mon == 8 &&
-	    out.tm_year == 115)
+	    out.tm_year == 115 &&
+	    time_get_tm_str (&out, "23/59/59/9/9/2015") == -1)
 	{
 		tst_print_success ("Time_Get_Tm_Str");
 		return TESTS_PASS;

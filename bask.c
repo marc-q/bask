@@ -179,8 +179,6 @@ static void bask_load_conf (bask_core* tcore)
 	
 	fclose (baskconf);
 	
-	
-	
 	if (utils_streq (baskbin, "default") != 0)
 	{
 		strcpy (tcore->path_baskbin, baskbin);
