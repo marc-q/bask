@@ -315,7 +315,7 @@ int import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 			{
 				import_ical_getdatestr (tadded, tt_tmp);
 			}
-			else if (parser_get_str (token, "DEND", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
+			else if (parser_get_str (token, "DTEND", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
 			{
 				import_ical_getdatestr (tfinished, tt_tmp);
 			}
