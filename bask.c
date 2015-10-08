@@ -92,6 +92,36 @@ static int bask_init_local_file (char* filename, char* content)
 }
 
 /*
+	Function: bask_init_baskconf (bask_core* tcore);
+	Description: Inits a config file at tcore->path_baskconf.
+	InitVersion: 0.0.1
+*/
+static void bask_init_baskconf (bask_core* tcore)
+{
+	bask_init_local_file (tcore->path_baskconf, "# Path to the baskbin.\nbaskbin=default;");
+}
+
+/*
+	Function: bask_init_baskbin (bask_core* tcore);
+	Description: Inits a baskbin at tcore->path_baskbin.
+	InitVersion: 0.0.1
+*/
+static void bask_init_baskbin (bask_core* tcore)
+{
+	bask_init_local_file (tcore->path_baskbin, "BASKBIN\nbbuid=0;\nBBEND");
+}
+
+/*
+	Function: bask_init_basktheme (bask_core* tcore);
+	Description: Inits a basktheme at tcore->path_basktheme.
+	InitVersion: 0.0.1
+*/
+static void bask_init_basktheme (bask_core* tcore)
+{
+	bask_init_local_file (tcore->path_basktheme, "color_normal=default;\ncolor_important=default;\ncolor_today=default;\ncolor_critical=default;\ncolor_finished=default;\ncolor_pbarbak=default;\ncolor_seclinesbak=default;");
+}
+
+/*
 	Function: bask_init_local (bask_core* tcore);
 	Description: Inits Bask local, creates the needed files.
 	InitVersion: 0.0.1
@@ -107,9 +137,9 @@ static int bask_init_local (bask_core* tcore)
 		return 1;
 	}
 
-	bask_init_local_file (tcore->path_baskconf, "# Path to the baskbin.\nbaskbin=default;");
-	bask_init_local_file (tcore->path_baskbin, "BASKBIN\nbbuid=0;\nBBEND");
-	bask_init_local_file (tcore->path_basktheme, "color_normal=default;\ncolor_important=default;\ncolor_today=default;\ncolor_critical=default;\ncolor_finished=default;\ncolor_pbarbak=default;\ncolor_seclinesbak=default;");
+	bask_init_baskconf (tcore);
+	bask_init_baskbin (tcore);
+	bask_init_basktheme (tcore);
 	
 	return 0;
 }
@@ -207,6 +237,7 @@ static void print_help (void)
 	printf ("\tlist\t\t\t\t\tLists all tasks.\n");
 	printf ("\tsummary\t\t\t\t\tSummary of all projects.\n");
 	
+	printf ("\tinit <FILE>\t\t\t\tInits the FILE or all files if no FILE is given.\n");
 	printf ("\tadd [priority] [PROJECT] [DESCRIPTION]\tAdd a task.\n");
 	printf ("\tremove [id]\t\t\t\tRemoves a task.\n");
 	
@@ -297,20 +328,41 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 2)
 	{
-		if (utils_streq (argv[optind], "help") == 0)
+		if (utils_streq (argv[1], "help") == 0)
 		{
 			print_help ();
 			exit (EXIT_SUCCESS);
 		}
-		else if (utils_streq (argv[optind], "about") == 0)
+		else if (utils_streq (argv[1], "about") == 0)
 		{
 			print_about ();
 			exit (EXIT_SUCCESS);
 		}
-		else if (utils_streq (argv[optind], "init") == 0)
+		else if (utils_streq (argv[1], "init") == 0)
 		{
 			bask_init_local (&tcore);
 			exit (EXIT_SUCCESS);
+		}
+	}
+	else if (argc == 3)
+	{
+		if (utils_streq (argv[1], "init") == 0)
+		{
+			if (utils_streq (argv[2], "baskconf") == 0)
+			{
+				bask_init_baskconf (&tcore);
+				exit (EXIT_SUCCESS);
+			}
+			else if (utils_streq (argv[2], "baskbin") == 0)
+			{
+				bask_init_baskbin (&tcore);
+				exit (EXIT_SUCCESS);
+			}
+			else if (utils_streq (argv[2], "basktheme") == 0)
+			{
+				bask_init_basktheme (&tcore);
+				exit (EXIT_SUCCESS);
+			}
 		}
 	}
 	
