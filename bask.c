@@ -328,17 +328,17 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 2)
 	{
-		if (utils_streq (argv[1], "help") == 0)
+		if (utils_streq (argv[optind], "help") == 0)
 		{
 			print_help ();
 			exit (EXIT_SUCCESS);
 		}
-		else if (utils_streq (argv[1], "about") == 0)
+		else if (utils_streq (argv[optind], "about") == 0)
 		{
 			print_about ();
 			exit (EXIT_SUCCESS);
 		}
-		else if (utils_streq (argv[1], "init") == 0)
+		else if (utils_streq (argv[optind], "init") == 0)
 		{
 			bask_init_local (&tcore);
 			exit (EXIT_SUCCESS);
@@ -346,19 +346,19 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 3)
 	{
-		if (utils_streq (argv[1], "init") == 0)
+		if (utils_streq (argv[optind], "init") == 0)
 		{
-			if (utils_streq (argv[2], "baskconf") == 0)
+			if (utils_streq (argv[optind+1], "baskconf") == 0)
 			{
 				bask_init_baskconf (&tcore);
 				exit (EXIT_SUCCESS);
 			}
-			else if (utils_streq (argv[2], "baskbin") == 0)
+			else if (utils_streq (argv[optind+1], "baskbin") == 0)
 			{
 				bask_init_baskbin (&tcore);
 				exit (EXIT_SUCCESS);
 			}
-			else if (utils_streq (argv[2], "basktheme") == 0)
+			else if (utils_streq (argv[optind+1], "basktheme") == 0)
 			{
 				bask_init_basktheme (&tcore);
 				exit (EXIT_SUCCESS);

@@ -191,7 +191,7 @@ static int tst_time_gettm_str (void)
 	
 	if (time_get_tm_str (&out, "23/59/59/09/09/2015") != 0)
 	{
-		tst_print_fail ("Core_Time_GetTFStr");
+		tst_print_fail ("Time_Get_Tm_Str");
 		return TESTS_FAIL;
 	}
 	
