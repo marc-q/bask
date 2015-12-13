@@ -1,6 +1,8 @@
 /* Copyright 2015 Marc Volker Dickmann */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "bask_core.h"
 
 /* |--------------------------------------------|

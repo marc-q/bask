@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include "bask_core.h"
+#include "bask_errors.h"
 #include "bask_time.h"
 #include "bask_task.h"
 #include "bask_export.h"
