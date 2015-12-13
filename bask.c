@@ -156,6 +156,7 @@ static void bask_load_conf (bask_core* tcore)
 	FILE *baskconf;
 	
 	tcore->t_descriptionmax = 50;
+	tcore->t_descriptionbreak = 1;
 	
 	baskconf = fopen (tcore->path_baskconf, "r");
 	
