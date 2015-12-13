@@ -26,7 +26,18 @@
 */
 static void tst_print_success (char* tstname)
 {
-	printf ("%s:\t%sSUCCESS%s\n", tstname, BC_BLD_GREEN, BC_TXT_RST);
+	printf ("%s:", tstname);
+	
+	if (strlen (tstname) < 15)
+	{
+		printf ("\t\t");
+	}
+	else
+	{
+		printf ("\t");
+	}
+	
+	printf ("%sSUCCESS%s\n", BC_BLD_GREEN, BC_TXT_RST);
 }
 
 /*
@@ -36,7 +47,18 @@ static void tst_print_success (char* tstname)
 */
 static void tst_print_fail (char* tstname)
 {
-	printf ("%s:\t%sFAIL%s\n", tstname, BC_BLD_RED, BC_TXT_RST);
+	printf ("%s:", tstname);
+	
+	if (strlen (tstname) < 15)
+	{
+		printf ("\t\t");
+	}
+	else
+	{
+		printf ("\t");
+	}
+	
+	printf ("%sFAIL%s\n", BC_BLD_RED, BC_TXT_RST);
 }
 
 /*
@@ -222,6 +244,10 @@ static int tst_time_gettm_str (void)
 */
 static int tst_task_checkinput (void)
 {
+	int passed;
+	
+	passed = 0;
+	
 	bask_core tcore;
 	
 	tcore.t_descriptionmax = 50;
@@ -232,6 +258,13 @@ static int tst_task_checkinput (void)
 	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/02015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -2 &&
 	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -3 &&
 	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", 0) == -4)
+	{
+		passed = 1;
+	}
+	
+	tcore.t_descriptionbreak = 0;
+	
+	if (passed == 1 && task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem .", 0) == -4)
 	{
 		tst_print_success ("Task_Check_Input");
 		return TESTS_PASS;

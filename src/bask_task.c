@@ -44,8 +44,8 @@ int task_check_input (bask_core* tcore, char* added, char* finished, char* proje
 		}
 		return -3;
 	}
-	else if ((strlen (description) >= T_S_DESCRIPTION ||
-		 strlen (description) > tcore->t_descriptionmax) && tcore->t_descriptionbreak == 0)
+	else if (strlen (description) >= T_S_DESCRIPTION ||
+		 strlen (description) > tcore->t_descriptionmax && tcore->t_descriptionbreak == 0)
 	{
 		if (printout == 1)
 		{
