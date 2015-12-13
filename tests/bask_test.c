@@ -225,6 +225,7 @@ static int tst_task_checkinput (void)
 	bask_core tcore;
 	
 	tcore.t_descriptionmax = 50;
+	tcore.t_descriptionbreak = 0;
 	
 	if (task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == 0 &&
 	    task_check_input (&tcore, "23/59/59/09/09/02015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -1 &&
