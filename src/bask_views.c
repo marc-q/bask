@@ -181,7 +181,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	
 	i = j = x = 0;
 	tprojectmax = 15;
-	tdescriptionmax = tcore->t_descriptionmax;
+	tdescriptionmax = tcore->t_descriptionmin;
 	
 	while (ptr != NULL)
 	{

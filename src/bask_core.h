@@ -24,6 +24,7 @@ struct _bask_core
 	int tc_amount;
 	int baskbin_uid;
 	int t_descriptionmax;
+	int t_descriptionmin;
 	int t_descriptionbreak;
 	char path_baskpath[200];
 	char path_baskconf[200];

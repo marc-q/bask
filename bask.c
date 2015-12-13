@@ -69,25 +69,16 @@ static void bask_get_baskpath (bask_core* tcore, char* out, char* filename)
 	Description: Creates a file if not exist filled the content.
 	InitVersion: 0.0.1
 */
-static int bask_init_local_file (char* filename, char* content)
+static int bask_init_local_file (char* filename, FILE** baskfile)
 {
-	FILE *baskfile;
+	*baskfile = fopen (filename, "w+");
 	
-	baskfile = fopen (filename, "w+");
-	
-	if (baskfile == NULL)
+	if (*baskfile == NULL)
 	{
 		errors_filenotwritten (filename);
 		return -1;
 	}
-	
-	if (content != NULL)
-	{
-		fprintf (baskfile, "%s", content);
-	}
-	
-	fclose (baskfile);
-	
+		
 	return 0;
 }
 
@@ -98,7 +89,17 @@ static int bask_init_local_file (char* filename, char* content)
 */
 static void bask_init_baskconf (bask_core* tcore)
 {
-	bask_init_local_file (tcore->path_baskconf, "# Path to the baskbin.\nbaskbin=default;\n# The maximum length of descriptions (0-200; default: 50;)\ntask_description_max=50;\n# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=1;\n");
+	FILE* baskfile;
+	
+	if (bask_init_local_file (tcore->path_baskconf, &baskfile) == 0)
+	{	
+		fprintf (baskfile, "# Path to the baskbin.\nbaskbin=default;\n");
+		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50;)\ntask_description_max=50;\n");
+		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50;)\ntask_description_min=50;\n");
+		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=1;\n");
+	
+		fclose (baskfile);	
+	}
 }
 
 /*
@@ -108,7 +109,14 @@ static void bask_init_baskconf (bask_core* tcore)
 */
 static void bask_init_baskbin (bask_core* tcore)
 {
-	bask_init_local_file (tcore->path_baskbin, "BASKBIN\nbbuid=0;\nBBEND");
+	FILE* baskfile;
+	
+	if (bask_init_local_file (tcore->path_baskbin, &baskfile) == 0)
+	{
+		fprintf (baskfile, "BASKBIN\nbbuid=0;\nBBEND");
+		
+		fclose (baskfile);
+	}
 }
 
 /*
@@ -118,7 +126,20 @@ static void bask_init_baskbin (bask_core* tcore)
 */
 static void bask_init_basktheme (bask_core* tcore)
 {
-	bask_init_local_file (tcore->path_basktheme, "color_normal=default;\ncolor_important=default;\ncolor_today=default;\ncolor_critical=default;\ncolor_finished=default;\ncolor_pbarbak=default;\ncolor_seclinesbak=default;");
+	FILE* baskfile;
+	
+	if (bask_init_local_file (tcore->path_basktheme, &baskfile) == 0)
+	{	
+		fprintf (baskfile, "color_normal=default;\n");
+		fprintf (baskfile, "color_important=default;\n");
+		fprintf (baskfile, "color_today=default;\n");
+		fprintf (baskfile, "color_critical=default;\n");
+		fprintf (baskfile, "color_finished=default;\n");
+		fprintf (baskfile, "color_pbarbak=default;\n");
+		fprintf (baskfile, "color_seclinesbak=default;\n");
+		
+		fclose (baskfile);
+	}
 }
 
 /*
@@ -156,6 +177,7 @@ static void bask_load_conf (bask_core* tcore)
 	FILE *baskconf;
 	
 	tcore->t_descriptionmax = 50;
+	tcore->t_descriptionmin = 50;
 	tcore->t_descriptionbreak = 1;
 	
 	baskconf = fopen (tcore->path_baskconf, "r");
@@ -175,6 +197,7 @@ static void bask_load_conf (bask_core* tcore)
 		
 			parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), BASKSEP, saveptr);
 			parser_get_int (token, "task_description_max", &tcore->t_descriptionmax, BASKSEP, saveptr);
+			parser_get_int (token, "task_description_min", &tcore->t_descriptionmin, BASKSEP, saveptr);
 			parser_get_int (token, "task_description_break", &tcore->t_descriptionbreak, BASKSEP, saveptr);
 		}
 	}
