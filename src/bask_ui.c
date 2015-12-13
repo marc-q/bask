@@ -259,9 +259,9 @@ void ui_misc_print_progress (float p, char* bakcolor)
 */
 void ui_tbl_print_title (char* name, int len_underline, int len_normal)
 {	
-	printf ("\033[4m%s", name);
+	printf ("%s%s", BC_TXT_UND, name);
 	ui_print_nspaces_str (name, len_underline);
-	printf ("\033[0m");
+	printf ("%s", BC_TXT_RST);
 	
 	ui_print_nspaces (len_normal);
 }

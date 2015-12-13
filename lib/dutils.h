@@ -89,6 +89,7 @@
 #define BC_BAK_HGH_CYAN "\033[0;106m"	/* Cyan */
 #define BC_BAK_HGH_WHITE "\033[0;107m"	/* White */
 
+#define BC_TXT_UND "\033[4m"		/* Text Underline */
 #define BC_TXT_RST "\033[0m"		/* Text Reset */
 
 /* BITS */

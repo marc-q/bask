@@ -65,8 +65,8 @@ static void bask_get_baskpath (bask_core* tcore, char* out, char* filename)
 }
 
 /*
-	Function: bask_init_local_file (char* filename, char* content);
-	Description: Creates a file if not exist filled the content.
+	Function: bask_init_local_file (char* filename, FILE** baskfile);
+	Description: Creates a file if not exist.
 	InitVersion: 0.0.1
 */
 static int bask_init_local_file (char* filename, FILE** baskfile)
@@ -116,7 +116,7 @@ static void bask_init_baskbin (bask_core* tcore)
 	
 	if (bask_init_local_file (tcore->path_baskbin, &baskfile) == 0)
 	{
-		fprintf (baskfile, "BASKBIN\nbbuid=0;\nBBEND");
+		fprintf (baskfile, "BASKBIN\nbbuid=0;\nBBEND\n");
 		
 		fclose (baskfile);
 	}
