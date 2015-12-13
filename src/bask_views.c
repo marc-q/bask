@@ -101,7 +101,7 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 	struct bask_task* ptr = *first;
 	
 	i = ppercent = premaining  = 0;
-	pprojectmax = 15;
+	pprojectmax = tcore->t_projectmin;
 	
 	while (ptr != NULL)
 	{
@@ -180,7 +180,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	struct bask_task* ptr = *first;
 	
 	i = j = x = 0;
-	tprojectmax = 15;
+	tprojectmax = tcore->t_projectmin;
 	tdescriptionmax = tcore->t_descriptionmin;
 	
 	while (ptr != NULL)

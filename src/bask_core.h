@@ -23,6 +23,7 @@ struct _bask_core
 {
 	int tc_amount;
 	int baskbin_uid;
+	int t_projectmin;
 	int t_descriptionmax;
 	int t_descriptionmin;
 	int t_descriptionbreak;

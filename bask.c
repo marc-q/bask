@@ -93,10 +93,13 @@ static void bask_init_baskconf (bask_core* tcore)
 	
 	if (bask_init_local_file (tcore->path_baskconf, &baskfile) == 0)
 	{	
-		fprintf (baskfile, "# Path to the baskbin.\nbaskbin=default;\n");
-		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50;)\ntask_description_max=50;\n");
-		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50;)\ntask_description_min=50;\n");
-		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=1;\n");
+		fprintf (baskfile, "# Path to the baskbin.\nbaskbin=default;\n#\n");
+		
+		fprintf (baskfile, "The minimum length of the project field in characters (0-200; default: 15;)\ntask_project_min=15;\n#\n");
+		
+		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50;)\ntask_description_max=50;\n#\n");
+		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50;)\ntask_description_min=50;\n#\n");
+		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=1;\n#\n");
 	
 		fclose (baskfile);	
 	}
@@ -176,6 +179,7 @@ static void bask_load_conf (bask_core* tcore)
 	char *token, *saveptr;
 	FILE *baskconf;
 	
+	tcore->t_projectmin = 15;
 	tcore->t_descriptionmax = 50;
 	tcore->t_descriptionmin = 50;
 	tcore->t_descriptionbreak = 1;
@@ -196,6 +200,7 @@ static void bask_load_conf (bask_core* tcore)
 			token = strtok_r (line, BASKSEP, &saveptr);
 		
 			parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), BASKSEP, saveptr);
+			parser_get_int (token, "task_project_min", &tcore->t_projectmin, BASKSEP, saveptr);
 			parser_get_int (token, "task_description_max", &tcore->t_descriptionmax, BASKSEP, saveptr);
 			parser_get_int (token, "task_description_min", &tcore->t_descriptionmin, BASKSEP, saveptr);
 			parser_get_int (token, "task_description_break", &tcore->t_descriptionbreak, BASKSEP, saveptr);
