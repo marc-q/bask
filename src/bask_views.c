@@ -187,6 +187,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	{
 		if (ptr->t_active != 0)
 		{
+			
 			i = strlen (ptr->t_project);
 		
 			if (i > tprojectmax)
@@ -263,7 +264,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 					if (x == tdescriptionmax)
 					{
 						printf ("\n");
-						ui_print_nspaces (GETDIGITS (ptr->t_id) + tprojectmax + 8);
+						ui_print_nspaces (GETDIGITS (tcore->baskbin_uid)  + tprojectmax + 8);
 						x = 0;
 					}
 					
