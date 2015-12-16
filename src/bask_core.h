@@ -17,16 +17,18 @@
 #define T_S_PROJECT 51
 #define T_S_DESCRIPTION 201
 
+#define T_O_DESCRIPTIONBREAK 0
+
 #define BIGGEST(a,b) ((a>b) ? (a) : (b))
 
 struct _bask_core
 {
 	int tc_amount;
 	int baskbin_uid;
-	int t_projectmin;
-	int t_descriptionmax;
-	int t_descriptionmin;
-	int t_descriptionbreak;
+	short t_projectmin; /* 0 - 200 */
+	short t_descriptionmax; /* 0 - 200 */
+	short t_descriptionmin; /* 0 - 200 */
+	short t_options;
 	char path_baskpath[200];
 	char path_baskconf[200];
 	char path_basktheme[200];
@@ -37,6 +39,7 @@ typedef struct _bask_core bask_core;
 
 int parser_get_str (char*, char*, char*, size_t, char*, char*);
 int parser_get_int (char*, char*, int*, char*, char*);
+int parser_get_short (char*, char*, short*, char*, char*);
 int utils_streq (char*, char*);
 
 #endif /* __BASK_CORE_H__ */

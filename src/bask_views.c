@@ -197,7 +197,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 			
 			i = strlen (ptr->t_description);
 			
-			if (i > tdescriptionmax && tcore->t_descriptionbreak == 0)
+			if (i > tdescriptionmax && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == 0)
 			{
 				tdescriptionmax = i;
 			}
@@ -257,7 +257,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 			ui_tbl_print_field_str (ptr->t_project, -1, tprojectmax+1);
 			ui_tbl_print_field_str (pri, -1, 4);
 			
-			if (strlen (ptr->t_description) > tdescriptionmax && tcore->t_descriptionbreak == 1)
+			if (strlen (ptr->t_description) > tdescriptionmax && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == 1)
 			{
 				for (j = 0, x = 0; j < strlen (ptr->t_description); j++, x++)
 				{

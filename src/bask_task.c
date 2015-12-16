@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "../lib/dutils.h"
 #include "bask_core.h"
 #include "bask_errors.h"
 #include "bask_time.h"
@@ -45,7 +46,7 @@ int task_check_input (bask_core* tcore, char* added, char* finished, char* proje
 		return -3;
 	}
 	else if (strlen (description) >= T_S_DESCRIPTION ||
-		 strlen (description) > tcore->t_descriptionmax && tcore->t_descriptionbreak == 0)
+		 strlen (description) > tcore->t_descriptionmax && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == 0)
 	{
 		if (printout == 1)
 		{

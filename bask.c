@@ -175,6 +175,7 @@ static int bask_init_local (bask_core* tcore)
 */
 static void bask_load_conf (bask_core* tcore)
 {
+	int tmp;
 	char line[200], baskbin[151];
 	char *token, *saveptr;
 	FILE *baskconf;
@@ -182,7 +183,9 @@ static void bask_load_conf (bask_core* tcore)
 	tcore->t_projectmin = 15;
 	tcore->t_descriptionmax = 50;
 	tcore->t_descriptionmin = 50;
-	tcore->t_descriptionbreak = 1;
+	
+	tcore->t_options = 0;
+	tcore->t_options ^= BITCOPY (1, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
 	
 	baskconf = fopen (tcore->path_baskconf, "r");
 	
@@ -200,10 +203,13 @@ static void bask_load_conf (bask_core* tcore)
 			token = strtok_r (line, BASKSEP, &saveptr);
 		
 			parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), BASKSEP, saveptr);
-			parser_get_int (token, "task_project_min", &tcore->t_projectmin, BASKSEP, saveptr);
-			parser_get_int (token, "task_description_max", &tcore->t_descriptionmax, BASKSEP, saveptr);
-			parser_get_int (token, "task_description_min", &tcore->t_descriptionmin, BASKSEP, saveptr);
-			parser_get_int (token, "task_description_break", &tcore->t_descriptionbreak, BASKSEP, saveptr);
+			parser_get_short (token, "task_project_min", &tcore->t_projectmin, BASKSEP, saveptr);
+			parser_get_short (token, "task_description_max", &tcore->t_descriptionmax, BASKSEP, saveptr);
+			parser_get_short (token, "task_description_min", &tcore->t_descriptionmin, BASKSEP, saveptr);
+			if (parser_get_int (token, "task_description_break", &tmp, BASKSEP, saveptr) == 0)
+			{
+				tcore->t_options ^= BITCOPY (tmp, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
+			}
 		}
 	}
 	

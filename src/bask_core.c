@@ -58,6 +58,25 @@ int parser_get_int (char* token, char* key, int* out, char* septags, char* savep
 }
 
 /*
+	Function: parser_get_short (char* token, char* key, short* out, char* septags, char* saveptr);
+	Description: Parses a row and return the value if the key is right.
+	InitVersion: 0.0.1
+*/
+int parser_get_short (char* token, char* key, short* out, char* septags, char* saveptr)
+{
+	int tmp;
+	
+	if (parser_get_int (token, key, &tmp, septags, saveptr) == 0)
+	{
+		*out = (short) tmp;
+		 
+		return 0;
+	}
+
+	return -1;
+}
+
+/*
 	Function: utils_streq (char* one, char* two);
 	Description: Check's if two strings are equal and have the same length.
 	InitVersion: 0.0.1

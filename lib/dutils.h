@@ -97,5 +97,6 @@
 #define EMBIANCONV(a) ((((a) >> 24) &0xff) | (((a) << 8) & 0xff0000) | (((a) >> 8) & 0xff00) | (((a) << 24) & 0xff000000))
 
 #define BITCOPY(a,b,c,d) ((-(((a) >> (b)) & 1) ^ (c)) & (1 << (d)))
+#define BITGET(a,b) (((a) >> (b)) & 1)
 
 #endif /* __DUTILS_H__ */
