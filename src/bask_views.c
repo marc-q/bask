@@ -169,11 +169,11 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
    |--------------------------------------------| */
 
 /*
-	Function: view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first);
+	Function: view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first, short filter);
 	Description: Displays all tasks in a table!
 	InitVersion: 0.0.1
 */
-void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first)
+void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first, short filter)
 {
 	int i, j, x, tprojectmax, tdescriptionmax;
 	char prefix[22], pri[4];
@@ -185,7 +185,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	
 	while (ptr != NULL)
 	{
-		if (ptr->t_active != 0)
+		if (ptr->t_active != 0 && ((filter == T_FLTR_ALL) || (filter == T_FLTR_FINISHED && ptr->t_state == 1 ) || (filter == T_FLTR_UNFINISHED && ptr->t_state == 0 )) || (filter == T_FLTR_STOPPED && ptr->t_active == 0 ))
 		{
 			
 			i = strlen (ptr->t_project);
@@ -216,7 +216,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	ptr = *first;
 	while (ptr != NULL)
 	{
-		if (ptr->t_active != 0)
+		if (ptr->t_active != 0 && ((filter == T_FLTR_ALL) || (filter == T_FLTR_FINISHED && ptr->t_state == 1 ) || (filter == T_FLTR_UNFINISHED && ptr->t_state == 0 )) || (filter == T_FLTR_STOPPED && ptr->t_active == 0 ))
 		{
 			switch (ptr->t_priority)
 			{

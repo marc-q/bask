@@ -19,6 +19,11 @@
 
 #define T_O_DESCRIPTIONBREAK 0
 
+#define T_FLTR_ALL -1
+#define T_FLTR_STOPPED 0
+#define T_FLTR_FINISHED 1
+#define T_FLTR_UNFINISHED 2
+
 #define BIGGEST(a,b) ((a>b) ? (a) : (b))
 
 struct _bask_core

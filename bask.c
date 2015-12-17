@@ -35,13 +35,13 @@ static void search_view (bask_core* tcore, bask_theme* btheme, struct bask_task*
 	switch (view)
 	{
 		case BVIEW_TASKLIST:
-			view_tasklist (tcore, btheme, &haystack);
+			view_tasklist (tcore, btheme, &haystack, T_FLTR_ALL);
 			break;
 		case BVIEW_SUMMARY:
 			view_summary (tcore, btheme, &haystack);
 			break;
 		default:
-			view_tasklist (tcore, btheme, &haystack);
+			view_tasklist (tcore, btheme, &haystack, T_FLTR_ALL);
 			break;
 	}
 	
@@ -273,7 +273,7 @@ static void print_help (void)
 	printf ("%s :\n", P_CMD);
 	printf ("\thelp\t\t\t\t\tThis help.\n");
 	printf ("\tabout\t\t\t\t\tAbout the programm.\n");
-	printf ("\tlist\t\t\t\t\tLists all tasks.\n");
+	printf ("\tlist <ARGS>\t\t\t\tLists all tasks.\n");
 	printf ("\tsummary\t\t\t\t\tSummary of all projects.\n");
 	
 	printf ("\tinit <FILE>\t\t\t\tInits the FILE or all files if no FILE is given.\n");
@@ -297,6 +297,7 @@ static void print_help (void)
 	printf ("\t-D [DESCRIPTION]\tThe description of the task.\n");
 	printf ("\t-F [FINISHED]\t\tThe finished date of the task.\n");
 	printf ("\t-A [ADDED]\t\tThe added date of the task.\n");
+	printf ("\t-f [FILTER]\t\tSet the filter.\n");
 	
 	printf ("\nVIEWS\n");
 	printf ("\ttasklist\t\tThe default view, a list of tasks.\n");
@@ -317,6 +318,12 @@ static void print_help (void)
 	printf ("\t2\tT\tToday\n");
 	printf ("\t3\tC\tCritical\n");
 	
+	printf ("\nFILTERS\n");
+	printf ("\tall\t\t\tShows all tasks. (default)\n");
+	printf ("\tstopped\t\t\tShows all tasks that are stopped.\n");
+	printf ("\tfinished\t\tShows all finished tasks.\n");
+	printf ("\tunfinsihed\t\tShows all unfinished tasks.\n");
+	
 	printf ("\nLEGEND: <optional> [necessary] [integer] [STRING]\n");
 }
 
@@ -333,12 +340,13 @@ static void usage (void)
 int main (int argc, char* argv[])
 {
 	int optc, ppri, pact, pstate;
+	short filter;
 	char padded[T_S_ADDED], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
 	struct bask_task* first = NULL;
 	
-	ppri = pact = pstate = -1;
+	ppri = pact = pstate = filter = -1;
 	
 	strcpy (padded, "");
 	strcpy (pfinished, "");
@@ -409,7 +417,7 @@ int main (int argc, char* argv[])
 	ui_theme_load (&tcore, &btheme);
 	bask_init (&tcore, &first);
 	
-	while ((optc = getopt (argc, argv, "p:P:a:D:s:F:A:")) != -1)
+	while ((optc = getopt (argc, argv, "p:P:a:D:s:F:A:f:")) != -1)
 	{
 		switch (optc)
 		{
@@ -446,6 +454,24 @@ int main (int argc, char* argv[])
 					strcpy (padded, optarg);
 				}
 				break;
+			case 'f':
+				if (utils_streq (optarg, "all") == 0)
+				{
+					filter = T_FLTR_ALL;
+				}
+				else if (utils_streq (optarg, "stopped") == 0)
+				{
+					filter = T_FLTR_STOPPED;
+				}
+				else if (utils_streq (optarg, "finished") == 0)
+				{
+					filter = T_FLTR_FINISHED;
+				}
+				else if (utils_streq (optarg, "unfinished") == 0)
+				{
+					filter = T_FLTR_UNFINISHED;
+				}
+				break;
 			default:
 				break;
 		}
@@ -453,7 +479,18 @@ int main (int argc, char* argv[])
 	
 	if (optind > 1)
 	{
-		if (argc-optind == 2)
+		if (argc-optind == 1)
+		{
+			if (utils_streq (argv[optind], "list") == 0)
+			{
+				view_tasklist (&tcore, &btheme, &first, filter);
+			}
+			else
+			{
+				usage ();
+			}
+		}
+		else if (argc-optind == 2)
 		{
 			if (utils_streq (argv[optind], "mod") == 0)
 			{
@@ -473,7 +510,7 @@ int main (int argc, char* argv[])
 	{
 		if (utils_streq (argv[optind], "list") == 0)
 		{
-			view_tasklist (&tcore, &btheme, &first);
+			view_tasklist (&tcore, &btheme, &first, T_FLTR_ALL);
 		}
 		else if (utils_streq (argv[optind], "summary") == 0)
 		{
