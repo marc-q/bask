@@ -251,7 +251,7 @@ static int tst_task_checkinput (void)
 	bask_core tcore;
 	
 	tcore.t_descriptionmax = 50;
-	tcore.t_descriptionbreak = 0;
+	tcore.t_options = 0;
 	
 	if (task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == 0 &&
 	    task_check_input (&tcore, "23/59/59/09/09/02015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -1 &&
@@ -262,9 +262,10 @@ static int tst_task_checkinput (void)
 		passed = 1;
 	}
 	
-	tcore.t_descriptionbreak = 0;
+	tcore.t_options ^= BITCOPY (1, 0, tcore.t_options, T_O_DESCRIPTIONBREAK);
 	
-	if (passed == 1 && task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem .", 0) == -4)
+	if (passed == 1 && task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem  .", 0) == -4 &&
+	task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem .", 0) == 0)
 	{
 		tst_print_success ("Task_Check_Input");
 		return TESTS_PASS;
