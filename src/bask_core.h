@@ -19,6 +19,8 @@
 
 #define T_O_DESCRIPTIONBREAK 0
 
+#define T_FLAG_MERGE 0
+
 #define T_FLTR_ALL -1
 #define T_FLTR_STOPPED 0
 #define T_FLTR_FINISHED 1
@@ -34,6 +36,7 @@ struct _bask_core
 	short t_descriptionmax; /* 0 - 200 */
 	short t_descriptionmin; /* 0 - 200 */
 	short t_options;
+	short flags;
 	char path_baskpath[200];
 	char path_baskconf[200];
 	char path_basktheme[200];

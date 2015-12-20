@@ -206,6 +206,7 @@ static void bask_load_conf (bask_core* tcore)
 			parser_get_short (token, "task_project_min", &tcore->t_projectmin, BASKSEP, saveptr);
 			parser_get_short (token, "task_description_max", &tcore->t_descriptionmax, BASKSEP, saveptr);
 			parser_get_short (token, "task_description_min", &tcore->t_descriptionmin, BASKSEP, saveptr);
+			
 			if (parser_get_int (token, "task_description_break", &tmp, BASKSEP, saveptr) == 0)
 			{
 				tcore->t_options ^= BITCOPY (tmp, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
@@ -339,13 +340,19 @@ static void usage (void)
 
 int main (int argc, char* argv[])
 {
-	int optc, ppri, pact, pstate;
+	int optc, ppri, pact, pstate, optindex;
 	short filter;
 	char padded[T_S_ADDED], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
 	struct bask_task* first = NULL;
 	
+	struct option long_options[] = {
+		 {"merge", no_argument, 0, 'm'},
+		 {0,0,0,0}
+	};
+	
+	tcore.flags = 0;
 	ppri = pact = pstate = filter = -1;
 	
 	strcpy (padded, "");
@@ -417,7 +424,7 @@ int main (int argc, char* argv[])
 	ui_theme_load (&tcore, &btheme);
 	bask_init (&tcore, &first);
 	
-	while ((optc = getopt (argc, argv, "p:P:a:D:s:F:A:f:")) != -1)
+	while ((optc = getopt_long (argc, argv, "p:P:a:D:s:F:A:f:m", long_options, &optindex)) != -1)
 	{
 		switch (optc)
 		{
@@ -471,6 +478,9 @@ int main (int argc, char* argv[])
 				{
 					filter = T_FLTR_UNFINISHED;
 				}
+				break;
+			case 'm':
+				tcore.flags ^= BITCOPY (1, 0, tcore.flags, T_FLAG_MERGE);
 				break;
 			default:
 				break;
