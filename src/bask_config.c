@@ -30,7 +30,7 @@ void config_set_str (bask_core* tcore, char* str)
 	{
 		if (tmpsvalue < 0 || tmpsvalue > 200)
 		{
-			errors_outofrange ("task_project_min", 0, 200);
+			errors_outofrange_int ("task_project_min", 0, 200);
 		}
 		else
 		{
@@ -41,7 +41,7 @@ void config_set_str (bask_core* tcore, char* str)
 	{
 		if (tmpsvalue < 0 || tmpsvalue > 200)
 		{
-			errors_outofrange ("task_description_max", 0, 200);
+			errors_outofrange_int ("task_description_max", 0, 200);
 		}
 		else
 		{
@@ -52,7 +52,7 @@ void config_set_str (bask_core* tcore, char* str)
 	{
 		if (tmpsvalue < 0 || tmpsvalue > 200)
 		{
-			errors_outofrange ("task_description_min", 0, 200);
+			errors_outofrange_int ("task_description_min", 0, 200);
 			exit (EXIT_FAILURE);
 		}
 		else
@@ -64,7 +64,7 @@ void config_set_str (bask_core* tcore, char* str)
 	{
 		if (tmpsvalue < 0 || tmpsvalue > 1)
 		{
-			errors_outofrange ("task_description_break", 0, 1);
+			errors_outofrange_int ("task_description_break", 0, 1);
 			exit (EXIT_FAILURE);
 		}
 		else
@@ -201,20 +201,19 @@ void config_load (bask_core* tcore)
 	
 	if (tcore->t_projectmin < 0 || tcore->t_projectmin > 200)
 	{
-		errors_outofrange ("task_project_min", 0, 200);
+		errors_outofrange_int ("task_project_min", 0, 200);
 		exit (EXIT_FAILURE);
 	}
 	
 	if (tcore->t_descriptionmax < 0 || tcore->t_descriptionmax > 200)
 	{
-		errors_outofrange ("task_description_max", 0, 200);
+		errors_outofrange_int ("task_description_max", 0, 200);
 		exit (EXIT_FAILURE);
 	}
 	
 	if (tcore->t_descriptionmin < 0 || tcore->t_descriptionmin > 200)
 	{
-		errors_outofrange ("task_description_min", 0, 200);
+		errors_outofrange_int ("task_description_min", 0, 200);
 		exit (EXIT_FAILURE);
 	}
-	
 }

@@ -97,11 +97,21 @@ void errors_notunsigned (char* variable)
 }
 
 /*
-	Function: errors_outofrange (char* variable);
-	Description: Prints the error for when the value of something is out of range.
+	Function: errors_outofrange_int (char* variable);
+	Description: Prints the error for when the value of something is out of range (int).
 	InitVersion: 0.0.1
 */
-void errors_outofrange (char* variable, float min, float max)
+void errors_outofrange_int (char* variable, int min, int max)
+{
+	printf ("ERROR: The value of %s must be between %i and %i!\n", variable, min, max);
+}
+
+/*
+	Function: errors_outofrange_float (char* variable);
+	Description: Prints the error for when the value of something is out of range (float).
+	InitVersion: 0.0.1
+*/
+void errors_outofrange_float (char* variable, float min, float max)
 {
 	printf ("ERROR: The value of %s must be between %f and %f!\n", variable, min, max);
 }
