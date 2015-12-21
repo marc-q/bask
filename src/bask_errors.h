@@ -8,5 +8,7 @@ void errors_filenotwritten (char*);
 void errors_homedirnotgot (void);
 void errors_timenotgot (void);
 void errors_lengthtobig (char*);
+void errors_notunsigned (char*);
+void errors_outofrange (char*, float, float);
 
 #endif /* __BASK_ERRORS_H__ */

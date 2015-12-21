@@ -220,6 +220,25 @@ static void bask_load_conf (bask_core* tcore)
 	{
 		strcpy (tcore->path_baskbin, baskbin);
 	}
+	
+	if (tcore->t_projectmin < 0 || tcore->t_projectmin > 200)
+	{
+		errors_outofrange ("task_project_min", 0, 200);
+		exit (EXIT_FAILURE);
+	}
+	
+	if (tcore->t_descriptionmax < 0 || tcore->t_descriptionmax > 200)
+	{
+		errors_outofrange ("task_description_max", 0, 200);
+		exit (EXIT_FAILURE);
+	}
+	
+	if (tcore->t_descriptionmin < 0 || tcore->t_descriptionmin > 200)
+	{
+		errors_outofrange ("task_description_min", 0, 200);
+		exit (EXIT_FAILURE);
+	}
+	
 }
 
 /*

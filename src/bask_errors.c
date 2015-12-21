@@ -84,3 +84,24 @@ void errors_lengthtobig (char* variable)
 {
 	printf ("ERROR: The length of the %s is to big!\n", variable);
 }
+
+/*
+	Function: errors_notunsigned (char* variable);
+	Description: Prints the error for when the value of something is not unsigned.
+	InitVersion: 0.0.1
+*/
+void errors_notunsigned (char* variable)
+{
+	printf ("ERROR: The value of %s must be a positive number!\n", variable);
+	printf ("ERROR: Converting to a postive number!\n");
+}
+
+/*
+	Function: errors_outofrange (char* variable);
+	Description: Prints the error for when the value of something is out of range.
+	InitVersion: 0.0.1
+*/
+void errors_outofrange (char* variable, float min, float max)
+{
+	printf ("ERROR: The value of %s must be between %f and %f!\n", variable, min, max);
+}
