@@ -248,7 +248,7 @@ static void usage (void)
 int main (int argc, char* argv[])
 {
 	int optc, ppri, pact, pstate, optindex;
-	short filter, showusage;
+	short filter;
 	char padded[T_S_ADDED], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
@@ -259,7 +259,7 @@ int main (int argc, char* argv[])
 		 {0,0,0,0}
 	};
 	
-	tcore.flags = showusage = 0;
+	tcore.flags = 0;
 	ppri = pact = pstate = filter = -1;
 	
 	strcpy (padded, "");
