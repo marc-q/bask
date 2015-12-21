@@ -9,6 +9,7 @@
 #include "lib/dutils.h"
 #include "src/bask_core.h"
 #include "src/bask_errors.h"
+#include "src/bask_config.h"
 #include "src/bask_task.h"
 #include "src/bask_project.h"
 #include "src/bask_ui.h"
@@ -65,47 +66,6 @@ static void bask_get_baskpath (bask_core* tcore, char* out, char* filename)
 }
 
 /*
-	Function: bask_init_local_file (char* filename, FILE** baskfile);
-	Description: Creates a file if not exist.
-	InitVersion: 0.0.1
-*/
-static int bask_init_local_file (char* filename, FILE** baskfile)
-{
-	*baskfile = fopen (filename, "w+");
-	
-	if (*baskfile == NULL)
-	{
-		errors_filenotwritten (filename);
-		return -1;
-	}
-		
-	return 0;
-}
-
-/*
-	Function: bask_init_baskconf (bask_core* tcore);
-	Description: Inits a config file at tcore->path_baskconf.
-	InitVersion: 0.0.1
-*/
-static void bask_init_baskconf (bask_core* tcore)
-{
-	FILE* baskfile;
-	
-	if (bask_init_local_file (tcore->path_baskconf, &baskfile) == 0)
-	{	
-		fprintf (baskfile, "# Path to the baskbin.\nbaskbin=default;\n#\n");
-		
-		fprintf (baskfile, "The minimum length of the project field in characters (0-200; default: 15;)\ntask_project_min=15;\n#\n");
-		
-		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50;)\ntask_description_max=50;\n#\n");
-		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50;)\ntask_description_min=50;\n#\n");
-		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=1;\n");
-	
-		fclose (baskfile);	
-	}
-}
-
-/*
 	Function: bask_init_baskbin (bask_core* tcore);
 	Description: Inits a baskbin at tcore->path_baskbin.
 	InitVersion: 0.0.1
@@ -114,7 +74,7 @@ static void bask_init_baskbin (bask_core* tcore)
 {
 	FILE* baskfile;
 	
-	if (bask_init_local_file (tcore->path_baskbin, &baskfile) == 0)
+	if (bask_init_local_file (&baskfile, tcore->path_baskbin) == 0)
 	{
 		fprintf (baskfile, "BASKBIN\nbbuid=0;\nBBEND\n");
 		
@@ -131,7 +91,7 @@ static void bask_init_basktheme (bask_core* tcore)
 {
 	FILE* baskfile;
 	
-	if (bask_init_local_file (tcore->path_basktheme, &baskfile) == 0)
+	if (bask_init_local_file (&baskfile, tcore->path_basktheme) == 0)
 	{	
 		fprintf (baskfile, "color_normal=default;\n");
 		fprintf (baskfile, "color_important=default;\n");
@@ -161,84 +121,11 @@ static int bask_init_local (bask_core* tcore)
 		return 1;
 	}
 
-	bask_init_baskconf (tcore);
+	config_init_file (tcore);
 	bask_init_baskbin (tcore);
 	bask_init_basktheme (tcore);
 	
 	return 0;
-}
-
-/*
-	Function: bask_load_conf (bask_core* tcore);
-	Description: Loads the config file from bask.
-	InitVersion: 0.0.1
-*/
-static void bask_load_conf (bask_core* tcore)
-{
-	int tmp;
-	char line[200], baskbin[151];
-	char *token, *saveptr;
-	FILE *baskconf;
-	
-	tcore->t_projectmin = 15;
-	tcore->t_descriptionmax = 50;
-	tcore->t_descriptionmin = 50;
-	
-	tcore->t_options = 0;
-	tcore->t_options ^= BITCOPY (1, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
-	
-	baskconf = fopen (tcore->path_baskconf, "r");
-	
-	if (baskconf == NULL)
-	{
-		errors_filenotopened (tcore->path_baskconf);
-		errors_useinit ();
-		exit (EXIT_FAILURE);
-	}
-	
-	while (fgets (line, sizeof (line), baskconf) != NULL)
-	{
-		if (line[0] != '#')
-		{
-			token = strtok_r (line, BASKSEP, &saveptr);
-		
-			parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), BASKSEP, saveptr);
-			parser_get_short (token, "task_project_min", &tcore->t_projectmin, BASKSEP, saveptr);
-			parser_get_short (token, "task_description_max", &tcore->t_descriptionmax, BASKSEP, saveptr);
-			parser_get_short (token, "task_description_min", &tcore->t_descriptionmin, BASKSEP, saveptr);
-			
-			if (parser_get_int (token, "task_description_break", &tmp, BASKSEP, saveptr) == 0)
-			{
-				tcore->t_options ^= BITCOPY (tmp, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
-			}
-		}
-	}
-	
-	fclose (baskconf);
-	
-	if (utils_streq (baskbin, "default") != 0)
-	{
-		strcpy (tcore->path_baskbin, baskbin);
-	}
-	
-	if (tcore->t_projectmin < 0 || tcore->t_projectmin > 200)
-	{
-		errors_outofrange ("task_project_min", 0, 200);
-		exit (EXIT_FAILURE);
-	}
-	
-	if (tcore->t_descriptionmax < 0 || tcore->t_descriptionmax > 200)
-	{
-		errors_outofrange ("task_description_max", 0, 200);
-		exit (EXIT_FAILURE);
-	}
-	
-	if (tcore->t_descriptionmin < 0 || tcore->t_descriptionmin > 200)
-	{
-		errors_outofrange ("task_description_min", 0, 200);
-		exit (EXIT_FAILURE);
-	}
-	
 }
 
 /*
@@ -304,6 +191,7 @@ static void print_help (void)
 	printf ("\tmod [id] ARGS\t\t\t\tModifies a task.\n");
 	printf ("\tfinish [id]\t\t\t\tSet's a task to finished.\n");
 	printf ("\tstop [id]\t\t\t\tDeactivates (hides) a task.\n");
+	printf ("\tconfig [CONFIGLINE]\t\t\tChanges the settings using a line from the config file.\n");
 	
 	printf ("\tsearch <VIEW> [SEARCHTAG]\t\tSearches through the tasks and optional uses <VIEW> to show the results.\n");
 	printf ("\texport <EXPORT> [FILENAME]\t\tExports the data from the baskbin to an file with the format <EXPORT> or baskbin.\n");
@@ -360,7 +248,7 @@ static void usage (void)
 int main (int argc, char* argv[])
 {
 	int optc, ppri, pact, pstate, optindex;
-	short filter;
+	short filter, showusage;
 	char padded[T_S_ADDED], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
@@ -371,7 +259,7 @@ int main (int argc, char* argv[])
 		 {0,0,0,0}
 	};
 	
-	tcore.flags = 0;
+	tcore.flags = showusage = 0;
 	ppri = pact = pstate = filter = -1;
 	
 	strcpy (padded, "");
@@ -423,7 +311,7 @@ int main (int argc, char* argv[])
 		{
 			if (utils_streq (argv[optind+1], "baskconf") == 0)
 			{
-				bask_init_baskconf (&tcore);
+				config_init_file (&tcore);
 				exit (EXIT_SUCCESS);
 			}
 			else if (utils_streq (argv[optind+1], "baskbin") == 0)
@@ -439,7 +327,7 @@ int main (int argc, char* argv[])
 		}
 	}
 	
-	bask_load_conf (&tcore);
+	config_load (&tcore);
 	ui_theme_load (&tcore, &btheme);
 	bask_init (&tcore, &first);
 	
@@ -580,6 +468,10 @@ int main (int argc, char* argv[])
 		{
 			import_baskbin_cmd (&tcore, &first, argv[optind+1]);
 		}
+		else if (utils_streq (argv[optind], "config") == 0)
+		{
+			config_set_str (&tcore, argv[optind+1]);
+		}
 		else
 		{
 			usage ();
@@ -665,6 +557,7 @@ int main (int argc, char* argv[])
 		usage ();
 	}
 	
+	config_save (&tcore);
 	bask_unload (&first);
 	return 0;
 }

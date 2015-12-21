@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "bask_errors.h"
 #include "bask_core.h"
 
 /* |--------------------------------------------|
@@ -89,4 +90,22 @@ int utils_streq (char* one, char* two)
 	}
 	
 	return strncmp (one, two, strlen (one));
+}
+
+/*
+	Function: bask_init_local_file (FILE** baskfile, char* filename);
+	Description: Creates a file if not exist.
+	InitVersion: 0.0.1
+*/
+int bask_init_local_file (FILE** baskfile, char* filename)
+{
+	*baskfile = fopen (filename, "w+");
+	
+	if (*baskfile == NULL)
+	{
+		errors_filenotwritten (filename);
+		return -1;
+	}
+		
+	return 0;
 }
