@@ -5,6 +5,7 @@
 #include "../lib/dutils.h"
 #include "bask_core.h"
 #include "bask_errors.h"
+#include "bask_config.h"
 
 /*
 	Function: config_set_str (bask_core* tcore, char* str);
