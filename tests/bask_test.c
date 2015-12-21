@@ -11,7 +11,7 @@
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 40
+#define TESTS_AMOUNT 41
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -163,6 +163,39 @@ static int tst_core_parser_int (void)
 	}
 
 	tst_print_fail ("Core_Parser_Int");
+	return TESTS_FAIL;
+}
+
+/*
+	Function: tst_core_parser_short (void);
+	Description: Tests the parser_get_short function from bask_core.c.
+	InitVersion: 0.0.1
+*/
+static int tst_core_parser_short (void)
+{
+	short out;
+	char instr[50];
+	char *token, *saveptr;
+	
+	strcpy (instr, "test=2015;\n");
+	
+	token = strtok_r (instr, BASKSEP, &saveptr);
+	
+	if (token == NULL)
+	{
+		tst_print_fail ("Core_Parser_Short");
+		return TESTS_FAIL;
+	}
+	
+	parser_get_short (token, "test", &out, BASKSEP, saveptr);
+	
+	if (out == 2015)
+	{
+		tst_print_success ("Core_Parser_Short");
+		return TESTS_PASS;
+	}
+
+	tst_print_fail ("Core_Parser_Short");
 	return TESTS_FAIL;
 }
 
@@ -381,6 +414,7 @@ int main (int argc, char* argv[])
 	points += tst_core_streq ();
 	points += tst_core_parser_str ();
 	points += tst_core_parser_int ();
+	points += tst_core_parser_short ();
 	
 	printf ("\n");
 	

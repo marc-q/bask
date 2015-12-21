@@ -19,6 +19,7 @@
 
 #define T_O_DESCRIPTIONBREAK 0
 
+/* TODO: Create a merge function and use this later. */
 #define T_FLAG_MERGE 0
 
 #define T_FLTR_ALL -1
