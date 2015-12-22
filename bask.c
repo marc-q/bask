@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
 #include <getopt.h>
 #include <sys/stat.h>
 #include "lib/dutils.h"
@@ -259,7 +260,7 @@ int main (int argc, char* argv[])
 		 {0,0,0,0}
 	};
 	
-	tcore.flags = optindex = 0;
+	tcore.flags = optindex = tmp = 0;
 	ppri = pact = pstate = filter = -1;
 	
 	strcpy (padded, "");
@@ -336,7 +337,10 @@ int main (int argc, char* argv[])
 		switch (optc)
 		{
 			case 'p':
-				ppri = atoi (optarg);
+				if (isdigit (optarg[0]) != 0)
+				{
+					ppri = atoi (optarg);
+				}
 				break;
 			case 'P':
 				if (strlen (optarg) < sizeof (pproject))
@@ -345,7 +349,10 @@ int main (int argc, char* argv[])
 				}
 				break;
 			case 'a':
-				pact = atoi (optarg);
+				if (isdigit (optarg[0]) != 0)
+				{
+					pact = atoi (optarg);
+				}
 				break;
 			case 'D':
 				if (strlen (optarg) < sizeof (pdescription))
@@ -354,7 +361,10 @@ int main (int argc, char* argv[])
 				}
 				break;
 			case 's':
-				pstate = atoi (optarg);
+				if (isdigit (optarg[0]) != 0)
+				{
+					pstate = atoi (optarg);
+				}
 				break;
 			case 'F':
 				if (strlen (optarg) < sizeof (pfinished))
