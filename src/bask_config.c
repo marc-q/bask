@@ -137,7 +137,7 @@ void config_init_file (bask_core* tcore)
 	{	
 		fprintf (baskfile, "# Path to the baskbin.\nbaskbin=default;\n#\n");
 		
-		fprintf (baskfile, "The minimum length of the project field in characters (0-200; default: 15;)\ntask_project_min=15;\n#\n");
+		fprintf (baskfile, "# The minimum length of the project field in characters (0-200; default: 15;)\ntask_project_min=15;\n#\n");
 		
 		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50;)\ntask_description_max=50;\n#\n");
 		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50;)\ntask_description_min=50;\n#\n");
@@ -188,6 +188,11 @@ int config_save (bask_core* tcore)
 				fseek (baskconf, -(strlen (line)), SEEK_CUR);
 				fprintf (baskconf, "task_description_min=%i;", (int)tcore->t_descriptionmin);
 			}
+			else if (strncmp ("task_description_break=", line, strlen ("task_description_break=")) == 0)
+			{
+				fseek (baskconf, -(strlen (line)), SEEK_CUR);
+				fprintf (baskconf, "task_description_break=%i;", (int)BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK));
+			}
 		}
 	}
 	
@@ -203,7 +208,8 @@ int config_save (bask_core* tcore)
 */
 void config_load (bask_core* tcore)
 {
-	short tmpsvalue, error;
+	int error;
+	short tmpsvalue;
 	char line[200], baskbin[151];
 	char *token, *saveptr;
 	FILE *baskconf;
@@ -231,7 +237,7 @@ void config_load (bask_core* tcore)
 		if (line[0] != '#')
 		{
 			/* NOTE: Using this we only must change one function in order to add options. */
-			if (error = config_set_str_raw (tcore, line, &tmpsvalue, baskbin, token, saveptr) != 0)
+			if ((error = config_set_str_raw (tcore, line, &tmpsvalue, baskbin, token, saveptr)) != 0)
 			{
 				config_print_set_str_errors (error);
 				
