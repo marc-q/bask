@@ -8,6 +8,70 @@
 #include "bask_config.h"
 
 /*
+	Function: config_set_str_raw (bask_core* tcore, char* str, char** token, char** saveptr);
+	Description: Sets config values with a str without declaration of new variables. (internal use)
+	InitVersion: 0.0.1
+*/
+int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* baskbin, char* token, char* saveptr)
+{
+	token = strtok_r (line, BASKSEP, &saveptr);
+	
+	if (parser_get_str (token, "baskbin", baskbin, 150, BASKSEP, saveptr) == 0)
+	{
+		if (utils_streq (baskbin, "default") != 0)
+		{
+			strcpy (tcore->path_baskbin, baskbin);
+		}
+	}
+	else if (parser_get_short (token, "task_project_min", tmpsvalue, BASKSEP, saveptr) == 0)
+	{
+		if (*tmpsvalue < 0 || *tmpsvalue > 200)
+		{
+			return -2;
+		}
+		else
+		{
+			tcore->t_projectmin = *tmpsvalue;
+		}
+	}
+	else if (parser_get_short (token, "task_description_max", tmpsvalue, BASKSEP, saveptr) == 0)
+	{
+		if (*tmpsvalue < 0 || *tmpsvalue > 200)
+		{
+			return -3;
+		}
+		else
+		{
+			tcore->t_descriptionmax = *tmpsvalue;
+		}
+	}
+	else if (parser_get_short (token, "task_description_min", tmpsvalue, BASKSEP, saveptr) == 0)
+	{
+		if (*tmpsvalue < 0 || *tmpsvalue > 200)
+		{
+			return -4;
+		}
+		else
+		{
+			tcore->t_descriptionmin = *tmpsvalue;
+		}
+	}
+	else if (parser_get_short (token, "task_description_break", tmpsvalue, BASKSEP, saveptr) == 0)
+	{
+		if (*tmpsvalue < 0 || *tmpsvalue > 1)
+		{
+			return -5;
+		}
+		else
+		{
+			tcore->t_options ^= BITCOPY (*tmpsvalue, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
+		}
+	}
+	
+	return 0;
+}
+
+/*
 	Function: config_set_str (bask_core* tcore, char* str);
 	Description: Sets config values with a str.
 	InitVersion: 0.0.1
@@ -27,61 +91,7 @@ int config_set_str (bask_core* tcore, char* str)
 		return -1;
 	}
 	
-	token = strtok_r (cline, BASKSEP, &saveptr);
-	
-	if (parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), BASKSEP, saveptr) == 0)
-	{
-		if (utils_streq (baskbin, "default") != 0)
-		{
-			strcpy (tcore->path_baskbin, baskbin);
-		}
-	}
-	else if (parser_get_short (token, "task_project_min", &tmpsvalue, BASKSEP, saveptr) == 0)
-	{
-		if (tmpsvalue < 0 || tmpsvalue > 200)
-		{
-			return -2;
-		}
-		else
-		{
-			tcore->t_projectmin = tmpsvalue;
-		}
-	}
-	else if (parser_get_short (token, "task_description_max", &tmpsvalue, BASKSEP, saveptr) == 0)
-	{
-		if (tmpsvalue < 0 || tmpsvalue > 200)
-		{
-			return -3;
-		}
-		else
-		{
-			tcore->t_descriptionmax = tmpsvalue;
-		}
-	}
-	else if (parser_get_short (token, "task_description_min", &tmpsvalue, BASKSEP, saveptr) == 0)
-	{
-		if (tmpsvalue < 0 || tmpsvalue > 200)
-		{
-			return -4;
-		}
-		else
-		{
-			tcore->t_descriptionmin = tmpsvalue;
-		}
-	}
-	else if (parser_get_short (token, "task_description_break", &tmpsvalue, BASKSEP, saveptr) == 0)
-	{
-		if (tmpsvalue < 0 || tmpsvalue > 1)
-		{
-			return -5;
-		}
-		else
-		{
-			tcore->t_options ^= BITCOPY (tmpsvalue, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
-		}
-	}
-	
-	return 0;
+	return config_set_str_raw (tcore, cline, &tmpsvalue, baskbin, token, saveptr);
 }
 
 /*
@@ -193,7 +203,7 @@ int config_save (bask_core* tcore)
 */
 void config_load (bask_core* tcore)
 {
-	int tmp;
+	short tmpsvalue;
 	char line[200], baskbin[151];
 	char *token, *saveptr;
 	FILE *baskconf;
@@ -218,27 +228,17 @@ void config_load (bask_core* tcore)
 	{
 		if (line[0] != '#')
 		{
-			token = strtok_r (line, BASKSEP, &saveptr);
-		
-			parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), BASKSEP, saveptr);
-			parser_get_short (token, "task_project_min", &tcore->t_projectmin, BASKSEP, saveptr);
-			parser_get_short (token, "task_description_max", &tcore->t_descriptionmax, BASKSEP, saveptr);
-			parser_get_short (token, "task_description_min", &tcore->t_descriptionmin, BASKSEP, saveptr);
-			
-			if (parser_get_int (token, "task_description_break", &tmp, BASKSEP, saveptr) == 0)
-			{
-				tcore->t_options ^= BITCOPY (tmp, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
-			}
+			/* NOTE: Using this we only must change one function in order to add options. */
+			config_set_str_raw (tcore, line, &tmpsvalue, baskbin, token, saveptr);
 		}
 	}
 	
 	fclose (baskconf);
 	
-	if (utils_streq (baskbin, "default") != 0)
-	{
-		strcpy (tcore->path_baskbin, baskbin);
-	}
-	
+
+	/* TODO: Find a elegant solution to this. */
+	/* NOTE: This is need because the function is called multiple times so we dont save the
+		 return every time. */
 	if (tcore->t_projectmin < 0 || tcore->t_projectmin > 200)
 	{
 		errors_outofrange_int ("task_project_min", 0, 200);

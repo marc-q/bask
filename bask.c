@@ -486,6 +486,10 @@ int main (int argc, char* argv[])
 			{
 				config_print_set_str_errors (tmp);
 			}
+			else
+			{
+				printf ("Config succefully changed.\n");
+			}
 		}
 		else
 		{
