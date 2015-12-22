@@ -247,7 +247,7 @@ static void usage (void)
 
 int main (int argc, char* argv[])
 {
-	int optc, ppri, pact, pstate, optindex;
+	int optc, ppri, pact, pstate, optindex, tmp;
 	short filter;
 	char padded[T_S_ADDED], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
@@ -259,7 +259,7 @@ int main (int argc, char* argv[])
 		 {0,0,0,0}
 	};
 	
-	tcore.flags = 0;
+	tcore.flags = optindex = 0;
 	ppri = pact = pstate = filter = -1;
 	
 	strcpy (padded, "");
@@ -470,7 +470,12 @@ int main (int argc, char* argv[])
 		}
 		else if (utils_streq (argv[optind], "config") == 0)
 		{
-			config_set_str (&tcore, argv[optind+1]);
+			tmp = config_set_str (&tcore, argv[optind+1]);
+			
+			if (tmp != 0)
+			{
+				config_print_set_str_errors (tmp);
+			}
 		}
 		else
 		{

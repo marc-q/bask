@@ -6,12 +6,13 @@
 #include "../lib/dutils.h"
 #include "../src/bask_core.h"
 #include "../src/bask_time.h"
+#include "../src/bask_config.h"
 #include "../src/bask_task.h"
 #include "../src/bask_ui.h"
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 41
+#define TESTS_AMOUNT 42
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -267,6 +268,55 @@ static int tst_time_gettm_str (void)
 }
 
 /* |--------------------------------------------|
+   |		   Tests-Config			|
+   |--------------------------------------------| */
+
+/*
+	Function: tst_config_setstr (void);
+	Description: Tests the config_set_str function from bask_config.c.
+	InitVersion: 0.0.1
+*/
+static int tst_config_setstr (void)
+{
+	int passed;
+	bask_core tcore;
+	
+	passed = 0;
+	
+	tcore.t_projectmin = 0;
+	tcore.t_descriptionmax = 0;
+	tcore.t_descriptionmin = 0;
+	tcore.t_options = 0;
+	
+	config_set_str (&tcore, "task_project_min=50;");
+	config_set_str (&tcore, "task_description_max=50;");
+	config_set_str (&tcore, "task_description_min=50;");
+	config_set_str (&tcore, "task_description_break=1;");
+
+	if (tcore.t_projectmin == 50 &&
+	    tcore.t_descriptionmax == 50 &&
+	    tcore.t_descriptionmin == 50 &&
+	    BITGET (tcore.t_options, T_O_DESCRIPTIONBREAK) == 1)
+	{
+		passed = 1;
+	}
+	
+	if (passed == 1 &&
+	    config_set_str (&tcore, "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem .") == -1 &&
+	    config_set_str (&tcore, "task_project_min=201;") == -2 &&
+	    config_set_str (&tcore, "task_description_max=201;") == -3 &&
+	    config_set_str (&tcore, "task_description_min=201;") == -4 &&
+	    config_set_str (&tcore, "task_description_break=2;") == -5)
+	{
+		tst_print_success ("Config_Set_Str");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Config_Set_Str");
+	return TESTS_FAIL;
+}
+
+/* |--------------------------------------------|
    |		    Tests-Task			|
    |--------------------------------------------| */
 
@@ -278,10 +328,9 @@ static int tst_time_gettm_str (void)
 static int tst_task_checkinput (void)
 {
 	int passed;
+	bask_core tcore;
 	
 	passed = 0;
-	
-	bask_core tcore;
 	
 	tcore.t_descriptionmax = 50;
 	tcore.t_options = 0;
@@ -420,6 +469,10 @@ int main (int argc, char* argv[])
 	
 	points += tst_time_getstr ();
 	points += tst_time_gettm_str ();
+	
+	printf ("\n");
+	
+	points += tst_config_setstr ();
 	
 	printf ("\n");
 	

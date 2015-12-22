@@ -12,12 +12,22 @@
 	Description: Sets config values with a str.
 	InitVersion: 0.0.1
 */
-void config_set_str (bask_core* tcore, char* str)
+int config_set_str (bask_core* tcore, char* str)
 {
 	short tmpsvalue;
-	char *token, *saveptr, baskbin[151];
+	char *token, *saveptr, baskbin[151], cline[200];
 	
-	token = strtok_r (str, BASKSEP, &saveptr);
+	/* NOTE: This is a fix to support using this function while given a string instead of an variable for the str argument. */
+	if (strlen (str) < sizeof (cline))
+	{
+		strcpy (cline, str);
+	}
+	else
+	{
+		return -1;
+	}
+	
+	token = strtok_r (cline, BASKSEP, &saveptr);
 	
 	if (parser_get_str (token, "baskbin", baskbin, sizeof (baskbin), BASKSEP, saveptr) == 0)
 	{
@@ -30,7 +40,7 @@ void config_set_str (bask_core* tcore, char* str)
 	{
 		if (tmpsvalue < 0 || tmpsvalue > 200)
 		{
-			errors_outofrange_int ("task_project_min", 0, 200);
+			return -2;
 		}
 		else
 		{
@@ -41,7 +51,7 @@ void config_set_str (bask_core* tcore, char* str)
 	{
 		if (tmpsvalue < 0 || tmpsvalue > 200)
 		{
-			errors_outofrange_int ("task_description_max", 0, 200);
+			return -3;
 		}
 		else
 		{
@@ -52,8 +62,7 @@ void config_set_str (bask_core* tcore, char* str)
 	{
 		if (tmpsvalue < 0 || tmpsvalue > 200)
 		{
-			errors_outofrange_int ("task_description_min", 0, 200);
-			exit (EXIT_FAILURE);
+			return -4;
 		}
 		else
 		{
@@ -64,13 +73,44 @@ void config_set_str (bask_core* tcore, char* str)
 	{
 		if (tmpsvalue < 0 || tmpsvalue > 1)
 		{
-			errors_outofrange_int ("task_description_break", 0, 1);
-			exit (EXIT_FAILURE);
+			return -5;
 		}
 		else
 		{
 			tcore->t_options ^= BITCOPY (tmpsvalue, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
 		}
+	}
+	
+	return 0;
+}
+
+/*
+	Function: config_print_set_str_errors (int error_id);
+	Description: Prints the errormessages for the function config_set_str.
+	InitVersion: 0.0.1
+*/
+void config_print_set_str_errors (int error_id)
+{
+	switch (error_id)
+	{
+		case -1:
+			errors_lengthtobig ("Configline");
+			break;
+		case -2:
+			errors_outofrange_int ("task_project_min", 0, 200);
+			break;
+		case -3:
+			errors_outofrange_int ("task_description_max", 0, 200);
+			break;
+		case -4:
+			errors_outofrange_int ("task_description_min", 0, 200);
+			break;
+		case -5:
+			errors_outofrange_int ("task_description_break", 0, 1);
+			break;
+		default:
+			break;
+			
 	}
 }
 
