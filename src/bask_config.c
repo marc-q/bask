@@ -203,10 +203,12 @@ int config_save (bask_core* tcore)
 */
 void config_load (bask_core* tcore)
 {
-	short tmpsvalue;
+	short tmpsvalue, error;
 	char line[200], baskbin[151];
 	char *token, *saveptr;
 	FILE *baskconf;
+	
+	tmpsvalue = error = 0;
 	
 	tcore->t_projectmin = 15;
 	tcore->t_descriptionmax = 50;
@@ -229,31 +231,16 @@ void config_load (bask_core* tcore)
 		if (line[0] != '#')
 		{
 			/* NOTE: Using this we only must change one function in order to add options. */
-			config_set_str_raw (tcore, line, &tmpsvalue, baskbin, token, saveptr);
+			if (error = config_set_str_raw (tcore, line, &tmpsvalue, baskbin, token, saveptr) != 0)
+			{
+				config_print_set_str_errors (error);
+				
+				fclose (baskconf);
+				exit (EXIT_FAILURE);
+				break;
+			}
 		}
 	}
 	
 	fclose (baskconf);
-	
-
-	/* TODO: Find a elegant solution to this. */
-	/* NOTE: This is need because the function is called multiple times so we dont save the
-		 return every time. */
-	if (tcore->t_projectmin < 0 || tcore->t_projectmin > 200)
-	{
-		errors_outofrange_int ("task_project_min", 0, 200);
-		exit (EXIT_FAILURE);
-	}
-	
-	if (tcore->t_descriptionmax < 0 || tcore->t_descriptionmax > 200)
-	{
-		errors_outofrange_int ("task_description_max", 0, 200);
-		exit (EXIT_FAILURE);
-	}
-	
-	if (tcore->t_descriptionmin < 0 || tcore->t_descriptionmin > 200)
-	{
-		errors_outofrange_int ("task_description_min", 0, 200);
-		exit (EXIT_FAILURE);
-	}
 }
