@@ -90,11 +90,11 @@ static int task_upgrade (struct bask_task* task)
 }
 
 /*
-	Function: task_insert (struct bask_task** first, unsigned int n, unsigned int tid, int tactive, int tpriority, int tstate, char* tadded, char* tfinished, char* tproject, char* tdescription);
+	Function: task_insert (struct bask_task** first, unsigned int n, unsigned int tid, int tactive, short tpriority, int tstate, char* tadded, char* tfinished, char* tproject, char* tdescription);
 	Description: Inserts a new task with data.
 	InitVersion: 0.0.1
 */
-int task_insert (struct bask_task** first, unsigned int n, unsigned int tid, int tactive, int tpriority, int tstate, char* tadded, char* tfinished, char* tproject, char* tdescription)
+int task_insert (struct bask_task** first, unsigned int n, unsigned int tid, int tactive, short tpriority, int tstate, char* tadded, char* tfinished, char* tproject, char* tdescription)
 {
 	struct bask_task *newobj = malloc (sizeof (struct bask_task)), *preobj;
 	
@@ -199,11 +199,11 @@ int task_remove (struct bask_task** first, unsigned int id)
 }
 
 /*
-	Function: task_modificate (struct bask_task** first, unsigned int id, int active, int state, int priority, char* added, char* finished, char* project, char* description);
+	Function: task_modificate (struct bask_task** first, unsigned int id, int active, int state, short priority, char* added, char* finished, char* project, char* description);
 	Description: Modificates a task!
 	InitVersion: 0.0.1
 */
-int task_modificate (struct bask_task** first, unsigned int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
+int task_modificate (struct bask_task** first, unsigned int id, int active, int state, short priority, char* added, char* finished, char* project, char* description)
 {
 	struct bask_task* ptr = *first;
 	
@@ -276,11 +276,11 @@ int task_modificate (struct bask_task** first, unsigned int id, int active, int 
    |--------------------------------------------| */
 
 /*
-	Function: task_create (bask_core* tcore, struct bask_task** first, int priority, char* project, char* description);
+	Function: task_create (bask_core* tcore, struct bask_task** first, short priority, char* project, char* description);
 	Description: Creates a task!
 	InitVersion: 0.0.1
 */
-int task_create (bask_core* tcore, struct bask_task** first, int priority, char* project, char* description)
+int task_create (bask_core* tcore, struct bask_task** first, short priority, char* project, char* description)
 {	
 	char added[T_S_ADDED];
 
@@ -383,9 +383,11 @@ int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** 
 */
 void task_create_cmd (bask_core* tcore, struct bask_task** first, int priority, char* project, char* description)
 {
-	if (task_check_input (tcore, "", "", project, description, 1) == 0)
+	/* TODO: Move the range check of the priority variable into the task_check_input function. */
+	if (task_check_input (tcore, "", "", project, description, 1) == 0 &&
+	    priority >= 0 && priority <= 3)
 	{
-		task_create (tcore, first, priority, project, description);
+		task_create (tcore, first, (short) priority, project, description);
 		printf ("Created task %i.\n", tcore->baskbin_uid);
 		export_baskbin (tcore, first, tcore->path_baskbin);
 	}
@@ -410,9 +412,11 @@ void task_remove_cmd (bask_core* tcore, struct bask_task** first, unsigned int i
 */
 void task_modificate_cmd (bask_core* tcore, struct bask_task** first, unsigned int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
 {
-	if (task_check_input (tcore, added, finished, project, description, 1) == 0)
+	/* TODO: Move the range check of the priority variable into the task_check_input function. */
+	if (task_check_input (tcore, added, finished, project, description, 1) == 0 &&
+	    priority >= 0 && priority <= 3)
 	{
-		task_modificate (first, id, active, state, priority, added, finished, project, description);
+		task_modificate (first, id, active, state, (short) priority, added, finished, project, description);
 		printf ("Modificated task %i.\n", id);
 		export_baskbin (tcore, first, tcore->path_baskbin);
 	}
