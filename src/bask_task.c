@@ -90,11 +90,11 @@ static int task_upgrade (struct bask_task* task)
 }
 
 /*
-	Function: task_insert (struct bask_task** first, int n, int tid, int tactive, int tpriority, int tstate, char* tadded, char* tfinished, char* tproject, char* tdescription);
+	Function: task_insert (struct bask_task** first, unsigned int n, unsigned int tid, int tactive, int tpriority, int tstate, char* tadded, char* tfinished, char* tproject, char* tdescription);
 	Description: Inserts a new task with data.
 	InitVersion: 0.0.1
 */
-int task_insert (struct bask_task** first, int n, int tid, int tactive, int tpriority, int tstate, char* tadded, char* tfinished, char* tproject, char* tdescription)
+int task_insert (struct bask_task** first, unsigned int n, unsigned int tid, int tactive, int tpriority, int tstate, char* tadded, char* tfinished, char* tproject, char* tdescription)
 {
 	struct bask_task *newobj = malloc (sizeof (struct bask_task)), *preobj;
 	
@@ -104,10 +104,11 @@ int task_insert (struct bask_task** first, int n, int tid, int tactive, int tpri
 	}
 	
 	newobj->n = n;
-	newobj->t_active = tactive;
+	newobj->t_flags = 0;
+	newobj->t_flags ^= BITCOPY (tactive, 0, newobj->t_flags, TASK_FLAG_ACTIVE);
+	newobj->t_flags ^= BITCOPY (tstate, 0, newobj->t_flags, TASK_FLAG_FINISHED);
 	newobj->t_id = tid;
 	newobj->t_priority = tpriority;
-	newobj->t_state = tstate;
 	newobj->next = NULL;
 	
 	if (strlen (tadded) >= T_S_ADDED || strlen (tfinished) >= T_S_FINISHED || strlen (tproject) >= T_S_PROJECT || strlen (tdescription) >= T_S_DESCRIPTION)
@@ -157,11 +158,11 @@ int task_insert (struct bask_task** first, int n, int tid, int tactive, int tpri
 }
 
 /*
-	Function: task_remove (struct bask_task** first, int id);
+	Function: task_remove (struct bask_task** first, unsigned int id);
 	Description: Removes a task!
 	InitVersion: 0.0.1
 */
-int task_remove (struct bask_task** first, int id)
+int task_remove (struct bask_task** first, unsigned int id)
 {
 	struct bask_task* ptr = *first, *pre = NULL;
 	
@@ -198,11 +199,11 @@ int task_remove (struct bask_task** first, int id)
 }
 
 /*
-	Function: task_modificate (struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description);
+	Function: task_modificate (struct bask_task** first, unsigned int id, int active, int state, int priority, char* added, char* finished, char* project, char* description);
 	Description: Modificates a task!
 	InitVersion: 0.0.1
 */
-int task_modificate (struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
+int task_modificate (struct bask_task** first, unsigned int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
 {
 	struct bask_task* ptr = *first;
 	
@@ -217,12 +218,12 @@ int task_modificate (struct bask_task** first, int id, int active, int state, in
 		{
 			if (active >= 0)
 			{
-				ptr->t_active = active;
+				ptr->t_flags ^= BITCOPY (active, 0, ptr->t_flags, TASK_FLAG_ACTIVE);
 			}
 			
 			if (state >= 0)
 			{
-				ptr->t_state = state;
+				ptr->t_flags ^= BITCOPY (state, 0, ptr->t_flags, TASK_FLAG_FINISHED);
 			}
 			
 			if (priority >= 0)
@@ -298,21 +299,21 @@ int task_create (bask_core* tcore, struct bask_task** first, int priority, char*
 }
 
 /*
-	Function: task_deactivate (struct bask_task** first, int id);
+	Function: task_deactivate (struct bask_task** first, unsigned int id);
 	Description: Deactivates a task!
 	InitVersion: 0.0.1
 */
-void task_deactivate (struct bask_task** first, int id)
+void task_deactivate (struct bask_task** first, unsigned int id)
 {	
 	task_modificate (first, id, 0, -1, -1, "", "", "", "");
 }
 
 /*
-	Function: task_finish (struct bask_task** first, int id);
+	Function: task_finish (struct bask_task** first, unsigned int id);
 	Description: Finished a task!
 	InitVersion: 0.0.1
 */
-int task_finish (struct bask_task** first, int id)
+int task_finish (struct bask_task** first, unsigned int id)
 {
 	char finished[T_S_FINISHED];
 
@@ -349,19 +350,19 @@ int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** 
 	{
 		if (strstr (ptr->t_added, searchtag) != NULL)
 		{
-			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
+			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
 		else if (strstr (ptr->t_finished, searchtag) != NULL)
 		{
-			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
+			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
 		else if (strstr (ptr->t_project, searchtag) != NULL)
 		{
-			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
+			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
 		else if (strstr (ptr->t_description, searchtag) != NULL)
 		{
-			task_insert (haystack, i, ptr->t_id, ptr->t_active, ptr->t_priority, ptr->t_state, ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
+			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
 		
 		i++;
@@ -391,11 +392,11 @@ void task_create_cmd (bask_core* tcore, struct bask_task** first, int priority, 
 }
 
 /*
-	Function: task_remove_cmd (bask_core* tcore, struct bask_task** first, int id);
+	Function: task_remove_cmd (bask_core* tcore, struct bask_task** first, unsigned int id);
 	Description: Cmd handle for removing a task!
 	InitVersion: 0.0.1
 */
-void task_remove_cmd (bask_core* tcore, struct bask_task** first, int id)
+void task_remove_cmd (bask_core* tcore, struct bask_task** first, unsigned int id)
 {
 	task_remove (first, id);
 	printf ("Removed task %i.\n", id);
@@ -403,11 +404,11 @@ void task_remove_cmd (bask_core* tcore, struct bask_task** first, int id)
 }
 
 /*
-	Function: task_modificate_cmd (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description);
+	Function: task_modificate_cmd (bask_core* tcore, struct bask_task** first, unsigned int id, int active, int state, int priority, char* added, char* finished, char* project, char* description);
 	Description: Cmd handle for modifying a task!
 	InitVersion: 0.0.1
 */
-void task_modificate_cmd (bask_core* tcore, struct bask_task** first, int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
+void task_modificate_cmd (bask_core* tcore, struct bask_task** first, unsigned int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
 {
 	if (task_check_input (tcore, added, finished, project, description, 1) == 0)
 	{
@@ -418,11 +419,11 @@ void task_modificate_cmd (bask_core* tcore, struct bask_task** first, int id, in
 }
 
 /*
-	Function: task_deactivate_cmd (bask_core* tcore, struct bask_task** first, int id);
+	Function: task_deactivate_cmd (bask_core* tcore, struct bask_task** first, unsigned int id);
 	Description: Cmd handle for deactivating a task!
 	InitVersion: 0.0.1
 */
-void task_deactivate_cmd (bask_core* tcore, struct bask_task** first, int id)
+void task_deactivate_cmd (bask_core* tcore, struct bask_task** first, unsigned int id)
 {	
 	task_deactivate (first, id);
 	printf ("Deactivated task %i.\n", id);
@@ -430,11 +431,11 @@ void task_deactivate_cmd (bask_core* tcore, struct bask_task** first, int id)
 }
 
 /*
-	Function: task_finish_cmd (bask_core* tcore, struct bask_task** first, int id);
+	Function: task_finish_cmd (bask_core* tcore, struct bask_task** first, unsigned int id);
 	Description: Cmd handle for finishing a task!
 	InitVersion: 0.0.1
 */
-void task_finish_cmd (bask_core* tcore, struct bask_task** first, int id)
+void task_finish_cmd (bask_core* tcore, struct bask_task** first, unsigned int id)
 {
 	task_finish (first, id);
 	printf ("Finished task %i.\n", id);

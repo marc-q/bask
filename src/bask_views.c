@@ -54,8 +54,8 @@ void view_print_single (struct bask_task* task)
 	{
 		printf ("\nTask:\n");
 		printf ("\tID:\t\t%i\n", task->t_id);
-		printf ("\tActive:\t\t%i\n", task->t_active);
-		printf ("\tState:\t\t%i\n", task->t_state);
+		printf ("\tActive:\t\t%i\n", BITGET (task->t_flags, TASK_FLAG_ACTIVE));
+		printf ("\tState:\t\t%i\n", BITGET (task->t_flags, TASK_FLAG_FINISHED));
 		printf ("\tPriority:\t%i\n", task->t_priority);
 		printf ("\tAdded:\t\t%s\n", task->t_added);
 		printf ("\tFinished:\t%s\n", task->t_finished);
@@ -105,7 +105,7 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 	
 	while (ptr != NULL)
 	{
-		project_insert (&tprojects, 1, ptr->t_state, ptr->t_project);
+		project_insert (&tprojects, 1, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_project);
 		
 		i = strlen (ptr->t_project);
 		
@@ -185,7 +185,11 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	
 	while (ptr != NULL)
 	{
-		if (ptr->t_active != 0 && ((filter == T_FLTR_ALL) || (filter == T_FLTR_FINISHED && ptr->t_state == 1 ) || (filter == T_FLTR_UNFINISHED && ptr->t_state == 0 )) || (filter == T_FLTR_STOPPED && ptr->t_active == 0 ))
+		if (BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 1 && 
+		    ((filter == T_FLTR_ALL) || 
+		     (filter == T_FLTR_FINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 1 ) || 
+		     (filter == T_FLTR_UNFINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 0 )) || 
+		     (filter == T_FLTR_STOPPED && BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 0 ))
 		{
 			
 			i = strlen (ptr->t_project);
@@ -216,7 +220,11 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	ptr = *first;
 	while (ptr != NULL)
 	{
-		if (ptr->t_active != 0 && ((filter == T_FLTR_ALL) || (filter == T_FLTR_FINISHED && ptr->t_state == 1 ) || (filter == T_FLTR_UNFINISHED && ptr->t_state == 0 )) || (filter == T_FLTR_STOPPED && ptr->t_active == 0 ))
+		if (BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 1 && 
+		    ((filter == T_FLTR_ALL) || 
+		     (filter == T_FLTR_FINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 1 ) || 
+		     (filter == T_FLTR_UNFINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 0 )) || 
+		     (filter == T_FLTR_STOPPED && BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 0 ))
 		{
 			switch (ptr->t_priority)
 			{
@@ -242,7 +250,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 					break;
 			}
 		
-			if (ptr->t_state == 1)
+			if (BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 1)
 			{
 				strcpy (prefix, btheme->color_finished);
 			}

@@ -20,7 +20,8 @@
 */
 int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 {
-	int tid, tactive, tpriority, tstate, bb_state;
+	unsigned int tid;
+	int tactive, tpriority, tstate, bb_state;
 	char line[200], tadded[T_S_ADDED], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char *token, *saveptr;
 	FILE* importfile;
@@ -102,7 +103,8 @@ void import_baskbin_cmd (bask_core* tcore, struct bask_task** first, char* filen
 */
 static int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, char* saveptr)
 {
-	int tid, tactive, tpriority, tstate;
+	unsigned int tid;
+	int tactive, tpriority, tstate;
 	char tadded[T_S_ADDED], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	
 	tid = tactive = tpriority = tstate = 0;
