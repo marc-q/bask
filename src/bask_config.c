@@ -161,6 +161,7 @@ int config_save (bask_core* tcore)
 	
 	if (baskconf == NULL)
 	{
+		errors_filenotwritten (tcore->path_baskconf);
 		return -1;
 	}
 	
