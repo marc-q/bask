@@ -40,7 +40,6 @@ int export_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 	{
 		fprintf (exportfile, "tid=%i;\n", ptr->t_id);
 		fprintf (exportfile, "tactive=%i;\n", BITGET (ptr->t_flags, TASK_FLAG_ACTIVE));
-		fprintf (exportfile, "tstate=%i;\n", BITGET (ptr->t_flags, TASK_FLAG_FINISHED));
 		fprintf (exportfile, "tpriority=%i;\n", ptr->t_priority);
 		fprintf (exportfile, "tadded=%s;\n", ptr->t_added);
 		fprintf (exportfile, "tfinished=%s;\n", ptr->t_finished);

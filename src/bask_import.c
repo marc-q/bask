@@ -67,10 +67,21 @@ int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 		{
 			parser_get_int (token, "tid", &tid, BASKSEP, saveptr);
 			parser_get_int (token, "tactive", &tactive, BASKSEP, saveptr);
-			parser_get_int (token, "tstate", &tstate, BASKSEP, saveptr);
 			parser_get_int (token, "tpriority", &tpriority, BASKSEP, saveptr);
 			parser_get_str (token, "tadded", tadded, sizeof (tadded), BASKSEP, saveptr);
-			parser_get_str (token, "tfinished", tfinished, sizeof (tfinished), BASKSEP, saveptr);
+			if (parser_get_str (token, "tfinished", tfinished, sizeof (tfinished), BASKSEP, saveptr) == 0)
+			{
+				/* Use this instead of tstate because this tells us already the state. */
+				if (strlen (tfinished) == F_BB_S_DATE-1)
+				{
+					tstate = 1;
+				}
+				else
+				{
+					tstate = 0;
+				}
+			}
+			
 			parser_get_str (token, "tproject", tproject, sizeof (tproject), BASKSEP, saveptr);
 			parser_get_str (token, "tdescription", tdescription, sizeof (tdescription), BASKSEP, saveptr);
 		}
