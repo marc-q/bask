@@ -232,7 +232,7 @@ static void print_help (void)
 	printf ("\tall\t\t\tShows all tasks. (default)\n");
 	printf ("\tstopped\t\t\tShows all tasks that are stopped.\n");
 	printf ("\tfinished\t\tShows all finished tasks.\n");
-	printf ("\tunfinsihed\t\tShows all unfinished tasks.\n");
+	printf ("\tunfinished\t\tShows all unfinished tasks.\n");
 	
 	printf ("\nLEGEND: <optional> [necessary] [integer] [STRING]\n");
 }
