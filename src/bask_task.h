@@ -4,6 +4,8 @@
 #define TASK_FLAG_ACTIVE 0
 #define TASK_FLAG_FINISHED 1
 
+#define TASK_PRIORITY_MIN 0
+#define TASK_PRIORITY_MAX 3
 
 struct bask_task
 {
@@ -18,7 +20,8 @@ struct bask_task
 	struct bask_task* next;
 };
 
-int task_check_input (bask_core* tcore, char*, char*, char*, char*, int);
+int task_check_input_nbrs (int, short, short, short);
+int task_check_input (bask_core* tcore, char*, char*, char*, char*, short);
 
 void task_free_ll (struct bask_task**);
 int task_insert (struct bask_task**, unsigned int, unsigned int, int, short, int, char*, char*, char*, char*);

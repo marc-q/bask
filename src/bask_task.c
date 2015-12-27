@@ -15,11 +15,47 @@
    |--------------------------------------------| */
 
 /*
-	Function: task_check_input (bask_core* tcore, char* added, char* finished, char* project, char* description, int printout);
+	Function: task_check_input_nbrs (int id, short priority, short active, short printout);
+	Description: Checks if the input nbrs is correct and displays the error messages if printout equals 1!
+	InitVersion: 0.0.1
+*/
+
+int task_check_input_nbrs (int id, short priority, short active, short printout)
+{
+	if (id < 0)
+	{
+		if (printout == 1)
+		{
+			errors_notunsigned ("id");
+		}
+		return -5;
+	}
+	else if (priority < TASK_PRIORITY_MIN || priority > TASK_PRIORITY_MAX)
+	{
+		if (printout == 1)
+		{
+			errors_outofrange_int ("priority", TASK_PRIORITY_MIN, TASK_PRIORITY_MAX);
+		}
+		return -6;
+	}
+	else if (ISBOOL (active) != 0)
+	{
+		if (printout == 1)
+		{
+			errors_outofrange_int ("active", 0, 1);
+		}
+		return -7;
+	}
+	
+	return 0;
+}
+
+/*
+	Function: task_check_input (bask_core* tcore, char* added, char* finished, char* project, char* description, short printout);
 	Description: Checks if the input is correct and displays the error messages if printout equals 1!
 	InitVersion: 0.0.1
 */
-int task_check_input (bask_core* tcore, char* added, char* finished, char* project, char* description, int printout)
+int task_check_input (bask_core* tcore, char* added, char* finished, char* project, char* description, short printout)
 {
 	if (strlen (added) >= T_S_ADDED)
 	{
@@ -385,7 +421,7 @@ void task_create_cmd (bask_core* tcore, struct bask_task** first, int priority, 
 {
 	/* TODO: Move the range check of the priority variable into the task_check_input function. */
 	if (task_check_input (tcore, "", "", project, description, 1) == 0 &&
-	    priority >= 0 && priority <= 3)
+	    task_check_input_nbrs (0, priority, 1, 1) == 0)
 	{
 		task_create (tcore, first, (short) priority, project, description);
 		printf ("Created task %i.\n", tcore->baskbin_uid);
@@ -414,7 +450,7 @@ void task_modificate_cmd (bask_core* tcore, struct bask_task** first, unsigned i
 {
 	/* TODO: Move the range check of the priority variable into the task_check_input function. */
 	if (task_check_input (tcore, added, finished, project, description, 1) == 0 &&
-	    priority >= 0 && priority <= 3)
+	    task_check_input_nbrs (id, priority, active, 1) == 0)
 	{
 		task_modificate (first, id, active, state, (short) priority, added, finished, project, description);
 		printf ("Modificated task %i.\n", id);

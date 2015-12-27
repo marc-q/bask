@@ -28,6 +28,7 @@
 #define T_FLTR_UNFINISHED 2
 
 #define BIGGEST(a,b) ((a>b) ? (a) : (b))
+#define ISBOOL(a) ((((a) == (0)) || ((a) == (1))) ? (0) : (1)) 
 
 struct _bask_core
 {

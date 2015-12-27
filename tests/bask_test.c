@@ -12,7 +12,7 @@
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 42
+#define TESTS_AMOUNT 43
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -321,6 +321,28 @@ static int tst_config_setstr (void)
    |--------------------------------------------| */
 
 /*
+	Function: tst_task_checkinputnbrs (void);
+	Description: Tests the task_check_input_nbrs function from bask_task.c.
+	InitVersion: 0.0.1
+*/
+static int tst_task_checkinputnbrs (void)
+{	
+	if (task_check_input_nbrs (-1, 0, 0, 0) == -5 &&
+	    task_check_input_nbrs (0, TASK_PRIORITY_MAX+1, 0, 0) == -6 &&
+	    task_check_input_nbrs (0, TASK_PRIORITY_MIN-1, 0, 0) == -6 &&
+	    task_check_input_nbrs (0, 0, 2, 0) == -7 &&
+	    task_check_input_nbrs (0, 0, -1, 0) == -7 &&
+	    task_check_input_nbrs (0, 0, 0, 0) == 0)
+	{
+		tst_print_success ("Task_Check_Input_Nbrs");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Task_Check_Input_Nbrs");
+	return TESTS_FAIL;
+}
+
+/*
 	Function: tst_task_checkinput (void);
 	Description: Tests the task_check_input function from bask_task.c.
 	InitVersion: 0.0.1
@@ -476,6 +498,7 @@ int main (int argc, char* argv[])
 	
 	printf ("\n");
 	
+	points += tst_task_checkinputnbrs ();
 	points += tst_task_checkinput ();
 	
 	printf ("\n");
