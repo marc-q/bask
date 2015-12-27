@@ -183,6 +183,7 @@ static void print_help (void)
 	printf ("\tabout\t\t\t\t\tAbout the programm.\n");
 	printf ("\tlist <ARGS>\t\t\t\tLists all tasks.\n");
 	printf ("\tsummary\t\t\t\t\tSummary of all projects.\n");
+	printf ("\thistory\t\t\t\t\tHistory of monthly stats.\n");
 	
 	printf ("\tinit <FILE>\t\t\t\tInits the FILE or all files if no FILE is given.\n");
 	printf ("\tadd [priority] [PROJECT] [DESCRIPTION]\tAdd a task.\n");
@@ -442,6 +443,10 @@ int main (int argc, char* argv[])
 		else if (utils_streq (argv[optind], "summary") == 0)
 		{
 			view_summary (&tcore, &btheme, &first);
+		}
+		else if (utils_streq (argv[optind], "history") == 0)
+		{
+			view_history (&tcore, &btheme, &first, T_FLTR_ALL);
 		}
 		else
 		{

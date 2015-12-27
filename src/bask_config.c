@@ -137,11 +137,11 @@ void config_init_file (bask_core* tcore)
 	{	
 		fprintf (baskfile, "# Path to the baskbin.\nbaskbin=default;\n#\n");
 		
-		fprintf (baskfile, "# The minimum length of the project field in characters (0-200; default: 15;)\ntask_project_min=15;\n#\n");
+		fprintf (baskfile, "# The minimum length of the project field in characters (0-200; default: 15)\ntask_project_min=15;\n#\n");
 		
-		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50;)\ntask_description_max=50;\n#\n");
-		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50;)\ntask_description_min=50;\n#\n");
-		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1;)\ntask_description_break=1;\n");
+		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50)\ntask_description_max=50;\n#\n");
+		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50)\ntask_description_min=50;\n#\n");
+		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=1;\n");
 	
 		fclose (baskfile);	
 	}

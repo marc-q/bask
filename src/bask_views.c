@@ -1,9 +1,11 @@
 /* Copyright 2015 Marc Volker Dickmann */
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <math.h>
 #include "../lib/dutils.h"
 #include "bask_core.h"
+#include "bask_time.h"
 #include "bask_task.h"
 #include "bask_project.h"
 #include "bask_ui.h"
@@ -301,4 +303,96 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 		printf ("\n%i tasks\n", i);
 	}
 	view_legend (btheme);
+}
+
+/* |--------------------------------------------|
+   |		    ViewHistory			|
+   |--------------------------------------------| */
+   
+/*
+	Function: view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** first, short filter);
+	Description: Displays a history of monthly stats.
+	InitVersion: 0.0.1
+*/
+void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** first, short filter)
+{
+	unsigned int i, tasks_added, tasks_finished, current_year, max_year, year_added, year_finished;
+	unsigned short current_month, max_month, month_added, month_finished;
+	struct bask_task* ptr = *first;
+	
+	i = tasks_added = tasks_finished = current_year = current_month = year_added = month_added = year_finished = month_finished = 0;
+	max_year = max_month = 1;
+	
+	while (current_year <= max_year || current_month < max_month)
+	{
+		while (ptr != NULL)
+		{
+			if (BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 1 && 
+			    ((filter == T_FLTR_ALL) || 
+			     (filter == T_FLTR_FINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 1 ) || 
+			     (filter == T_FLTR_UNFINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 0 )) || 
+			     (filter == T_FLTR_STOPPED && BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 0 ))
+			{
+				year_added = time_get_year (ptr->t_added);
+				month_added = time_get_month (ptr->t_added);
+				year_finished = time_get_year (ptr->t_finished);
+				month_finished = time_get_month (ptr->t_finished);
+				
+				if (i == 0 && year_added > max_year)
+				{
+					max_year = year_added;
+				}
+				else if (i == 0 && year_added < current_year)
+				{
+					current_year = year_added;
+				}
+			
+				if (i == 0 && month_added > max_month)
+				{
+					max_month = month_added;
+				}
+				else if (i == 0 && month_added < current_month)
+				{
+					current_month = year_added;
+				}
+			
+				if (i != 0 &&
+				    year_finished == current_year &&
+				    month_finished == current_month)
+				{
+					tasks_finished++;
+				}
+			
+				if (i != 0 &&
+				    year_added == current_year &&
+				    month_added == current_month)
+				{
+					tasks_added++;
+				}
+			}
+		
+			ptr = ptr->next;
+		}
+		
+		if (tasks_added > 0 || tasks_finished > 0)
+		{
+			printf ("%i/%i\t\t%i tasks added, %i tasks finished.\n", current_year, current_month, tasks_added, tasks_finished);
+		}
+		
+		tasks_added = 0;
+		tasks_finished = 0;
+		
+		if (current_month == 12)
+		{
+			current_year++;
+			current_month = 1;
+		}
+		else
+		{
+			current_month++;
+		}
+		
+		i++;
+		ptr = *first;
+	}
 }

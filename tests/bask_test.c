@@ -12,7 +12,7 @@
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 43
+#define TESTS_AMOUNT 49
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -267,6 +267,120 @@ static int tst_time_gettm_str (void)
 	return TESTS_FAIL;
 }
 
+/*
+	Function: tst_time_gethours (void);
+	Description: Tests the time_get_hours function from bask_time.c.
+	InitVersion: 0.0.1
+*/
+static int tst_time_gethours (void)
+{
+	
+	if (time_get_hours ("23/59/59/09/09/2015") == 23 &&
+	    time_get_hours ("23/59/59/9/9/2015") == -1)
+	{
+		tst_print_success ("Time_Get_Hours");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Time_Get_Hours");
+	return TESTS_FAIL;
+}
+
+/*
+	Function: tst_time_getminutes (void);
+	Description: Tests the time_get_minutes function from bask_time.c.
+	InitVersion: 0.0.1
+*/
+static int tst_time_getminutes (void)
+{
+	
+	if (time_get_minutes ("23/59/59/09/09/2015") == 59 &&
+	    time_get_minutes ("23/59/59/9/9/2015") == -1)
+	{
+		tst_print_success ("Time_Get_Minutes");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Time_Get_Minutes");
+	return TESTS_FAIL;
+}
+
+/*
+	Function: tst_time_getseconds (void);
+	Description: Tests the time_get_seconds function from bask_time.c.
+	InitVersion: 0.0.1
+*/
+static int tst_time_getseconds (void)
+{
+	
+	if (time_get_seconds ("23/59/59/09/09/2015") == 59 &&
+	    time_get_seconds ("23/59/59/9/9/2015") == -1)
+	{
+		tst_print_success ("Time_Get_Seconds");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Time_Get_Seconds");
+	return TESTS_FAIL;
+}
+
+/*
+	Function: tst_time_getday (void);
+	Description: Tests the time_get_day function from bask_time.c.
+	InitVersion: 0.0.1
+*/
+static int tst_time_getday (void)
+{
+	
+	if (time_get_day ("23/59/59/09/09/2015") == 9 &&
+	    time_get_day ("23/59/59/9/9/2015") == -1)
+	{
+		tst_print_success ("Time_Get_Day");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Time_Get_Day");
+	return TESTS_FAIL;
+}
+
+/*
+	Function: tst_time_getmonth (void);
+	Description: Tests the time_get_month function from bask_time.c.
+	InitVersion: 0.0.1
+*/
+static int tst_time_getmonth (void)
+{
+	
+	if (time_get_month ("23/59/59/09/09/2015") == 9 &&
+	    time_get_month ("23/59/59/9/9/2015") == -1)
+	{
+		tst_print_success ("Time_Get_Month");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Time_Get_Month");
+	return TESTS_FAIL;
+}
+
+/*
+	Function: tst_time_getyear (void);
+	Description: Tests the time_get_year function from bask_time.c.
+	InitVersion: 0.0.1
+*/
+static int tst_time_getyear (void)
+{
+	
+	if (time_get_year ("23/59/59/09/09/2015") == 2015 &&
+	    time_get_year ("23/59/59/9/9/2015") == -1)
+	{
+		tst_print_success ("Time_Get_Year");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Time_Get_Year");
+	return TESTS_FAIL;
+}
+
 /* |--------------------------------------------|
    |		   Tests-Config			|
    |--------------------------------------------| */
@@ -491,6 +605,12 @@ int main (int argc, char* argv[])
 	
 	points += tst_time_getstr ();
 	points += tst_time_gettm_str ();
+	points += tst_time_gethours ();
+	points += tst_time_getminutes ();
+	points += tst_time_getseconds ();
+	points += tst_time_getday ();
+	points += tst_time_getmonth ();
+	points += tst_time_getyear ();
 	
 	printf ("\n");
 	

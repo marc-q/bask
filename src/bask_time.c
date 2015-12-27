@@ -62,3 +62,131 @@ int time_get_tm_str (struct tm* out, char* datestr)
 	
 	return 0;
 }
+
+/*
+	Function: time_get_hours (char* datestr);
+	Description: Returns the hours from the datestr.
+	InitVersion: 0.0.1
+*/
+int time_get_hours (char* datestr)
+{
+	char hours[3];
+	
+	if (strlen (datestr) != F_BB_S_DATE-1)
+	{
+		return -1;
+	}
+	
+	hours[0] = datestr[0];
+	hours[1] = datestr[1];
+	hours[2] = '\0';
+	
+	return atoi (hours);
+}
+
+/*
+	Function: time_get_minutes (char* datestr);
+	Description: Returns the minutes from the datestr.
+	InitVersion: 0.0.1
+*/
+int time_get_minutes (char* datestr)
+{
+	char minutes[3];
+	
+	if (strlen (datestr) != F_BB_S_DATE-1)
+	{
+		return -1;
+	}
+	
+	minutes[0] = datestr[3];
+	minutes[1] = datestr[4];
+	minutes[2] = '\0';
+	
+	return atoi (minutes);
+}
+
+/*
+	Function: time_get_seconds (char* datestr);
+	Description: Returns the seconds from the datestr.
+	InitVersion: 0.0.1
+*/
+int time_get_seconds (char* datestr)
+{
+	char seconds[3];
+	
+	if (strlen (datestr) != F_BB_S_DATE-1)
+	{
+		return -1;
+	}
+	
+	seconds[0] = datestr[6];
+	seconds[1] = datestr[7];
+	seconds[2] = '\0';
+	
+	return atoi (seconds);
+}
+
+/*
+	Function: time_get_day (char* datestr);
+	Description: Returns the day from the datestr.
+	InitVersion: 0.0.1
+*/
+int time_get_day (char* datestr)
+{
+	char day[3];
+	
+	if (strlen (datestr) != F_BB_S_DATE-1)
+	{
+		return -1;
+	}
+	
+	day[0] = datestr[9];
+	day[1] = datestr[10];
+	day[2] = '\0';
+	
+	return atoi (day);
+}
+
+/*
+	Function: time_get_month (char* datestr);
+	Description: Returns the month from the datestr.
+	InitVersion: 0.0.1
+*/
+int time_get_month (char* datestr)
+{
+	char month[3];
+	
+	if (strlen (datestr) != F_BB_S_DATE-1)
+	{
+		return -1;
+	}
+	
+	month[0] = datestr[12];
+	month[1] = datestr[13];
+	month[2] = '\0';
+	
+	return atoi (month);
+}
+
+/*
+	Function: time_get_year (char* datestr);
+	Description: Returns the year from the datestr.
+	InitVersion: 0.0.1
+*/
+int time_get_year (char* datestr)
+{
+	char year[5];
+	
+	if (strlen (datestr) != F_BB_S_DATE-1)
+	{
+		return -1;
+	}
+	
+	year[0] = datestr[15];
+	year[1] = datestr[16];
+	year[2] = datestr[17];
+	year[3] = datestr[18];
+	year[4] = '\0';
+	
+	return atoi (year);
+}
