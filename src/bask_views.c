@@ -376,7 +376,7 @@ void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 		
 		if (tasks_added > 0 || tasks_finished > 0)
 		{
-			printf ("%i/%i\t\t%i tasks added, %i tasks finished.\n", current_year, current_month, tasks_added, tasks_finished);
+			printf ("%s%i/%i\t\t%s%i%s tasks added, %s%i%s tasks finished.\n", BC_BLD_BLUE, current_year, current_month, BC_BLD_GREEN, tasks_added, BC_TXT_RST, btheme->color_finished, tasks_finished, BC_TXT_RST);
 		}
 		
 		tasks_added = 0;
