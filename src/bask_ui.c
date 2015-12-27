@@ -123,7 +123,7 @@ void ui_theme_load (bask_core* tcore, bask_theme* btheme)
 	int i;
 	char line[200];
 	char colors[7][UI_S_THEMECOLOR];
-	char *token, *saveptr;
+	char saveptr[200];
 	FILE *basktheme;
 	
 	/* NOTE: If an config doesn't exist, f.e. an old config is used, its using the default value instead of crashing. */
@@ -145,15 +145,13 @@ void ui_theme_load (bask_core* tcore, bask_theme* btheme)
 	{
 		if (line[0] != '#')
 		{
-			token = strtok_r (line, BASKSEP, &saveptr);
-		
-			parser_get_str (token, "color_normal", colors[0], UI_S_THEMECOLOR, BASKSEP, saveptr);
-			parser_get_str (token, "color_important", colors[1], UI_S_THEMECOLOR, BASKSEP, saveptr);
-			parser_get_str (token, "color_today", colors[2], UI_S_THEMECOLOR, BASKSEP, saveptr);
-			parser_get_str (token, "color_critical", colors[3], UI_S_THEMECOLOR, BASKSEP, saveptr);
-			parser_get_str (token, "color_finished", colors[4], UI_S_THEMECOLOR, BASKSEP, saveptr);
-			parser_get_str (token, "color_pbarbak", colors[5], UI_S_THEMECOLOR, BASKSEP, saveptr);
-			parser_get_str (token, "color_seclinesbak", colors[6], UI_S_THEMECOLOR, BASKSEP, saveptr);
+			parser_get_str (line, "color_normal=", colors[0], UI_S_THEMECOLOR, BASKSEP, saveptr);
+			parser_get_str (line, "color_important=", colors[1], UI_S_THEMECOLOR, BASKSEP, saveptr);
+			parser_get_str (line, "color_today=", colors[2], UI_S_THEMECOLOR, BASKSEP, saveptr);
+			parser_get_str (line, "color_critical=", colors[3], UI_S_THEMECOLOR, BASKSEP, saveptr);
+			parser_get_str (line, "color_finished=", colors[4], UI_S_THEMECOLOR, BASKSEP, saveptr);
+			parser_get_str (line, "color_pbarbak=", colors[5], UI_S_THEMECOLOR, BASKSEP, saveptr);
+			parser_get_str (line, "color_seclinesbak=", colors[6], UI_S_THEMECOLOR, BASKSEP, saveptr);
 		}
 	}
 	

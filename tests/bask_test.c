@@ -110,21 +110,13 @@ static int tst_core_streq (void)
 static int tst_core_parser_str (void)
 {
 	char outstr[50], instr[50];
-	char *token, *saveptr;
+	char saveptr[200];
 
-	strcpy (instr, "test=this is a str test.;\n");
-
-	token = strtok_r (instr, BASKSEP, &saveptr);
+	strcpy (instr, "test=this is a str test with an ;.\n");
 	
-	if (token == NULL)
-	{
-		tst_print_fail ("Core_Parser_Str");
-		return TESTS_FAIL;
-	}
+	parser_get_str (instr, "test=", outstr, sizeof (outstr), BASKSEP, saveptr);
 	
-	parser_get_str (token, "test", outstr, sizeof (outstr), BASKSEP, saveptr);
-	
-	if (utils_streq (outstr, "this is a str test.") == 0)
+	if (utils_streq (outstr, "this is a str test with an ;.") == 0)
 	{
 		tst_print_success ("Core_Parser_Str");
 		return TESTS_PASS;
@@ -143,19 +135,11 @@ static int tst_core_parser_int (void)
 {
 	int outint;
 	char instr[50];
-	char *token, *saveptr;
+	char saveptr[200];
 	
-	strcpy (instr, "test=2015;\n");
+	strcpy (instr, "test=2015\n");
 	
-	token = strtok_r (instr, BASKSEP, &saveptr);
-	
-	if (token == NULL)
-	{
-		tst_print_fail ("Core_Parser_Int");
-		return TESTS_FAIL;
-	}
-	
-	parser_get_int (token, "test", &outint, BASKSEP, saveptr);
+	parser_get_int (instr, "test=", &outint, BASKSEP, saveptr);
 	
 	if (outint == 2015)
 	{
@@ -176,19 +160,11 @@ static int tst_core_parser_short (void)
 {
 	short out;
 	char instr[50];
-	char *token, *saveptr;
+	char saveptr[200];
 	
-	strcpy (instr, "test=2015;\n");
+	strcpy (instr, "test=2015\n");
 	
-	token = strtok_r (instr, BASKSEP, &saveptr);
-	
-	if (token == NULL)
-	{
-		tst_print_fail ("Core_Parser_Short");
-		return TESTS_FAIL;
-	}
-	
-	parser_get_short (token, "test", &out, BASKSEP, saveptr);
+	parser_get_short (instr, "test=", &out, BASKSEP, saveptr);
 	
 	if (out == 2015)
 	{

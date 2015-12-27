@@ -77,7 +77,7 @@ static void bask_init_baskbin (bask_core* tcore)
 	
 	if (bask_init_local_file (&baskfile, tcore->path_baskbin) == 0)
 	{
-		fprintf (baskfile, "BASKBIN\nbbuid=0;\nBBEND\n");
+		fprintf (baskfile, "BASKBIN\nbbuid=0\nBBEND\n");
 		
 		fclose (baskfile);
 	}
@@ -94,13 +94,13 @@ static void bask_init_basktheme (bask_core* tcore)
 	
 	if (bask_init_local_file (&baskfile, tcore->path_basktheme) == 0)
 	{	
-		fprintf (baskfile, "color_normal=default;\n");
-		fprintf (baskfile, "color_important=default;\n");
-		fprintf (baskfile, "color_today=default;\n");
-		fprintf (baskfile, "color_critical=default;\n");
-		fprintf (baskfile, "color_finished=default;\n");
-		fprintf (baskfile, "color_pbarbak=default;\n");
-		fprintf (baskfile, "color_seclinesbak=default;\n");
+		fprintf (baskfile, "color_normal=default\n");
+		fprintf (baskfile, "color_important=default\n");
+		fprintf (baskfile, "color_today=default\n");
+		fprintf (baskfile, "color_critical=default\n");
+		fprintf (baskfile, "color_finished=default\n");
+		fprintf (baskfile, "color_pbarbak=default\n");
+		fprintf (baskfile, "color_seclinesbak=default\n");
 		
 		fclose (baskfile);
 	}

@@ -369,6 +369,7 @@ void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 					/* NOTE: If the tasks hasnt finished (equals no finished date) this return -1 which will result in the max value of the unsigned int variable. This fixes that problem. */
 					year_finished = (time_get_year (ptr->t_finished) == -1) ? 0 : time_get_year (ptr->t_finished);
 					month_finished = (time_get_month (ptr->t_finished) == -1) ? 0 : time_get_month (ptr->t_finished);
+					
 					/* ADDED TASKS */
 					if (year_added == current_year &&
 					    month_added == current_month)

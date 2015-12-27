@@ -4,7 +4,7 @@
 #define P_CMD "bask"
 #define P_VERSION "0.0.1"
 #define P_LICENCE "GNU GPL v.3"
-#define BASKSEP "=;"
+#define BASKSEP '='
 #define BASKBINFILE "baskbin.txt"
 #define BASKCONFFILE "bask.txt"
 #define BASKTHEMEFILE "basktheme.txt"
@@ -48,9 +48,11 @@ struct _bask_core
 
 typedef struct _bask_core bask_core;
 
-int parser_get_str (char*, char*, char*, size_t, char*, char*);
-int parser_get_int (char*, char*, int*, char*, char*);
-int parser_get_short (char*, char*, short*, char*, char*);
+int parser_get_str_old (char*, char*, char*, size_t, char*, char*);
+int parser_get_str (char*, char*, char*, size_t, char, char*);
+int parser_get_int_old (char*, char*, int*, char*, char*);
+int parser_get_int (char*, char*, int*, char, char*);
+int parser_get_short (char*, char*, short*, char, char*);
 int utils_streq (char*, char*);
 int bask_init_local_file (FILE**, char*);
 

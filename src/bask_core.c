@@ -11,11 +11,11 @@
    |--------------------------------------------| */
 
 /*
-	Function: parser_get_str (char* token, char* key, char* out, size_t outsize, char* septags, char* saveptr);
-	Description: Parses a row and return the value if the key is right.
+	Function: parser_get_str_old (char* token, char* key, char* out, size_t outsize, char* septags, char* saveptr);
+	Description: Parses a row and return the value if the key is right. (!DEPRECATED!)
 	InitVersion: 0.0.1
 */
-int parser_get_str (char* token, char* key, char* out, size_t outsize, char* septags, char* saveptr)
+int parser_get_str_old (char* token, char* key, char* out, size_t outsize, char* septags, char* saveptr)
 {
 	if (utils_streq (token, key) == 0)
 	{
@@ -35,11 +35,39 @@ int parser_get_str (char* token, char* key, char* out, size_t outsize, char* sep
 }
 
 /*
-	Function: parser_get_int (char* token, char* key, int* out, char* septags, char* saveptr);
+	Function: parser_get_str (char* line, char* key, char* out, size_t outsize, char septag, char* saveptr);
 	Description: Parses a row and return the value if the key is right.
 	InitVersion: 0.0.1
 */
-int parser_get_int (char* token, char* key, int* out, char* septags, char* saveptr)
+int parser_get_str (char* line, char* key, char* out, size_t outsize, char septag, char* saveptr)
+{
+	if (strncmp (line, key, strlen (key)) == 0)
+	{
+		strcpy (saveptr, strchr (line, septag));
+
+		if (strlen (saveptr+2) < outsize &&
+		    strlen (saveptr+2) > 2)
+		{
+			if (saveptr[strlen (saveptr)-1] == '\n')
+			{
+				saveptr[strlen (saveptr)-1] = '\0';
+			}
+			
+			strcpy (out, saveptr+1);
+		}
+
+		return 0;
+	}
+
+	return -1;
+}
+
+/*
+	Function: parser_get_int_old (char* token, char* key, int* out, char* septags, char* saveptr);
+	Description: Parses a row and return the value if the key is right. (!DEPRECATED!)
+	InitVersion: 0.0.1
+*/
+int parser_get_int_old (char* token, char* key, int* out, char* septags, char* saveptr)
 {
 	if (utils_streq (token, key) == 0)
 	{
@@ -59,15 +87,42 @@ int parser_get_int (char* token, char* key, int* out, char* septags, char* savep
 }
 
 /*
-	Function: parser_get_short (char* token, char* key, short* out, char* septags, char* saveptr);
+	Function: parser_get_int (char* line, char* key, int* out, char septag, char* saveptr);
 	Description: Parses a row and return the value if the key is right.
 	InitVersion: 0.0.1
 */
-int parser_get_short (char* token, char* key, short* out, char* septags, char* saveptr)
+int parser_get_int (char* line, char* key, int* out, char septag, char* saveptr)
+{
+	if (strncmp (line, key, strlen (key)) == 0)
+	{
+		strcpy (saveptr, strchr (line, septag));
+		
+		if (strlen (saveptr) < 3)
+		{
+			return -3;
+		}
+		
+		if (isdigit (saveptr[1]) != 0)
+		{
+			*out = atoi (saveptr+1);
+		}
+
+		return 0;
+	}
+
+	return -1;
+}
+
+/*
+	Function: parser_get_short (char* line, char* key, short* out, char septag, char* saveptr);
+	Description: Parses a row and return the value if the key is right.
+	InitVersion: 0.0.1
+*/
+int parser_get_short (char* line, char* key, short* out, char septag, char* saveptr)
 {
 	int tmp;
 	
-	if (parser_get_int (token, key, &tmp, septags, saveptr) == 0)
+	if (parser_get_int (line, key, &tmp, septag, saveptr) == 0)
 	{
 		*out = (short) tmp;
 		 

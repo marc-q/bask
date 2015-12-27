@@ -33,18 +33,18 @@ int export_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 	}
 	
 	fprintf (exportfile, "BASKBIN\n");
-	fprintf (exportfile, "bbuid=%i;\n", tcore->baskbin_uid);
+	fprintf (exportfile, "bbuid=%i\n", tcore->baskbin_uid);
 	fprintf (exportfile, "BBEND\n");
 	
 	while (ptr != NULL)
 	{
-		fprintf (exportfile, "tid=%i;\n", ptr->t_id);
-		fprintf (exportfile, "tactive=%i;\n", BITGET (ptr->t_flags, TASK_FLAG_ACTIVE));
-		fprintf (exportfile, "tpriority=%i;\n", ptr->t_priority);
-		fprintf (exportfile, "tadded=%s;\n", ptr->t_added);
-		fprintf (exportfile, "tfinished=%s;\n", ptr->t_finished);
-		fprintf (exportfile, "tproject=%s;\n", ptr->t_project);
-		fprintf (exportfile, "tdescription=%s;\n", ptr->t_description);
+		fprintf (exportfile, "tid=%i\n", ptr->t_id);
+		fprintf (exportfile, "tactive=%i\n", BITGET (ptr->t_flags, TASK_FLAG_ACTIVE));
+		fprintf (exportfile, "tpriority=%i\n", ptr->t_priority);
+		fprintf (exportfile, "tadded=%s\n", ptr->t_added);
+		fprintf (exportfile, "tfinished=%s\n", ptr->t_finished);
+		fprintf (exportfile, "tproject=%s\n", ptr->t_project);
+		fprintf (exportfile, "tdescription=%s\n", ptr->t_description);
 		fprintf (exportfile, "END\n");
 		ptr = ptr->next;
 	}

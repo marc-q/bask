@@ -8,22 +8,20 @@
 #include "bask_config.h"
 
 /*
-	Function: config_set_str_raw (bask_core* tcore, char* str, char** token, char** saveptr);
+	Function: config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* baskbin, char* saveptr);
 	Description: Sets config values with a str without declaration of new variables. (internal use)
 	InitVersion: 0.0.1
 */
-int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* baskbin, char* token, char* saveptr)
-{
-	token = strtok_r (line, BASKSEP, &saveptr);
-	
-	if (parser_get_str (token, "baskbin", baskbin, 150, BASKSEP, saveptr) == 0)
+int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* baskbin, char* saveptr)
+{	
+	if (parser_get_str (line, "baskbin=", baskbin, 150, BASKSEP, saveptr) == 0)
 	{
 		if (utils_streq (baskbin, "default") != 0)
 		{
 			strcpy (tcore->path_baskbin, baskbin);
 		}
 	}
-	else if (parser_get_short (token, "task_project_min", tmpsvalue, BASKSEP, saveptr) == 0)
+	else if (parser_get_short (line, "task_project_min=", tmpsvalue, BASKSEP, saveptr) == 0)
 	{
 		if (*tmpsvalue < 0 || *tmpsvalue > 200)
 		{
@@ -34,7 +32,7 @@ int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* ba
 			tcore->t_projectmin = *tmpsvalue;
 		}
 	}
-	else if (parser_get_short (token, "task_description_max", tmpsvalue, BASKSEP, saveptr) == 0)
+	else if (parser_get_short (line, "task_description_max=", tmpsvalue, BASKSEP, saveptr) == 0)
 	{
 		if (*tmpsvalue < 0 || *tmpsvalue > 200)
 		{
@@ -45,7 +43,7 @@ int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* ba
 			tcore->t_descriptionmax = *tmpsvalue;
 		}
 	}
-	else if (parser_get_short (token, "task_description_min", tmpsvalue, BASKSEP, saveptr) == 0)
+	else if (parser_get_short (line, "task_description_min=", tmpsvalue, BASKSEP, saveptr) == 0)
 	{
 		if (*tmpsvalue < 0 || *tmpsvalue > 200)
 		{
@@ -56,7 +54,7 @@ int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* ba
 			tcore->t_descriptionmin = *tmpsvalue;
 		}
 	}
-	else if (parser_get_short (token, "task_description_break", tmpsvalue, BASKSEP, saveptr) == 0)
+	else if (parser_get_short (line, "task_description_break=", tmpsvalue, BASKSEP, saveptr) == 0)
 	{
 		if (*tmpsvalue < 0 || *tmpsvalue > 1)
 		{
@@ -79,7 +77,7 @@ int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* ba
 int config_set_str (bask_core* tcore, char* str)
 {
 	short tmpsvalue;
-	char *token, *saveptr, baskbin[151], cline[200];
+	char saveptr[200], baskbin[151], cline[200];
 	
 	/* NOTE: This is a fix to support using this function while given a string instead of an variable for the str argument. */
 	if (strlen (str) < sizeof (cline))
@@ -91,7 +89,7 @@ int config_set_str (bask_core* tcore, char* str)
 		return -1;
 	}
 	
-	return config_set_str_raw (tcore, cline, &tmpsvalue, baskbin, token, saveptr);
+	return config_set_str_raw (tcore, cline, &tmpsvalue, baskbin, saveptr);
 }
 
 /*
@@ -135,13 +133,13 @@ void config_init_file (bask_core* tcore)
 	
 	if (bask_init_local_file (&baskfile, tcore->path_baskconf) == 0)
 	{	
-		fprintf (baskfile, "# Path to the baskbin.\nbaskbin=default;\n#\n");
+		fprintf (baskfile, "# Path to the baskbin.\nbaskbin=default\n#\n");
 		
-		fprintf (baskfile, "# The minimum length of the project field in characters (0-200; default: 15)\ntask_project_min=15;\n#\n");
+		fprintf (baskfile, "# The minimum length of the project field in characters (0-200; default: 15)\ntask_project_min=15\n#\n");
 		
-		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50)\ntask_description_max=50;\n#\n");
-		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50)\ntask_description_min=50;\n#\n");
-		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=1;\n");
+		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50)\ntask_description_max=50\n#\n");
+		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50)\ntask_description_min=50\n#\n");
+		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=1\n");
 	
 		fclose (baskfile);	
 	}
@@ -172,27 +170,27 @@ int config_save (bask_core* tcore)
 			if (strncmp ("baskbin=", line, strlen ("baskbin=")) == 0)
 			{
 				fseek (baskconf, -(strlen (line)), SEEK_CUR);
-				fprintf (baskconf, "baskbin=%s;", tcore->path_baskbin);
+				fprintf (baskconf, "baskbin=%s\n", tcore->path_baskbin);
 			}
 			else if (strncmp ("task_project_min=", line, strlen ("task_project_min=")) == 0)
 			{
 				fseek (baskconf, -(strlen (line)), SEEK_CUR);
-				fprintf (baskconf, "task_project_min=%i;", (int)tcore->t_projectmin);
+				fprintf (baskconf, "task_project_min=%i\n", (int)tcore->t_projectmin);
 			}
 			else if (strncmp ("task_description_max=", line, strlen ("task_description_max=")) == 0)
 			{
 				fseek (baskconf, -(strlen (line)), SEEK_CUR);
-				fprintf (baskconf, "task_description_max=%i;", (int)tcore->t_descriptionmax);
+				fprintf (baskconf, "task_description_max=%i\n", (int)tcore->t_descriptionmax);
 			}
 			else if (strncmp ("task_description_min=", line, strlen ("task_description_min=")) == 0)
 			{
 				fseek (baskconf, -(strlen (line)), SEEK_CUR);
-				fprintf (baskconf, "task_description_min=%i;", (int)tcore->t_descriptionmin);
+				fprintf (baskconf, "task_description_min=%i\n", (int)tcore->t_descriptionmin);
 			}
 			else if (strncmp ("task_description_break=", line, strlen ("task_description_break=")) == 0)
 			{
 				fseek (baskconf, -(strlen (line)), SEEK_CUR);
-				fprintf (baskconf, "task_description_break=%i;", (int)BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK));
+				fprintf (baskconf, "task_description_break=%i\n", (int)BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK));
 			}
 		}
 	}
@@ -212,7 +210,7 @@ void config_load (bask_core* tcore)
 	int error;
 	short tmpsvalue;
 	char line[200], baskbin[151];
-	char *token, *saveptr;
+	char saveptr[200];
 	FILE *baskconf;
 	
 	tmpsvalue = error = 0;
@@ -238,7 +236,7 @@ void config_load (bask_core* tcore)
 		if (line[0] != '#')
 		{
 			/* NOTE: Using this we only must change one function in order to add options. */
-			if ((error = config_set_str_raw (tcore, line, &tmpsvalue, baskbin, token, saveptr)) != 0)
+			if ((error = config_set_str_raw (tcore, line, &tmpsvalue, baskbin, saveptr)) != 0)
 			{
 				config_print_set_str_errors (error);
 				

@@ -23,7 +23,7 @@ int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 	unsigned int tid;
 	int tactive, tpriority, tstate, bb_state;
 	char line[200], tadded[T_S_ADDED], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
-	char *token, *saveptr;
+	char saveptr[200];
 	FILE* importfile;
 
 	bb_state = tid = tactive = tpriority = tstate = 0;
@@ -42,34 +42,32 @@ int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 	}
 	
 	while (fgets (line, sizeof (line), importfile) != NULL)
-	{
-		token = strtok_r (line, BASKSEP, &saveptr);
-		
-		if (utils_streq (token, "BASKBIN\n") == 0)
+	{		
+		if (utils_streq (line, "BASKBIN\n") == 0)
 		{
 			bb_state = 1;
 		}
-		else if (utils_streq (token, "BBEND\n") == 0)
+		else if (utils_streq (line, "BBEND\n") == 0)
 		{
 			bb_state = 0;
 		}
 			
 		if (bb_state == 1)
 		{
-			parser_get_int (token, "bbuid", &tcore->baskbin_uid, BASKSEP, saveptr);
+			parser_get_int (line, "bbuid=", &tcore->baskbin_uid, BASKSEP, saveptr);
 		}
-		else if (utils_streq (token, "END\n") == 0)
+		else if (utils_streq (line, "END\n") == 0)
 		{
 			task_insert (first, tcore->tc_amount, tid, tactive, tpriority, tstate, tadded, tfinished, tproject, tdescription);
 			tcore->tc_amount++;
 		}
 		else
 		{
-			parser_get_int (token, "tid", &tid, BASKSEP, saveptr);
-			parser_get_int (token, "tactive", &tactive, BASKSEP, saveptr);
-			parser_get_int (token, "tpriority", &tpriority, BASKSEP, saveptr);
-			parser_get_str (token, "tadded", tadded, sizeof (tadded), BASKSEP, saveptr);
-			if (parser_get_str (token, "tfinished", tfinished, sizeof (tfinished), BASKSEP, saveptr) == 0)
+			parser_get_int (line, "tid=", &tid, BASKSEP, saveptr);
+			parser_get_int (line, "tactive=", &tactive, BASKSEP, saveptr);
+			parser_get_int (line, "tpriority=", &tpriority, BASKSEP, saveptr);
+			parser_get_str (line, "tadded=", tadded, sizeof (tadded), BASKSEP, saveptr);
+			if (parser_get_str (line, "tfinished=", tfinished, sizeof (tfinished), BASKSEP, saveptr) == 0)
 			{
 				/* Use this instead of tstate because this tells us already the state. */
 				if (strlen (tfinished) == F_BB_S_DATE-1)
@@ -82,8 +80,8 @@ int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 				}
 			}
 			
-			parser_get_str (token, "tproject", tproject, sizeof (tproject), BASKSEP, saveptr);
-			parser_get_str (token, "tdescription", tdescription, sizeof (tdescription), BASKSEP, saveptr);
+			parser_get_str (line, "tproject=", tproject, sizeof (tproject), BASKSEP, saveptr);
+			parser_get_str (line, "tdescription=", tdescription, sizeof (tdescription), BASKSEP, saveptr);
 		}
 	}
 	
@@ -293,7 +291,7 @@ int import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	char line[200], tadded[T_S_ADDED], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char tt_tmp[50];
-	char *token, *saveptr;
+	char saveptr[200];
 	FILE* importfile;
 	
 	strcpy (tt_tmp, " ");
@@ -312,9 +310,8 @@ int import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 	
 	while (fgets (line, sizeof (line), importfile) != NULL)
 	{
-		token = strtok_r (line, ICALSEP, &saveptr);
 		
-		if (parser_get_str (token, "END", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
+		if (parser_get_str (line, "END:", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
 		{
 			if (utils_streq (tt_tmp, "VEVENT") == 0)
 			{
@@ -325,16 +322,16 @@ int import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 		}
 		else
 		{
-			if (parser_get_str (token, "CREATED", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
+			if (parser_get_str (line, "CREATED:", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
 			{
 				import_ical_getdatestr (tadded, tt_tmp);
 			}
-			else if (parser_get_str (token, "DTEND", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
+			else if (parser_get_str (line, "DTEND:", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
 			{
 				import_ical_getdatestr (tfinished, tt_tmp);
 			}
 			
-			parser_get_str (token, "DESCRIPTION", tdescription, sizeof (tdescription), ICALSEP, saveptr);
+			parser_get_str (line, "DESCRIPTION:", tdescription, sizeof (tdescription), ICALSEP, saveptr);
 		}
 	}
 	
