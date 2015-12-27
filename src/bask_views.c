@@ -327,8 +327,7 @@ void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 	{
 		while (ptr != NULL)
 		{
-			if (strlen (ptr->t_added) == F_BB_S_DATE-1 && 
-			    BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 1 && 
+			if (strlen (ptr->t_added) == F_BB_S_DATE-1 &&
 			    ((filter == T_FLTR_ALL) || 
 			     (filter == T_FLTR_FINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 1 ) || 
 			     (filter == T_FLTR_UNFINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 0 )) || 
