@@ -200,7 +200,7 @@ static void print_help (void)
 	
 	printf ("\nARGUMENTS\n");
 	printf ("\t-a [active]\t\tIf the task is active.\n");
-	/*printf ("\t-s [state]\t\tThe state of the task.\n");*/ /* We dont need this right now, but later. */
+	/*printf ("\t-s [state]\t\tThe state of the task.\n");*/ /* We dont need this right now. */
 	printf ("\t-p [priority]\t\tThe priority of the task.\n");
 	printf ("\t-P [PROJECT]\t\tThe projectname of the task.\n");
 	printf ("\t-D [DESCRIPTION]\tThe description of the task.\n");
