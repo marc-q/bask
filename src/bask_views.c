@@ -327,7 +327,8 @@ void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 	{
 		while (ptr != NULL)
 		{
-			if (BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 1 && 
+			if (strlen (ptr->t_added) == F_BB_S_DATE-1 && 
+			    BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 1 && 
 			    ((filter == T_FLTR_ALL) || 
 			     (filter == T_FLTR_FINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 1 ) || 
 			     (filter == T_FLTR_UNFINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 0 )) || 
@@ -335,39 +336,53 @@ void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 			{
 				year_added = time_get_year (ptr->t_added);
 				month_added = time_get_month (ptr->t_added);
-				year_finished = time_get_year (ptr->t_finished);
-				month_finished = time_get_month (ptr->t_finished);
 				
-				if (i == 0 && year_added > max_year)
+				if (i == 0)
 				{
-					max_year = year_added;
+					/* NOTE: If the tasks hasnt finished (equals no finished date) this return -1 which will result in the max value of the unsigned int variable. This fixes that problem. */
+					year_finished = (time_get_year (ptr->t_finished) == -1) ? year_added : time_get_year (ptr->t_finished);
+					month_finished = (time_get_month (ptr->t_finished) == -1) ? month_added : time_get_month (ptr->t_finished);
+				
+					if (BIGGEST (year_added, year_finished) > max_year)
+					{
+						max_year = BIGGEST (year_added, year_finished);
+					}
+					
+					if (SMALLEST (year_added, year_finished) < current_year ||
+					    current_year == 0)
+					{
+						current_year = SMALLEST (year_added, year_finished);
+					}
+					
+					if (BIGGEST (month_added, month_finished) > max_month)
+					{
+						max_month = BIGGEST (month_added, month_finished);
+					}
+					
+					if (SMALLEST (month_added, month_finished) < current_month ||
+					    current_month == 0)
+					{ 
+						current_month = SMALLEST (month_added, month_finished);
+					}
 				}
-				else if (i == 0 && year_added < current_year)
+				else
 				{
-					current_year = year_added;
-				}
-			
-				if (i == 0 && month_added > max_month)
-				{
-					max_month = month_added;
-				}
-				else if (i == 0 && month_added < current_month)
-				{
-					current_month = year_added;
-				}
-			
-				if (i != 0 &&
-				    year_finished == current_year &&
-				    month_finished == current_month)
-				{
-					tasks_finished++;
-				}
-			
-				if (i != 0 &&
-				    year_added == current_year &&
-				    month_added == current_month)
-				{
-					tasks_added++;
+					/* NOTE: If the tasks hasnt finished (equals no finished date) this return -1 which will result in the max value of the unsigned int variable. This fixes that problem. */
+					year_finished = (time_get_year (ptr->t_finished) == -1) ? 0 : time_get_year (ptr->t_finished);
+					month_finished = (time_get_month (ptr->t_finished) == -1) ? 0 : time_get_month (ptr->t_finished);
+					/* ADDED TASKS */
+					if (year_added == current_year &&
+					    month_added == current_month)
+					{
+						tasks_added++;
+					}
+				
+					/* FINISHED TASKS */
+					if (year_finished == current_year &&
+					    month_finished == current_month)
+					{
+						tasks_finished++;
+					}
 				}
 			}
 		
@@ -382,12 +397,12 @@ void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 		tasks_added = 0;
 		tasks_finished = 0;
 		
-		if (current_month == 12)
+		if (i != 0 && current_month == 12)
 		{
 			current_year++;
 			current_month = 1;
 		}
-		else
+		else if (i != 0)
 		{
 			current_month++;
 		}
