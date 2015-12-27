@@ -257,7 +257,8 @@ int main (int argc, char* argv[])
 	struct bask_task* first = NULL;
 	
 	struct option long_options[] = {
-		 {"merge", no_argument, 0, 'm'},
+		 {"help", no_argument, 0, 'h'},
+		 {"about", no_argument, 0, '@'},
 		 {0,0,0,0}
 	};
 	
@@ -331,9 +332,8 @@ int main (int argc, char* argv[])
 	
 	config_load (&tcore);
 	ui_theme_load (&tcore, &btheme);
-	bask_init (&tcore, &first);
 	
-	while ((optc = getopt_long (argc, argv, "p:P:a:D:s:F:A:f:m", long_options, &optindex)) != -1)
+	while ((optc = getopt_long (argc, argv, "p:P:a:D:s:F:A:f:mh", long_options, &optindex)) != -1)
 	{
 		switch (optc)
 		{
@@ -397,13 +397,20 @@ int main (int argc, char* argv[])
 					filter = T_FLTR_UNFINISHED;
 				}
 				break;
-			case 'm':
-				tcore.flags ^= BITCOPY (1, 0, tcore.flags, T_FLAG_MERGE);
+			case 'h':
+				print_help ();
+				exit (EXIT_SUCCESS);
+				break;
+			case '@':
+				print_about ();
+				exit (EXIT_SUCCESS);
 				break;
 			default:
 				break;
 		}
 	}
+	
+	bask_init (&tcore, &first);
 	
 	if (optind > 1)
 	{
