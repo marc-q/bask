@@ -257,8 +257,8 @@ int main (int argc, char* argv[])
 	struct bask_task* first = NULL;
 	
 	struct option long_options[] = {
-		 {"help", no_argument, 0, 'h'},
-		 {"about", no_argument, 0, '@'},
+		 {"help", no_argument, 0, B_CMD_ARG_HELP},
+		 {"about", no_argument, 0, B_CMD_ARG_ABOUT},
 		 {0,0,0,0}
 	};
 	
@@ -397,11 +397,11 @@ int main (int argc, char* argv[])
 					filter = T_FLTR_UNFINISHED;
 				}
 				break;
-			case 'h':
+			case B_CMD_ARG_HELP:
 				print_help ();
 				exit (EXIT_SUCCESS);
 				break;
-			case '@':
+			case B_CMD_ARG_ABOUT:
 				print_about ();
 				exit (EXIT_SUCCESS);
 				break;
