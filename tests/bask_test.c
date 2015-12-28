@@ -12,7 +12,7 @@
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 49
+#define TESTS_AMOUNT 50
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -469,6 +469,36 @@ static int tst_task_checkinput (void)
 	return TESTS_FAIL;
 }
 
+/*
+	Function: tst_task_getpriority (void);
+	Description: Tests the task_get_priority function from bask_task.c.
+	InitVersion: 0.0.1
+*/
+static int tst_task_getpriority (void)
+{	
+	if (task_get_priority ("0") == 0 &&
+	    task_get_priority ("1") == 1 &&
+	    task_get_priority ("2") == 2 &&
+	    task_get_priority ("3") == 3 &&
+	    task_get_priority ("l") == 0 &&
+	    task_get_priority ("i") == 1 &&
+	    task_get_priority ("t") == 2 &&
+	    task_get_priority ("c") == 3 &&
+	    task_get_priority ("L") == 0 &&
+	    task_get_priority ("I") == 1 &&
+	    task_get_priority ("T") == 2 &&
+	    task_get_priority ("C") == 3 &&
+	    task_get_priority ("b") == -1 &&
+	    task_get_priority ("B") == -1)
+	{
+		tst_print_success ("Task_Get_Priority");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Task_Get_Priority");
+	return TESTS_FAIL;
+}
+
 /* |--------------------------------------------|
    |		    Tests-UI			|
    |--------------------------------------------| */
@@ -596,6 +626,7 @@ int main (int argc, char* argv[])
 	
 	points += tst_task_checkinputnbrs ();
 	points += tst_task_checkinput ();
+	points += tst_task_getpriority ();
 	
 	printf ("\n");
 	

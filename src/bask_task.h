@@ -22,6 +22,7 @@ struct bask_task
 
 int task_check_input_nbrs (int, short, short, short);
 int task_check_input (bask_core* tcore, char*, char*, char*, char*, short);
+int task_get_priority (char*);
 
 void task_free_ll (struct bask_task**);
 int task_insert (struct bask_task**, unsigned int, unsigned int, int, short, int, char*, char*, char*, char*);

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 #include "../lib/dutils.h"
 #include "bask_core.h"
 #include "bask_errors.h"
@@ -92,6 +93,41 @@ int task_check_input (bask_core* tcore, char* added, char* finished, char* proje
 	}
 	
 	return 0;
+}
+
+/*
+	Function: task_get_priority (char* str);
+	Description: Converts the str to the priority number.
+	InitVersion: 0.0.1
+*/
+int task_get_priority (char* str)
+{
+	if (isdigit (str[0]) != 0)
+	{
+		return atoi (str);
+	}
+	else if (isalpha (str[0]) != 0)
+	{
+		switch (toupper (str[0]))
+		{
+			case 'L':
+				return 0;
+				break;
+			case 'I':
+				return 1;
+				break;
+			case 'T':
+				return 2;
+				break;
+			case 'C':
+				return 3;
+				break;
+			default:
+				break;
+		}
+	}
+	
+	return -1;
 }
 
 /* |--------------------------------------------|

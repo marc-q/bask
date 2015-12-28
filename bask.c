@@ -333,15 +333,12 @@ int main (int argc, char* argv[])
 	config_load (&tcore);
 	ui_theme_load (&tcore, &btheme);
 	
-	while ((optc = getopt_long (argc, argv, "p:P:a:D:s:F:A:f:mh", long_options, &optindex)) != -1)
+	while ((optc = getopt_long (argc, argv, "p:P:a:D:s:F:A:f:h", long_options, &optindex)) != -1)
 	{
 		switch (optc)
 		{
 			case 'p':
-				if (isdigit (optarg[0]) != 0)
-				{
-					ppri = atoi (optarg);
-				}
+				ppri = task_get_priority (optarg);
 				break;
 			case 'P':
 				if (strlen (optarg) < sizeof (pproject))
@@ -576,7 +573,7 @@ int main (int argc, char* argv[])
 	{	
 		if (utils_streq (argv[optind], "add") == 0)
 		{
-			task_create_cmd (&tcore, &first, atoi (argv[optind+1]), argv[optind+2], argv[optind+3]);
+			task_create_cmd (&tcore, &first, task_get_priority (argv[optind+1]), argv[optind+2], argv[optind+3]);
 		}
 		else
 		{
