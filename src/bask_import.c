@@ -115,6 +115,7 @@ static int import_csv_parser (bask_core* tcore, struct bask_task** first, char* 
 	unsigned int tid;
 	int tactive, tpriority, tstate;
 	char tadded[T_S_ADDED], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
+	char tmp[200];
 	
 	tid = tactive = tpriority = tstate = 0;
 	
@@ -134,9 +135,24 @@ static int import_csv_parser (bask_core* tcore, struct bask_task** first, char* 
 	
 	token = strtok_r (NULL, ";", &saveptr);
 	
-	if (strlen (token) < T_S_ADDED)
+	/* Subtracting 2 byte for the " chars. */
+	if (strlen (token)-2 < T_S_ADDED)
 	{
-		strcpy (tadded, token); 
+		strcpy (tmp, token); 
+		
+		if (tmp[0] == '"')
+		{
+			strcpy (tadded, &tmp[1]);
+		}
+		else
+		{
+			strcpy (tadded, tmp);
+		}
+		
+		if (tadded[strlen (tadded)-1] == '"')
+		{
+			tadded[strlen (tadded)-1] = '\0';
+		}
 	}
 	else
 	{
@@ -145,9 +161,24 @@ static int import_csv_parser (bask_core* tcore, struct bask_task** first, char* 
 	
 	token = strtok_r (NULL, ";", &saveptr);
 	
-	if (strlen (token) < T_S_FINISHED)
+	/* Subtracting 2 byte for the " chars. */
+	if (strlen (token)-2 < T_S_FINISHED)
 	{
-		strcpy (tfinished, token); 
+		strcpy (tmp, token); 
+		
+		if (tmp[0] == '"')
+		{
+			strcpy (tfinished, &tmp[1]);
+		}
+		else
+		{
+			strcpy (tfinished, tmp);
+		}
+		
+		if (tfinished[strlen (tfinished)-1] == '"')
+		{
+			tfinished[strlen (tfinished)-1] = '\0';
+		}
 	}
 	else
 	{
@@ -156,9 +187,24 @@ static int import_csv_parser (bask_core* tcore, struct bask_task** first, char* 
 	
 	token = strtok_r (NULL, ";", &saveptr);
 	
-	if (strlen (token) < T_S_PROJECT)
+	/* Subtracting 2 byte for the " chars. */
+	if (strlen (token)-2 < T_S_PROJECT)
 	{
-		strcpy (tproject, token); 
+		strcpy (tmp, token); 
+		
+		if (tmp[0] == '"')
+		{
+			strcpy (tproject, &tmp[1]);
+		}
+		else
+		{
+			strcpy (tproject, tmp);
+		}
+		
+		if (tproject[strlen (tproject)-1] == '"')
+		{
+			tproject[strlen (tproject)-1] = '\0';
+		}
 	}
 	else
 	{
@@ -167,9 +213,24 @@ static int import_csv_parser (bask_core* tcore, struct bask_task** first, char* 
 	
 	token = strtok_r (NULL, ";\n", &saveptr);
 	
-	if (strlen (token) < T_S_DESCRIPTION)
+	/* Subtracting 2 byte for the " chars. */
+	if (strlen (token)-2 < T_S_DESCRIPTION)
 	{
-		strcpy (tdescription, token); 
+		strcpy (tmp, token); 
+		
+		if (tmp[0] == '"')
+		{
+			strcpy (tdescription, &tmp[1]);
+		}
+		else
+		{
+			strcpy (tdescription, tmp);
+		}
+		
+		if (tdescription[strlen (tdescription)-1] == '"')
+		{
+			tdescription[strlen (tdescription)-1] = '\0';
+		}
 	}
 	else
 	{
