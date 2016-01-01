@@ -600,7 +600,7 @@ int main (int argc, char* argv[])
 	
 	points = 0;
 	
-	printf ("Bask-Tests (c) 2015 Marc Volker Dickmann\n\n");
+	printf ("Bask-Tests (c) 2015 - 2016 Marc Volker Dickmann\n\n");
 	
 	points += tst_core_streq ();
 	points += tst_core_parser_str ();
