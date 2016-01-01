@@ -123,26 +123,18 @@ void config_print_set_str_errors (int error_id)
 }
 
 /*
-	Function: config_init_file (bask_core* tcore);
-	Description: Inits a config file at tcore->path_baskconf.
+	Function: config_init (bask_core* tcore);
+	Description: Init the config by setting default values.
 	InitVersion: 0.0.1
 */
-void config_init_file (bask_core* tcore)
+void config_init (bask_core* tcore)
 {
-	FILE* baskfile;
+	tcore->t_projectmin = 15;
+	tcore->t_descriptionmax = 50;
+	tcore->t_descriptionmin = 50;
 	
-	if (bask_init_local_file (&baskfile, tcore->path_baskconf) == 0)
-	{	
-		fprintf (baskfile, "# Path to the baskbin.\nbaskbin=default\n#\n");
-		
-		fprintf (baskfile, "# The minimum length of the project field in characters (0-200; default: 15)\ntask_project_min=15\n#\n");
-		
-		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50)\ntask_description_max=50\n#\n");
-		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50)\ntask_description_min=50\n#\n");
-		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=1\n");
-	
-		fclose (baskfile);	
-	}
+	tcore->t_options = 0;
+	tcore->t_options ^= BITCOPY (1, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
 }
 
 /*
@@ -150,54 +142,34 @@ void config_init_file (bask_core* tcore)
 	Description: Save the config file from bask.
 	InitVersion: 0.0.1
 */
-int config_save (bask_core* tcore)
+void config_save (bask_core* tcore)
 {
-	char line[200];
-	FILE *baskconf;
+	char tmp[200];
+	FILE *baskfile;
 	
-	baskconf = fopen (tcore->path_baskconf, "r+");
-	
-	if (baskconf == NULL)
-	{
-		errors_filenotwritten (tcore->path_baskconf);
-		return -1;
-	}
-	
-	while (fgets (line, sizeof (line), baskconf) != NULL)
-	{
-		if (line[0] != '#')
+	if (bask_init_local_file (&baskfile, tcore->path_baskconf) == 0)
+	{	
+		bask_get_baskpath (tcore, tmp, BASKBINFILE);
+				
+		if (utils_streq (tcore->path_baskbin, tmp) == 0)
 		{
-			if (strncmp ("baskbin=", line, strlen ("baskbin=")) == 0)
-			{
-				fseek (baskconf, -(strlen (line)), SEEK_CUR);
-				fprintf (baskconf, "baskbin=%s\n", tcore->path_baskbin);
-			}
-			else if (strncmp ("task_project_min=", line, strlen ("task_project_min=")) == 0)
-			{
-				fseek (baskconf, -(strlen (line)), SEEK_CUR);
-				fprintf (baskconf, "task_project_min=%i\n", (int)tcore->t_projectmin);
-			}
-			else if (strncmp ("task_description_max=", line, strlen ("task_description_max=")) == 0)
-			{
-				fseek (baskconf, -(strlen (line)), SEEK_CUR);
-				fprintf (baskconf, "task_description_max=%i\n", (int)tcore->t_descriptionmax);
-			}
-			else if (strncmp ("task_description_min=", line, strlen ("task_description_min=")) == 0)
-			{
-				fseek (baskconf, -(strlen (line)), SEEK_CUR);
-				fprintf (baskconf, "task_description_min=%i\n", (int)tcore->t_descriptionmin);
-			}
-			else if (strncmp ("task_description_break=", line, strlen ("task_description_break=")) == 0)
-			{
-				fseek (baskconf, -(strlen (line)), SEEK_CUR);
-				fprintf (baskconf, "task_description_break=%i\n", (int)BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK));
-			}
+			strcpy (tmp, "default");
 		}
+		else
+		{
+			strcpy (tmp, tcore->path_baskbin);
+		}
+		
+		fprintf (baskfile, "# Path to the baskbin.\nbaskbin=%s\n#\n", tmp);
+		
+		fprintf (baskfile, "# The minimum length of the project field in characters (0-200; default: 15)\ntask_project_min=%i\n#\n", (int)tcore->t_projectmin);
+		
+		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50)\ntask_description_max=%i\n#\n", (int)tcore->t_descriptionmax);
+		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50)\ntask_description_min=%i\n#\n", (int)tcore->t_descriptionmin);
+		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=%i\n", (int)BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK));
+	
+		fclose (baskfile);	
 	}
-	
-	fclose (baskconf);
-	
-	return 0;
 }
 
 /*
@@ -214,13 +186,6 @@ void config_load (bask_core* tcore)
 	FILE *baskconf;
 	
 	tmpsvalue = error = 0;
-	
-	tcore->t_projectmin = 15;
-	tcore->t_descriptionmax = 50;
-	tcore->t_descriptionmin = 50;
-	
-	tcore->t_options = 0;
-	tcore->t_options ^= BITCOPY (1, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
 	
 	baskconf = fopen (tcore->path_baskconf, "r");
 	

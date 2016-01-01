@@ -55,18 +55,6 @@ static void search_view (bask_core* tcore, bask_theme* btheme, struct bask_task*
    |--------------------------------------------| */
 
 /*
-	Function: bask_get_baskpath (bask_core* tcore, char* out, char* filename);
-	Description: Set the out to the path of filename file in the bask dir.
-	InitVersion: 0.0.1
-*/
-static void bask_get_baskpath (bask_core* tcore, char* out, char* filename)
-{
-	strcpy (out, tcore->path_baskpath);
-
-	strcat (out, filename);
-}
-
-/*
 	Function: bask_init_baskbin (bask_core* tcore);
 	Description: Inits a baskbin at tcore->path_baskbin.
 	InitVersion: 0.0.1
@@ -122,7 +110,7 @@ static int bask_init_local (bask_core* tcore)
 		return 1;
 	}
 
-	config_init_file (tcore);
+	config_init (tcore);
 	bask_init_baskbin (tcore);
 	bask_init_basktheme (tcore);
 	
@@ -284,6 +272,8 @@ int main (int argc, char* argv[])
 	bask_get_baskpath (&tcore, tcore.path_basktheme, BASKTHEMEFILE);
 	bask_get_baskpath (&tcore, tcore.path_baskbin, BASKBINFILE);
 	
+	config_init (&tcore);
+	
 	/* NOTE: These are cmd's that don't need the tasks data, so it wont be loaded. */
 	if (argc <= 1)
 	{
@@ -314,7 +304,8 @@ int main (int argc, char* argv[])
 		{
 			if (utils_streq (argv[optind+1], "baskconf") == 0)
 			{
-				config_init_file (&tcore);
+				/* Saving the default values and exit. */
+				config_save (&tcore);
 				exit (EXIT_SUCCESS);
 			}
 			else if (utils_streq (argv[optind+1], "baskbin") == 0)

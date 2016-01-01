@@ -55,5 +55,6 @@ int parser_get_int (char*, char*, int*, char, char*);
 int parser_get_short (char*, char*, short*, char, char*);
 int utils_streq (char*, char*);
 int bask_init_local_file (FILE**, char*);
+void bask_get_baskpath (bask_core*, char*, char*);
 
 #endif /* __BASK_CORE_H__ */

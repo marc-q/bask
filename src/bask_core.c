@@ -164,3 +164,15 @@ int bask_init_local_file (FILE** baskfile, char* filename)
 		
 	return 0;
 }
+
+/*
+	Function: bask_get_baskpath (bask_core* tcore, char* out, char* filename);
+	Description: Set the out to the path of filename file in the bask dir.
+	InitVersion: 0.0.1
+*/
+void bask_get_baskpath (bask_core* tcore, char* out, char* filename)
+{
+	strcpy (out, tcore->path_baskpath);
+
+	strcat (out, filename);
+}
