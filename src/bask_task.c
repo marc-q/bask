@@ -363,7 +363,7 @@ int task_create (bask_core* tcore, struct bask_task** first, short priority, cha
 	
 	tcore->baskbin_uid++;
 	
-	task_insert (first, tcore->tc_amount, tcore->baskbin_uid, 1, priority, 0, added, " ", project, description);
+	task_insert (first, tcore->tc_amount, tcore->baskbin_uid, 1, priority, 0, added, "NONE", project, description);
 	
 	tcore->tc_amount++;
 

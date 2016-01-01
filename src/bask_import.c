@@ -67,6 +67,7 @@ int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 			parser_get_int (line, "tactive=", &tactive, BASKSEP, saveptr);
 			parser_get_int (line, "tpriority=", &tpriority, BASKSEP, saveptr);
 			parser_get_str (line, "tadded=", tadded, sizeof (tadded), BASKSEP, saveptr);
+			
 			if (parser_get_str (line, "tfinished=", tfinished, sizeof (tfinished), BASKSEP, saveptr) == 0)
 			{
 				/* Use this instead of tstate because this tells us already the state. */
