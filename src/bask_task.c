@@ -1,4 +1,4 @@
-/* Copyright 2015 Marc Volker Dickmann */
+/* Copyright 2015 - 2016 Marc Volker Dickmann */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -176,11 +176,11 @@ int task_insert (struct bask_task** first, unsigned int n, unsigned int tid, int
 	}
 	
 	newobj->n = n;
+	newobj->t_id = tid;
+	newobj->t_priority = tpriority;
 	newobj->t_flags = 0;
 	newobj->t_flags ^= BITCOPY (tactive, 0, newobj->t_flags, TASK_FLAG_ACTIVE);
 	newobj->t_flags ^= BITCOPY (tstate, 0, newobj->t_flags, TASK_FLAG_FINISHED);
-	newobj->t_id = tid;
-	newobj->t_priority = tpriority;
 	newobj->next = NULL;
 	
 	if (strlen (tadded) >= T_S_ADDED || strlen (tfinished) >= T_S_FINISHED || strlen (tproject) >= T_S_PROJECT || strlen (tdescription) >= T_S_DESCRIPTION)

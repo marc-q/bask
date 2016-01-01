@@ -1,4 +1,4 @@
-/* Copyright 2015 Marc Volker Dickmann */
+/* Copyright 2015 - 2016 Marc Volker Dickmann */
 #define _XOPEN_SOURCE  
 #include <stdio.h>
 #include <stdlib.h>
