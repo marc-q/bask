@@ -12,7 +12,7 @@
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 50
+#define TESTS_AMOUNT 51
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -176,6 +176,31 @@ static int tst_core_parser_short (void)
 	return TESTS_FAIL;
 }
 
+/*
+	Function: tst_core_get_baskpath (void);
+	Description: Tests the bask_get_baskpath function from bask_core.c.
+	InitVersion: 0.0.1
+*/
+static int tst_core_get_baskpath (void)
+{
+	char out[200];
+	bask_core tcore;
+		
+	strcpy (tcore.path_baskpath, "/test");
+	strcat (tcore.path_baskpath, "/.local/share/bask/");
+	
+	bask_get_baskpath (&tcore, out, "test.txt");
+	
+	if (utils_streq (out, "/test/.local/share/bask/test.txt") == 0)
+	{
+		tst_print_success ("Core_Get_Baskpath");
+		return TESTS_PASS;
+	}
+
+	tst_print_fail ("Core_Get_Baskpath");
+	return TESTS_FAIL;
+}
+
 /* |--------------------------------------------|
    |		    Tests-Time			|
    |--------------------------------------------| */
@@ -250,7 +275,6 @@ static int tst_time_gettm_str (void)
 */
 static int tst_time_gethours (void)
 {
-	
 	if (time_get_hours ("23/59/59/09/09/2015") == 23 &&
 	    time_get_hours ("23/59/59/9/9/2015") == -1)
 	{
@@ -606,6 +630,7 @@ int main (int argc, char* argv[])
 	points += tst_core_parser_str ();
 	points += tst_core_parser_int ();
 	points += tst_core_parser_short ();
+	points += tst_core_get_baskpath ();
 	
 	printf ("\n");
 	
