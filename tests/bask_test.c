@@ -12,7 +12,7 @@
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 51
+#define TESTS_AMOUNT 52
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -592,6 +592,51 @@ static int tst_export_icaldate (void)
    |--------------------------------------------| */
    
 /*
+	Function: tst_import_csvparser (void);
+	Description: Tests the import_csv_parser function from bask_import.c.
+	InitVersion: 0.0.1
+*/
+static int tst_import_csvparser (void)
+{
+	char line[200];
+	char *token, *saveptr;
+	bask_core tcore;
+	struct bask_task* first = NULL;
+	
+	tcore.baskbin_uid = 1;
+	tcore.tc_amount = 0;
+	
+	strcpy (line, "1;1;2;\"23/59/59/09/09/2015\";\"NONE\";\"Test\";\"This is a test.\"\n");
+	token = strtok_r (line, ";", &saveptr); 
+	
+	import_csv_parser (&tcore, &first, token, saveptr);
+	
+	if (first == NULL)
+	{
+		tst_print_fail ("Import_CSV_Parser");
+		return TESTS_FAIL;
+	}
+	
+	if (first->t_id == 1 &&
+	    first->t_priority == 2 &&
+	    BITGET (first->t_flags, TASK_FLAG_ACTIVE) == 1 &&
+	    BITGET (first->t_flags, TASK_FLAG_FINISHED) == 0 &&
+	    utils_streq (first->t_added, "23/59/59/09/09/2015") == 0 &&
+	    utils_streq (first->t_finished, "NONE") == 0 &&
+	    utils_streq (first->t_project, "Test") == 0 &&
+	    utils_streq (first->t_description, "This is a test.") == 0)
+	{
+		task_free_ll (&first);
+		tst_print_success ("Import_CSV_Parser");
+		return TESTS_PASS;
+	}
+	
+	task_free_ll (&first);
+	tst_print_fail ("Import_CSV_Parser");
+	return TESTS_FAIL;
+}
+   
+/*
 	Function: tst_import_icaldate (void);
 	Description: Tests the import_ical_getdatestr function from bask_import.c.
 	InitVersion: 0.0.1
@@ -703,6 +748,7 @@ int main (int argc, char* argv[])
 	
 	printf ("\n");
 	
+	points += tst_import_csvparser ();
 	points += tst_import_icaldate ();
 	
 	tst_print_summary (points);

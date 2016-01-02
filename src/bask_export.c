@@ -76,11 +76,11 @@ int export_csv (bask_core* tcore, struct bask_task** first, char* filename)
 		return -1;
 	}
 	
-	fprintf (exportfile, "ID;Active;State;Priority;Added;Finished;Project;Description\n");
+	fprintf (exportfile, "ID;Active;Priority;Added;Finished;Project;Description\n");
 	
 	while (ptr != NULL)
 	{
-		fprintf (exportfile, "%i;%i;%i;%i;\"%s\";\"%s\";\"%s\";\"%s\"\n", ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_priority, ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
+		fprintf (exportfile, "%i;%i;%i;\"%s\";\"%s\";\"%s\";\"%s\"\n", ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
 		
 		ptr = ptr->next;
 	}

@@ -111,12 +111,14 @@ void import_baskbin_cmd (bask_core* tcore, struct bask_task** first, char* filen
 	Description: Parses a task data line from a csv formated file. 
 	InitVersion: 0.0.1
 */
-static int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, char* saveptr)
+int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, char* saveptr)
 {
 	unsigned int tid;
 	int tactive, tpriority, tstate;
 	char tadded[T_S_ADDED], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char tmp[200];
+	
+	tstate = 0;
 	
 	tid = tactive = tpriority = tstate = 0;
 	
@@ -125,10 +127,6 @@ static int import_csv_parser (bask_core* tcore, struct bask_task** first, char* 
 	token = strtok_r (NULL, ";", &saveptr);
 	
 	tactive = atoi (token);
-	
-	token = strtok_r (NULL, ";", &saveptr);
-	
-	tstate = atoi (token);
 	
 	token = strtok_r (NULL, ";", &saveptr);
 	
@@ -179,6 +177,12 @@ static int import_csv_parser (bask_core* tcore, struct bask_task** first, char* 
 		if (tfinished[strlen (tfinished)-1] == '"')
 		{
 			tfinished[strlen (tfinished)-1] = '\0';
+		}
+		
+		/* If the string isnt set to NONE its finished. */
+		if (strlen (tfinished) > 4)
+		{
+			tstate = 1;
 		}
 	}
 	else
