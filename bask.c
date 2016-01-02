@@ -13,6 +13,7 @@
 #include "src/bask_config.h"
 #include "src/bask_task.h"
 #include "src/bask_project.h"
+#include "src/bask_filter.h"
 #include "src/bask_ui.h"
 #include "src/bask_views.h"
 #include "src/bask_export.h"
@@ -30,20 +31,23 @@
 */
 static void search_view (bask_core* tcore, bask_theme* btheme, struct bask_task** first, char* searchtag, int view)
 {
+	bask_filter bfilter;
 	struct bask_task* haystack = NULL;
+	
+	filter_init (&bfilter, 1, -1, -1);
 	
 	task_search (tcore, first, &haystack, searchtag);
 	
 	switch (view)
 	{
 		case BVIEW_TASKLIST:
-			view_tasklist (tcore, btheme, &haystack, T_FLTR_ALL);
+			view_tasklist (tcore, btheme, &haystack, &bfilter);
 			break;
 		case BVIEW_SUMMARY:
 			view_summary (tcore, btheme, &haystack);
 			break;
 		default:
-			view_tasklist (tcore, btheme, &haystack, T_FLTR_ALL);
+			view_tasklist (tcore, btheme, &haystack, &bfilter);
 			break;
 	}
 	
@@ -195,7 +199,7 @@ static void print_help (void)
 	printf ("\t-D [DESCRIPTION]\tThe description of the task.\n");
 	printf ("\t-F [FINISHED]\t\tThe finished date of the task.\n");
 	printf ("\t-A [ADDED]\t\tThe added date of the task.\n");
-	printf ("\t-f [FILTER]\t\tSet the filter.\n");
+	printf ("\t-f [ARGS]\t\tActivate the filtermode.\n");
 	
 	printf ("\nVIEWS\n");
 	printf ("\ttasklist\t\tThe default view, a list of tasks.\n");
@@ -217,10 +221,7 @@ static void print_help (void)
 	printf ("\t3\tC\tCritical\n");
 	
 	printf ("\nFILTERS\n");
-	printf ("\tall\t\t\tShows all tasks. (default)\n");
-	printf ("\tstopped\t\t\tShows all tasks that are stopped.\n");
-	printf ("\tfinished\t\tShows all finished tasks.\n");
-	printf ("\tunfinished\t\tShows all unfinished tasks.\n");
+	printf ("\t-a, -p\t\t\tThese args can be used, look at ARGUMENTS for more info.\n");
 	
 	printf ("\nLEGEND: <optional> [necessary] [integer] [STRING]\n");
 }
@@ -242,6 +243,7 @@ int main (int argc, char* argv[])
 	char padded[T_S_ADDED], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
+	bask_filter bfilter;
 	struct bask_task* first = NULL;
 	
 	struct option long_options[] = {
@@ -324,7 +326,7 @@ int main (int argc, char* argv[])
 	config_load (&tcore);
 	ui_theme_load (&tcore, &btheme);
 	
-	while ((optc = getopt_long (argc, argv, "p:P:a:D:s:F:A:f:h", long_options, &optindex)) != -1)
+	while ((optc = getopt_long (argc, argv, "p:P:a:D:s:F:A:fh", long_options, &optindex)) != -1)
 	{
 		switch (optc)
 		{
@@ -368,22 +370,7 @@ int main (int argc, char* argv[])
 				}
 				break;
 			case 'f':
-				if (utils_streq (optarg, "all") == 0)
-				{
-					filter = T_FLTR_ALL;
-				}
-				else if (utils_streq (optarg, "stopped") == 0)
-				{
-					filter = T_FLTR_STOPPED;
-				}
-				else if (utils_streq (optarg, "finished") == 0)
-				{
-					filter = T_FLTR_FINISHED;
-				}
-				else if (utils_streq (optarg, "unfinished") == 0)
-				{
-					filter = T_FLTR_UNFINISHED;
-				}
+				filter = 1;
 				break;
 			case B_CMD_ARG_HELP:
 				print_help ();
@@ -398,6 +385,15 @@ int main (int argc, char* argv[])
 		}
 	}
 	
+	if (filter == 1)
+	{
+		filter_init (&bfilter, (short) pact, -1, (short) ppri);
+	}
+	else
+	{
+		filter_init (&bfilter, 1, -1, -1);
+	}
+	
 	bask_init (&tcore, &first);
 	
 	if (optind > 1)
@@ -406,7 +402,7 @@ int main (int argc, char* argv[])
 		{
 			if (utils_streq (argv[optind], "list") == 0)
 			{
-				view_tasklist (&tcore, &btheme, &first, filter);
+				view_tasklist (&tcore, &btheme, &first, &bfilter);
 			}
 			else
 			{
@@ -433,7 +429,7 @@ int main (int argc, char* argv[])
 	{
 		if (utils_streq (argv[optind], "list") == 0)
 		{
-			view_tasklist (&tcore, &btheme, &first, T_FLTR_ALL);
+			view_tasklist (&tcore, &btheme, &first, &bfilter);
 		}
 		else if (utils_streq (argv[optind], "summary") == 0)
 		{
@@ -441,7 +437,7 @@ int main (int argc, char* argv[])
 		}
 		else if (utils_streq (argv[optind], "history") == 0)
 		{
-			view_history (&tcore, &btheme, &first, T_FLTR_ALL);
+			view_history (&tcore, &btheme, &first, &bfilter);
 		}
 		else
 		{

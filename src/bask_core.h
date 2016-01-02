@@ -22,11 +22,6 @@
 /* TODO: Create a merge function and use this later. */
 #define T_FLAG_MERGE 0
 
-#define T_FLTR_ALL -1
-#define T_FLTR_STOPPED 0
-#define T_FLTR_FINISHED 1
-#define T_FLTR_UNFINISHED 2
-
 #define BIGGEST(a,b) ((a>b) ? (a) : (b))
 #define SMALLEST(a,b) ((a)<(b) ? (a) : (b))
 #define ISBOOL(a) ((((a) == (0)) || ((a) == (1))) ? (0) : (1)) 

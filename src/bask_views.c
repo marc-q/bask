@@ -8,6 +8,7 @@
 #include "bask_time.h"
 #include "bask_task.h"
 #include "bask_project.h"
+#include "bask_filter.h"
 #include "bask_ui.h"
 #include "bask_views.h"
 
@@ -171,11 +172,11 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
    |--------------------------------------------| */
 
 /*
-	Function: view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first, short filter);
+	Function: view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first, bask_filter* filter);
 	Description: Displays all tasks in a table!
 	InitVersion: 0.0.1
 */
-void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first, short filter)
+void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first, bask_filter* filter)
 {
 	int i, j, x, tprojectmax, tdescriptionmax;
 	char prefix[22], pri[4];
@@ -187,13 +188,8 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	
 	while (ptr != NULL)
 	{
-		if (BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 1 && 
-		    ((filter == T_FLTR_ALL) || 
-		     (filter == T_FLTR_FINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 1 ) || 
-		     (filter == T_FLTR_UNFINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 0 )) || 
-		     (filter == T_FLTR_STOPPED && BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 0 ))
+		if (filter_check_task (filter, ptr) == 1)
 		{
-			
 			i = strlen (ptr->t_project);
 		
 			if (i > tprojectmax)
@@ -222,11 +218,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	ptr = *first;
 	while (ptr != NULL)
 	{
-		if (BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 1 && 
-		    ((filter == T_FLTR_ALL) || 
-		     (filter == T_FLTR_FINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 1 ) || 
-		     (filter == T_FLTR_UNFINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 0 )) || 
-		     (filter == T_FLTR_STOPPED && BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 0 ))
+		if (filter_check_task (filter, ptr) == 1)
 		{
 			switch (ptr->t_priority)
 			{
@@ -310,11 +302,11 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
    |--------------------------------------------| */
    
 /*
-	Function: view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** first, short filter);
+	Function: view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** first, bask_filter* filter);
 	Description: Displays a history of monthly stats.
 	InitVersion: 0.0.1
 */
-void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** first, short filter)
+void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** first, bask_filter* filter)
 {
 	unsigned int i, tasks_added, tasks_finished, current_year, max_year, year_added, year_finished;
 	unsigned short current_month, max_month, month_added, month_finished;
@@ -328,10 +320,7 @@ void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 		while (ptr != NULL)
 		{
 			if (strlen (ptr->t_added) == F_BB_S_DATE-1 &&
-			    ((filter == T_FLTR_ALL) || 
-			     (filter == T_FLTR_FINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 1 ) || 
-			     (filter == T_FLTR_UNFINISHED && BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 0 )) || 
-			     (filter == T_FLTR_STOPPED && BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 0 ))
+			    filter_check_task (filter, ptr) == 1)
 			{
 				year_added = time_get_year (ptr->t_added);
 				month_added = time_get_month (ptr->t_added);
