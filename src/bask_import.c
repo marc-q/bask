@@ -28,8 +28,8 @@ int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 
 	bb_state = tid = tactive = tpriority = tstate = 0;
 	
-	strcpy (tadded, " ");
-	strcpy (tfinished, " ");
+	strcpy (tadded, "NONE");
+	strcpy (tfinished, "NONE");
 	strcpy (tproject, " ");
 	strcpy (tdescription, " "); 
 
