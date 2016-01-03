@@ -222,6 +222,7 @@ static void print_help (void)
 	
 	printf ("\nFILTERS\n");
 	printf ("\t-a, -p\t\t\tThese args can be used, look at ARGUMENTS for more info.\n");
+	printf ("\t--month [month]\t\tUse only tasks if there month of the added date equals month.\n");
 	
 	printf ("\nLEGEND: <optional> [necessary] [integer] [STRING]\n");
 }
@@ -384,7 +385,7 @@ int main (int argc, char* argv[])
 			case B_CMD_ARG_MONTH:
 				if (isdigit (optarg[0]) != 0)
 				{
-					pmonth = atoi (optarg);
+					pmonth = (short) atoi (optarg);
 				}
 				break;
 			default:
