@@ -8,11 +8,12 @@
 #include "../src/bask_time.h"
 #include "../src/bask_config.h"
 #include "../src/bask_task.h"
+#include "../src/bask_filter.h"
 #include "../src/bask_ui.h"
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 52
+#define TESTS_AMOUNT 54
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -524,6 +525,115 @@ static int tst_task_getpriority (void)
 }
 
 /* |--------------------------------------------|
+   |		    Tests-Filter		|
+   |--------------------------------------------| */
+
+/*
+	Function: tst_filter_init (void);
+	Description: Tests the filter_init function from bask_filter.c.
+	InitVersion: 0.0.1
+*/
+static int tst_filter_init (void)
+{
+	bask_filter bfilter;
+	
+	filter_init (&bfilter, 1, -1, 2, 9);
+	
+	if (BITGET (bfilter.flags, T_FLTR_ACTIVE) == FLTR_ON &&
+	    BITGET (bfilter.task.t_flags, TASK_FLAG_ACTIVE) == 1 &&
+	    BITGET (bfilter.flags, T_FLTR_FINISHED) == FLTR_OFF &&
+	    BITGET (bfilter.flags, T_FLTR_PRIORITY) == FLTR_ON &&
+	    bfilter.task.t_priority == 2 &&
+	    BITGET (bfilter.flags, T_FLTR_MONTH) == FLTR_ON &&
+	    bfilter.tmonth == 9
+	    )
+	{
+		tst_print_success ("Filter_Init");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Filter_Init");
+	return TESTS_FAIL;
+}
+
+/*
+	Function: tst_filter_checktask (void);
+	Description: Tests the filter_check_task function from bask_filter.c.
+	InitVersion: 0.0.1
+*/
+static int tst_filter_checktask (void)
+{
+	int passed;
+	bask_filter bfilter;
+	struct bask_task btask;
+	
+	passed = 0;
+	
+	btask.t_id = 0;
+	btask.t_flags = 0;
+	btask.t_flags ^= BITCOPY (1, 0, btask.t_flags, TASK_FLAG_ACTIVE);
+	btask.t_flags ^= BITCOPY (0, 0, btask.t_flags, TASK_FLAG_FINISHED);
+	btask.t_priority = 2;
+	
+	strcpy (btask.t_added, "23/59/59/09/09/2015");
+	
+	filter_init (&bfilter, 1, -1, 2, 9);
+	
+	if (filter_check_task (&bfilter, &btask) == 1)
+	{
+		passed = 1;
+	}
+	
+	filter_init (&bfilter, -1, -1, -1, -1);
+	
+	if (passed == 1 &&
+	    filter_check_task (&bfilter, &btask) == 1)
+	{
+		passed = 1;
+	}
+	else
+	{
+		passed = 0;
+	}
+	
+	filter_init (&bfilter, 0, -1, -1, 9);
+	
+	if (passed == 1 &&
+	    filter_check_task (&bfilter, &btask) == 0)
+	{
+		passed = 1;
+	}
+	else
+	{
+		passed = 0;
+	}
+	
+	filter_init (&bfilter, -1, 1, -1, 9);
+	
+	if (passed == 1 &&
+	    filter_check_task (&bfilter, &btask) == 0)
+	{
+		passed = 1;
+	}
+	else
+	{
+		passed = 0;
+	}
+	
+	filter_init (&bfilter, -1, -1, -1, 8);
+	
+	if (passed == 1 &&
+	    filter_check_task (&bfilter, &btask) == 0)
+	{
+		tst_print_success ("Filter_Check_Task");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Filter_Check_Task");
+	return TESTS_FAIL;
+}
+
+/* |--------------------------------------------|
    |		    Tests-UI			|
    |--------------------------------------------| */
 
@@ -697,6 +807,11 @@ int main (int argc, char* argv[])
 	points += tst_task_checkinputnbrs ();
 	points += tst_task_checkinput ();
 	points += tst_task_getpriority ();
+	
+	printf ("\n");
+	
+	points += tst_filter_init ();
+	points += tst_filter_checktask ();
 	
 	printf ("\n");
 	

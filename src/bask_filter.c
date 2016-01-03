@@ -2,9 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <ctype.h>
 #include "../lib/dutils.h"
 #include "bask_core.h"
+#include "bask_time.h"
 #include "bask_task.h"
 #include "bask_filter.h"
 
@@ -13,9 +15,10 @@
 	Description: Inits a filter structure with values.
 	InitVersion: 0.0.1
 */
-void filter_init (bask_filter* filter, short tactive, short tfinished, short tpriority)
+void filter_init (bask_filter* filter, short tactive, short tfinished, short tpriority, short tmonth)
 {
 	filter->flags = 0;
+	filter->tmonth = 0;
 	filter->task.t_flags = 0;
 	filter->task.t_priority = 0;
 	filter->task.next = NULL;
@@ -37,6 +40,12 @@ void filter_init (bask_filter* filter, short tactive, short tfinished, short tpr
 		filter->flags ^= BITCOPY (FLTR_ON, 0, filter->flags, T_FLTR_PRIORITY);
 		filter->task.t_priority = tpriority;
 	}
+	
+	if (tmonth != -1)
+	{
+		filter->flags ^= BITCOPY (FLTR_ON, 0, filter->flags, T_FLTR_MONTH);
+		filter->tmonth = tmonth;
+	}
 }
 
 /*
@@ -56,7 +65,11 @@ int filter_check_task (bask_filter* filter, struct bask_task* task)
 	    
 	    ( (BITGET (filter->flags, T_FLTR_PRIORITY) == FLTR_ON &&
 	       task->t_priority == filter->task.t_priority) ||
-	    BITGET (filter->flags, T_FLTR_PRIORITY) == FLTR_OFF))
+	    BITGET (filter->flags, T_FLTR_PRIORITY) == FLTR_OFF) &&
+	    
+	    ( (BITGET (filter->flags, T_FLTR_MONTH) == FLTR_ON &&
+	       time_get_month (task->t_added) == filter->tmonth) ||
+	    BITGET (filter->flags, T_FLTR_MONTH) == FLTR_OFF))
 	{
 		return 1;
 	}
