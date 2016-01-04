@@ -61,6 +61,7 @@ void view_print_single (struct bask_task* task)
 		printf ("\tState:\t\t%i\n", BITGET (task->t_flags, TASK_FLAG_FINISHED));
 		printf ("\tPriority:\t%i\n", task->t_priority);
 		printf ("\tAdded:\t\t%s\n", task->t_added);
+		printf ("\tDue:\t\t%s\n", task->t_due);
 		printf ("\tFinished:\t%s\n", task->t_finished);
 		printf ("\tProject:\t%s\n", task->t_project);
 		printf ("\tDescription:\t%s\n", task->t_description);

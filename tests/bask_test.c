@@ -472,19 +472,20 @@ static int tst_task_checkinput (void)
 	tcore.t_descriptionmax = 50;
 	tcore.t_options = 0;
 	
-	if (task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == 0 &&
-	    task_check_input (&tcore, "23/59/59/09/09/02015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -1 &&
-	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/02015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -2 &&
-	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -3 &&
-	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", 0) == -4)
+	if (task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == 0 &&
+	    task_check_input (&tcore, "23/59/59/09/09/02015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -1 &&
+	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/02015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -5 &&
+	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/02015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -2 &&
+	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -3 &&
+	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015","23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", 0) == -4)
 	{
 		passed = 1;
 	}
 	
 	tcore.t_options ^= BITCOPY (1, 0, tcore.t_options, T_O_DESCRIPTIONBREAK);
 	
-	if (passed == 1 && task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem  .", 0) == -4 &&
-	task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem .", 0) == 0)
+	if (passed == 1 && task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem  .", 0) == -4 &&
+	task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem .", 0) == 0)
 	{
 		tst_print_success ("Task_Check_Input");
 		return TESTS_PASS;
@@ -716,7 +717,7 @@ static int tst_import_csvparser (void)
 	tcore.baskbin_uid = 1;
 	tcore.tc_amount = 0;
 	
-	strcpy (line, "1;1;2;\"23/59/59/09/09/2015\";\"NONE\";\"Test\";\"This is a test.\"\n");
+	strcpy (line, "1;1;2;\"23/59/59/09/09/2015\";\"NONE\";\"NONE\";\"Test\";\"This is a test.\"\n");
 	token = strtok_r (line, ";", &saveptr); 
 	
 	import_csv_parser (&tcore, &first, token, saveptr);
@@ -732,6 +733,7 @@ static int tst_import_csvparser (void)
 	    BITGET (first->t_flags, TASK_FLAG_ACTIVE) == 1 &&
 	    BITGET (first->t_flags, TASK_FLAG_FINISHED) == 0 &&
 	    utils_streq (first->t_added, "23/59/59/09/09/2015") == 0 &&
+	    utils_streq (first->t_due, "NONE") == 0 &&
 	    utils_streq (first->t_finished, "NONE") == 0 &&
 	    utils_streq (first->t_project, "Test") == 0 &&
 	    utils_streq (first->t_description, "This is a test.") == 0)

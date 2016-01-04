@@ -190,6 +190,7 @@ static void print_help (void)
 	printf ("\tsearch <VIEW> [SEARCHTAG]\t\tSearches through the tasks and optional uses <VIEW> to show the results.\n");
 	printf ("\texport <EXPORT> [FILENAME]\t\tExports the data from the baskbin to an file with the format <EXPORT> or baskbin.\n");
 	printf ("\timport <IMPORT> [FILENAME]\t\tImports the data from an file with the format <IMPORT> or baskbin to the baskbin.\n");
+	printf ("\tdue [id] [DUEDATE]\t\tSet the due date of a task.\n");
 	
 	printf ("\nARGUMENTS\n");
 	printf ("\t-a [active]\t\tIf the task is active.\n");
@@ -200,6 +201,7 @@ static void print_help (void)
 	printf ("\t-F [FINISHED]\t\tThe finished date of the task.\n");
 	printf ("\t-A [ADDED]\t\tThe added date of the task.\n");
 	printf ("\t-f [ARGS]\t\tActivate the filtermode.\n");
+	printf ("\t--due [DUEDATE]\t\tThe due date of the task.\n");
 	
 	printf ("\nVIEWS\n");
 	printf ("\ttasklist\t\tThe default view, a list of tasks.\n");
@@ -241,7 +243,7 @@ int main (int argc, char* argv[])
 {
 	int optc, ppri, pact, pstate, optindex, tmp;
 	short filter, pmonth;
-	char padded[T_S_ADDED], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
+	char padded[T_S_ADDED], pdue[T_S_DUE], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
 	bask_filter bfilter;
@@ -251,6 +253,7 @@ int main (int argc, char* argv[])
 		 {"help", no_argument, 0, B_CMD_ARG_HELP},
 		 {"about", no_argument, 0, B_CMD_ARG_ABOUT},
 		 {"month", required_argument, 0, B_CMD_ARG_MONTH},
+		 {"due", required_argument, 0, B_CMD_ARG_DUE},
 		 {0,0,0,0}
 	};
 	
@@ -258,6 +261,7 @@ int main (int argc, char* argv[])
 	ppri = pact = pstate = pmonth = filter = -1;
 	
 	strcpy (padded, "");
+	strcpy (pdue, "");
 	strcpy (pfinished, "");
 	strcpy (pproject, "");
 	strcpy (pdescription, "");
@@ -388,6 +392,12 @@ int main (int argc, char* argv[])
 					pmonth = (short) atoi (optarg);
 				}
 				break;
+			case B_CMD_ARG_DUE:
+				if (strlen (optarg) < sizeof (pdue))
+				{
+					strcpy (pdue, optarg);
+				}
+				break;
 			default:
 				break;
 		}
@@ -429,7 +439,7 @@ int main (int argc, char* argv[])
 		{
 			if (utils_streq (argv[optind], "mod") == 0)
 			{
-				task_modificate_cmd (&tcore, &first, atoi (argv[optind+1]), pact, pstate, ppri, padded, pfinished, pproject, pdescription);
+				task_modificate_cmd (&tcore, &first, atoi (argv[optind+1]), pact, pstate, ppri, padded, pdue, pfinished, pproject, pdescription);
 			}
 			else
 			{
@@ -566,6 +576,10 @@ int main (int argc, char* argv[])
 			{
 				usage ();
 			}
+		}
+		else if (utils_streq (argv[optind], "due") == 0)
+		{
+			task_due_cmd (&tcore, &first, atoi (argv[optind+1]), argv[optind+2]);
 		}
 		else
 		{

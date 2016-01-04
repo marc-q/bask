@@ -22,13 +22,14 @@ int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	unsigned int tid;
 	int tactive, tpriority, tstate, bb_state;
-	char line[200], tadded[T_S_ADDED], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
+	char line[200], tadded[T_S_ADDED], tdue[T_S_DUE], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char saveptr[200];
 	FILE* importfile;
 
 	bb_state = tid = tactive = tpriority = tstate = 0;
 	
 	strcpy (tadded, "NONE");
+	strcpy (tdue, "NONE");
 	strcpy (tfinished, "NONE");
 	strcpy (tproject, " ");
 	strcpy (tdescription, " "); 
@@ -58,7 +59,7 @@ int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 		}
 		else if (utils_streq (line, "END\n") == 0)
 		{
-			task_insert (first, tcore->tc_amount, tid, tactive, tpriority, tstate, tadded, tfinished, tproject, tdescription);
+			task_insert (first, tcore->tc_amount, tid, tactive, tpriority, tstate, tadded, tdue, tfinished, tproject, tdescription);
 			tcore->tc_amount++;
 		}
 		else
@@ -67,6 +68,7 @@ int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 			parser_get_int (line, "tactive=", &tactive, BASKSEP, saveptr);
 			parser_get_int (line, "tpriority=", &tpriority, BASKSEP, saveptr);
 			parser_get_str (line, "tadded=", tadded, sizeof (tadded), BASKSEP, saveptr);
+			parser_get_str (line, "tdue=", tdue, sizeof (tdue), BASKSEP, saveptr);
 			
 			if (parser_get_str (line, "tfinished=", tfinished, sizeof (tfinished), BASKSEP, saveptr) == 0)
 			{
@@ -115,7 +117,7 @@ int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, 
 {
 	unsigned int tid;
 	int tactive, tpriority, tstate;
-	char tadded[T_S_ADDED], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
+	char tadded[T_S_ADDED], tdue[T_S_DUE], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char tmp[200];
 	
 	tstate = 0;
@@ -155,7 +157,33 @@ int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, 
 	}
 	else
 	{
-		strcpy (tadded, " ");
+		strcpy (tadded, "NONE");
+	}
+	
+	token = strtok_r (NULL, ";", &saveptr);
+	
+	/* Subtracting 2 byte for the " chars. */
+	if (strlen (token)-2 < T_S_DUE)
+	{
+		strcpy (tmp, token); 
+		
+		if (tmp[0] == '"')
+		{
+			strcpy (tdue, &tmp[1]);
+		}
+		else
+		{
+			strcpy (tdue, tmp);
+		}
+		
+		if (tdue[strlen (tdue)-1] == '"')
+		{
+			tdue[strlen (tdue)-1] = '\0';
+		}
+	}
+	else
+	{
+		strcpy (tdue, "NONE");
 	}
 	
 	token = strtok_r (NULL, ";", &saveptr);
@@ -187,7 +215,7 @@ int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, 
 	}
 	else
 	{
-		strcpy (tfinished, " ");
+		strcpy (tfinished, "NONE");
 	}
 	
 	token = strtok_r (NULL, ";", &saveptr);
@@ -243,7 +271,7 @@ int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, 
 	}
 	
 	tcore->baskbin_uid++;
-	task_insert (first, tcore->tc_amount, tid, tactive, tpriority, tstate, tadded, tfinished, tproject, tdescription);
+	task_insert (first, tcore->tc_amount, tid, tactive, tpriority, tstate, tadded, tdue, tfinished, tproject, tdescription);
 	tcore->tc_amount++;
 	
 	return 0;
@@ -382,7 +410,7 @@ int import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 			if (utils_streq (tt_tmp, "VEVENT") == 0)
 			{
 				tcore->baskbin_uid++;
-				task_insert (first, tcore->tc_amount, tcore->baskbin_uid, 1, 0, 0, tadded, tfinished, tproject, tdescription);
+				task_insert (first, tcore->tc_amount, tcore->baskbin_uid, 1, 0, 0, tadded, "NONE", tfinished, tproject, tdescription);
 				tcore->tc_amount++;
 			}
 		}

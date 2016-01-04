@@ -13,6 +13,7 @@
 #define F_ICAL_S_DATE 16
 
 #define T_S_ADDED F_BB_S_DATE
+#define T_S_DUE F_BB_S_DATE
 #define T_S_FINISHED F_BB_S_DATE
 #define T_S_PROJECT 51
 #define T_S_DESCRIPTION 201

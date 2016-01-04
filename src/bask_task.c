@@ -56,7 +56,7 @@ int task_check_input_nbrs (int id, short priority, short active, short printout)
 	Description: Checks if the input is correct and displays the error messages if printout equals 1!
 	InitVersion: 0.0.1
 */
-int task_check_input (bask_core* tcore, char* added, char* finished, char* project, char* description, short printout)
+int task_check_input (bask_core* tcore, char* added, char* due, char* finished, char* project, char* description, short printout)
 {
 	if (strlen (added) >= T_S_ADDED)
 	{
@@ -65,6 +65,14 @@ int task_check_input (bask_core* tcore, char* added, char* finished, char* proje
 			errors_lengthtobig ("added");
 		}
 		return -1;
+	}
+	else if (strlen (due) >= T_S_DUE)
+	{
+		if (printout == 1)
+		{
+			errors_lengthtobig ("due");
+		}
+		return -5;
 	}
 	else if (strlen (finished) >= T_S_FINISHED)
 	{
@@ -162,11 +170,11 @@ static int task_upgrade (struct bask_task* task)
 }
 
 /*
-	Function: task_insert (struct bask_task** first, unsigned int n, unsigned int tid, int tactive, short tpriority, int tstate, char* tadded, char* tfinished, char* tproject, char* tdescription);
+	Function: task_insert (struct bask_task** first, unsigned int n, unsigned int tid, int tactive, short tpriority, int tstate, char* tadded, char* tdue, char* tfinished, char* tproject, char* tdescription);
 	Description: Inserts a new task with data.
 	InitVersion: 0.0.1
 */
-int task_insert (struct bask_task** first, unsigned int n, unsigned int tid, int tactive, short tpriority, int tstate, char* tadded, char* tfinished, char* tproject, char* tdescription)
+int task_insert (struct bask_task** first, unsigned int n, unsigned int tid, int tactive, short tpriority, int tstate, char* tadded, char* tdue, char* tfinished, char* tproject, char* tdescription)
 {
 	struct bask_task *newobj = malloc (sizeof (struct bask_task)), *preobj;
 	
@@ -183,12 +191,13 @@ int task_insert (struct bask_task** first, unsigned int n, unsigned int tid, int
 	newobj->t_flags ^= BITCOPY (tstate, 0, newobj->t_flags, TASK_FLAG_FINISHED);
 	newobj->next = NULL;
 	
-	if (strlen (tadded) >= T_S_ADDED || strlen (tfinished) >= T_S_FINISHED || strlen (tproject) >= T_S_PROJECT || strlen (tdescription) >= T_S_DESCRIPTION)
+	if (strlen (tadded) >= T_S_ADDED || strlen (tdue) >= T_S_DUE || strlen (tfinished) >= T_S_FINISHED || strlen (tproject) >= T_S_PROJECT || strlen (tdescription) >= T_S_DESCRIPTION)
 	{
 		return -2;
 	}
 
 	strcpy (newobj->t_added, tadded);
+	strcpy (newobj->t_due, tdue);
 	strcpy (newobj->t_finished, tfinished);
 	strcpy (newobj->t_project, tproject);
 	strcpy (newobj->t_description, tdescription);
@@ -271,11 +280,11 @@ int task_remove (struct bask_task** first, unsigned int id)
 }
 
 /*
-	Function: task_modificate (struct bask_task** first, unsigned int id, int active, int state, short priority, char* added, char* finished, char* project, char* description);
+	Function: task_modificate (struct bask_task** first, unsigned int id, int active, int state, short priority, char* added, char* due, char* finished, char* project, char* description);
 	Description: Modificates a task!
 	InitVersion: 0.0.1
 */
-int task_modificate (struct bask_task** first, unsigned int id, int active, int state, short priority, char* added, char* finished, char* project, char* description)
+int task_modificate (struct bask_task** first, unsigned int id, int active, int state, short priority, char* added, char* due, char* finished, char* project, char* description)
 {
 	struct bask_task* ptr = *first;
 	
@@ -308,6 +317,14 @@ int task_modificate (struct bask_task** first, unsigned int id, int active, int 
 				if (strlen (added) < T_S_ADDED && strcmp (added, "") != 0 )
 				{
 					strcpy (ptr->t_added, added);
+				}
+			}
+			
+			if (due != NULL)
+			{
+				if (strlen (due) < T_S_DUE && strcmp (due, "") != 0 )
+				{
+					strcpy (ptr->t_due, due);
 				}
 			}
 			
@@ -363,7 +380,7 @@ int task_create (bask_core* tcore, struct bask_task** first, short priority, cha
 	
 	tcore->baskbin_uid++;
 	
-	task_insert (first, tcore->tc_amount, tcore->baskbin_uid, 1, priority, 0, added, "NONE", project, description);
+	task_insert (first, tcore->tc_amount, tcore->baskbin_uid, 1, priority, 0, added, "NONE", "NONE", project, description);
 	
 	tcore->tc_amount++;
 
@@ -377,7 +394,19 @@ int task_create (bask_core* tcore, struct bask_task** first, short priority, cha
 */
 void task_deactivate (struct bask_task** first, unsigned int id)
 {	
-	task_modificate (first, id, 0, -1, -1, "", "", "", "");
+	task_modificate (first, id, 0, -1, -1, "", "", "", "", "");
+}
+
+/*
+	Function: task_due (struct bask_task** first, unsigned int id, char* due);
+	Description: Set the due date!
+	InitVersion: 0.0.1
+*/
+int task_due (struct bask_task** first, unsigned int id, char* due)
+{	
+	task_modificate (first, id, -1, 1, -1, "", due, "", "", "");
+	
+	return 0;
 }
 
 /*
@@ -394,7 +423,7 @@ int task_finish (struct bask_task** first, unsigned int id)
 		return -1;
 	}
 	
-	task_modificate (first, id, -1, 1, -1, "", finished, "", "");
+	task_modificate (first, id, -1, 1, -1, "", "", finished, "", "");
 	
 	return 0;
 }
@@ -422,19 +451,19 @@ int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** 
 	{
 		if (strstr (ptr->t_added, searchtag) != NULL)
 		{
-			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
+			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_due, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
 		else if (strstr (ptr->t_finished, searchtag) != NULL)
 		{
-			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
+			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_due, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
 		else if (strstr (ptr->t_project, searchtag) != NULL)
 		{
-			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
+			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_due, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
 		else if (strstr (ptr->t_description, searchtag) != NULL)
 		{
-			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_finished, ptr->t_project, ptr->t_description);
+			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_due, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
 		
 		i++;
@@ -456,7 +485,7 @@ int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** 
 void task_create_cmd (bask_core* tcore, struct bask_task** first, int priority, char* project, char* description)
 {
 	/* TODO: Move the range check of the priority variable into the task_check_input function. */
-	if (task_check_input (tcore, "", "", project, description, 1) == 0 &&
+	if (task_check_input (tcore, "", "", "", project, description, 1) == 0 &&
 	    task_check_input_nbrs (0, (short) priority, 1, 1) == 0)
 	{
 		task_create (tcore, first, (short) priority, project, description);
@@ -478,17 +507,17 @@ void task_remove_cmd (bask_core* tcore, struct bask_task** first, unsigned int i
 }
 
 /*
-	Function: task_modificate_cmd (bask_core* tcore, struct bask_task** first, unsigned int id, int active, int state, int priority, char* added, char* finished, char* project, char* description);
+	Function: task_modificate_cmd (bask_core* tcore, struct bask_task** first, unsigned int id, int active, int state, int priority, char* added, char* due, char* finished, char* project, char* description);
 	Description: Cmd handle for modifying a task!
 	InitVersion: 0.0.1
 */
-void task_modificate_cmd (bask_core* tcore, struct bask_task** first, unsigned int id, int active, int state, int priority, char* added, char* finished, char* project, char* description)
+void task_modificate_cmd (bask_core* tcore, struct bask_task** first, unsigned int id, int active, int state, int priority, char* added, char* due, char* finished, char* project, char* description)
 {
 	/* TODO: Move the range check of the priority variable into the task_check_input function. */
-	if (task_check_input (tcore, added, finished, project, description, 1) == 0 &&
+	if (task_check_input (tcore, added, due, finished, project, description, 1) == 0 &&
 	    task_check_input_nbrs (id, (priority == -1 ? 0 : (short) priority), (active == -1 ? 0 : (short) active), 1) == 0)
 	{
-		task_modificate (first, id, active, state, (short) priority, added, finished, project, description);
+		task_modificate (first, id, active, state, (short) priority, added, due, finished, project, description);
 		printf ("Modificated task %i.\n", id);
 		export_baskbin (tcore, first, tcore->path_baskbin);
 	}
@@ -504,6 +533,21 @@ void task_deactivate_cmd (bask_core* tcore, struct bask_task** first, unsigned i
 	task_deactivate (first, id);
 	printf ("Deactivated task %i.\n", id);
 	export_baskbin (tcore, first, tcore->path_baskbin);
+}
+
+/*
+	Function: task_due_cmd (bask_core* tcore, struct bask_task** first, unsigned int id, char* due);
+	Description: Cmd handle for setting a due date!
+	InitVersion: 0.0.1
+*/
+void task_due_cmd (bask_core* tcore, struct bask_task** first, unsigned int id, char* due)
+{
+	if (task_check_input (tcore, "", due, "", "", "", 1) == 0)
+	{
+		task_due (first, id, due);
+		printf ("Updated task %i.\n", id);
+		export_baskbin (tcore, first, tcore->path_baskbin);
+	}
 }
 
 /*
