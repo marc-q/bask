@@ -3,12 +3,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <math.h>
 #include <ctype.h>
 #include <getopt.h>
 #include <sys/stat.h>
 #include "lib/dutils.h"
 #include "src/bask_core.h"
+#include "src/bask_time.h"
 #include "src/bask_errors.h"
 #include "src/bask_config.h"
 #include "src/bask_task.h"
@@ -227,6 +229,7 @@ static void print_help (void)
 	printf ("\t--day [day]\t\tUse only tasks if there day of the added date equals day.\n");
 	printf ("\t--month [month]\t\tUse only tasks if there month of the added date equals month.\n");
 	printf ("\t--year [year]\t\tUse only tasks if there year of the added date equals year.\n");
+	printf ("\t--today\t\t\tUse only tasks if there added today.\n");
 	
 	printf ("\nLEGEND: <optional> [necessary] [integer] [STRING]\n");
 }
@@ -258,6 +261,7 @@ int main (int argc, char* argv[])
 		 {"month", required_argument, 0, B_CMD_ARG_MONTH},
 		 {"year", required_argument, 0, B_CMD_ARG_YEAR},
 		 {"due", required_argument, 0, B_CMD_ARG_DUE},
+		 {"today", no_argument, 0, B_CMD_ARG_TODAY},
 		 {0,0,0,0}
 	};
 	
@@ -406,6 +410,15 @@ int main (int argc, char* argv[])
 				if (strlen (optarg) < sizeof (pdue))
 				{
 					strcpy (pdue, optarg);
+				}
+				break;
+			case B_CMD_ARG_TODAY:
+				/* TODO: Improve this. */
+				if (time_get_str (padded, sizeof (padded)) == 0)
+				{
+					pday = time_get_day (padded);
+					pmonth = time_get_month (padded);
+					pyear = time_get_year (padded);
 				}
 				break;
 			default:

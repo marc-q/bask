@@ -7,5 +7,6 @@
 #define B_CMD_ARG_MONTH '2'
 #define B_CMD_ARG_YEAR '3'
 #define B_CMD_ARG_DUE 'd'
+#define B_CMD_ARG_TODAY '4'
 
 #endif /* __BASK_H__ */
