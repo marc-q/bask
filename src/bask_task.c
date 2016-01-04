@@ -453,6 +453,10 @@ int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** 
 		{
 			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_due, ptr->t_finished, ptr->t_project, ptr->t_description);
 		}
+		else if (strstr (ptr->t_due, searchtag) != NULL)
+		{
+			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_due, ptr->t_finished, ptr->t_project, ptr->t_description);
+		}
 		else if (strstr (ptr->t_finished, searchtag) != NULL)
 		{
 			task_insert (haystack, i, ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_added, ptr->t_due, ptr->t_finished, ptr->t_project, ptr->t_description);
