@@ -387,7 +387,24 @@ void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 			ui_tbl_print_field_int (current_year, -1, -1);
 			ui_tbl_print_field_str ("/", -1, -1);
 			ui_tbl_print_field_int (current_month, -1, (max_year+1+max_month+10)-(current_year+1+current_month));
-			printf ("%s%i%s tasks added, %s%i%s tasks finished.\n", BC_BLD_GREEN, tasks_added, BC_TXT_RST, btheme->color_finished, tasks_finished, BC_TXT_RST);
+			
+			if (tasks_added != 1)
+			{
+				printf ("%s%i%s tasks added, ", BC_BLD_GREEN, tasks_added, BC_TXT_RST);
+			}
+			else
+			{
+				printf ("%s%i%s task added, ", BC_BLD_GREEN, tasks_added, BC_TXT_RST);
+			}
+			
+			if (tasks_finished != 1)
+			{
+				printf ("%s%i%s tasks finished.\n", btheme->color_finished, tasks_finished, BC_TXT_RST);
+			}
+			else
+			{
+				printf ("%s%i%s task finished.\n", btheme->color_finished, tasks_finished, BC_TXT_RST);
+			}
 		}
 		
 		tasks_added = 0;
