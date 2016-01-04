@@ -190,7 +190,7 @@ static void print_help (void)
 	printf ("\tsearch <VIEW> [SEARCHTAG]\t\tSearches through the tasks and optional uses <VIEW> to show the results.\n");
 	printf ("\texport <EXPORT> [FILENAME]\t\tExports the data from the baskbin to an file with the format <EXPORT> or baskbin.\n");
 	printf ("\timport <IMPORT> [FILENAME]\t\tImports the data from an file with the format <IMPORT> or baskbin to the baskbin.\n");
-	printf ("\tdue [id] [DUEDATE]\t\tSet the due date of a task.\n");
+	printf ("\tdue [id] [DUEDATE]\t\t\tSet the due date of a task.\n");
 	
 	printf ("\nARGUMENTS\n");
 	printf ("\t-a [active]\t\tIf the task is active.\n");
