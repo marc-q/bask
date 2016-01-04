@@ -241,7 +241,7 @@ static void usage (void)
 
 int main (int argc, char* argv[])
 {
-	int optc, ppri, pact, pstate, optindex, tmp;
+	int optc, ppri, pact, optindex, tmp;
 	short filter, pmonth;
 	char padded[T_S_ADDED], pdue[T_S_DUE], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
@@ -258,7 +258,7 @@ int main (int argc, char* argv[])
 	};
 	
 	tcore.flags = optindex = tmp = 0;
-	ppri = pact = pstate = pmonth = filter = -1;
+	ppri = pact = pmonth = filter = -1;
 	
 	strcpy (padded, "");
 	strcpy (pdue, "");
@@ -332,7 +332,7 @@ int main (int argc, char* argv[])
 	config_load (&tcore);
 	ui_theme_load (&tcore, &btheme);
 	
-	while ((optc = getopt_long (argc, argv, "p:P:a:D:s:F:A:fh", long_options, &optindex)) != -1)
+	while ((optc = getopt_long (argc, argv, "p:P:a:D:F:A:fh", long_options, &optindex)) != -1)
 	{
 		switch (optc)
 		{
@@ -355,12 +355,6 @@ int main (int argc, char* argv[])
 				if (strlen (optarg) < sizeof (pdescription))
 				{
 					strcpy (pdescription, optarg);
-				}
-				break;
-			case 's':
-				if (isdigit (optarg[0]) != 0)
-				{
-					pstate = atoi (optarg);
 				}
 				break;
 			case 'F':
@@ -439,7 +433,7 @@ int main (int argc, char* argv[])
 		{
 			if (utils_streq (argv[optind], "mod") == 0)
 			{
-				task_modificate_cmd (&tcore, &first, atoi (argv[optind+1]), pact, pstate, ppri, padded, pdue, pfinished, pproject, pdescription);
+				task_modificate_cmd (&tcore, &first, atoi (argv[optind+1]), pact, -1, ppri, padded, pdue, pfinished, pproject, pdescription);
 			}
 			else
 			{
