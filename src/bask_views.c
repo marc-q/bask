@@ -93,11 +93,11 @@ void view_single (bask_core* tcore, struct bask_task** first, int id)
    |--------------------------------------------| */
 
 /*
-	Function: view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** first);
+	Function: view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** first, bask_filter* bfilter);
 	Description: Displays the summary of the projects!
 	InitVersion: 0.0.1
 */
-void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** first)
+void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** first, bask_filter* bfilter)
 {
 	int i, ppercent, premaining, pprojectmax;
 	struct bask_project* tprojects = NULL, *pptr;
@@ -108,13 +108,16 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 	
 	while (ptr != NULL)
 	{
-		project_insert (&tprojects, 1, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_project);
-		
-		i = strlen (ptr->t_project);
-		
-		if (i > pprojectmax)
+		if (filter_check_task (bfilter, ptr) == 1)
 		{
-			pprojectmax = i;
+			project_insert (&tprojects, 1, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_project);
+		
+			i = strlen (ptr->t_project);
+		
+			if (i > pprojectmax)
+			{
+				pprojectmax = i;
+			}
 		}
 		
 		ptr = ptr->next;

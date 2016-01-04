@@ -44,7 +44,7 @@ static void search_view (bask_core* tcore, bask_theme* btheme, struct bask_task*
 			view_tasklist (tcore, btheme, &haystack, &bfilter);
 			break;
 		case BVIEW_SUMMARY:
-			view_summary (tcore, btheme, &haystack);
+			view_summary (tcore, btheme, &haystack, &bfilter);
 			break;
 		default:
 			view_tasklist (tcore, btheme, &haystack, &bfilter);
@@ -174,8 +174,8 @@ static void print_help (void)
 	printf ("\thelp\t\t\t\t\tThis help.\n");
 	printf ("\tabout\t\t\t\t\tAbout the programm.\n");
 	printf ("\tlist <ARGS>\t\t\t\tLists all tasks.\n");
-	printf ("\tsummary\t\t\t\t\tSummary of all projects.\n");
-	printf ("\thistory\t\t\t\t\tHistory of monthly stats.\n");
+	printf ("\tsummary <ARGS>\t\t\t\tSummary of all projects.\n");
+	printf ("\thistory <ARGS>\t\t\t\tHistory of monthly stats.\n");
 	
 	printf ("\tinit <FILE>\t\t\t\tInits the FILE or all files if no FILE is given.\n");
 	printf ("\tadd [priority] [PROJECT] [DESCRIPTION]\tAdd a task.\n");
@@ -412,6 +412,14 @@ int main (int argc, char* argv[])
 			{
 				view_tasklist (&tcore, &btheme, &first, &bfilter);
 			}
+			else if (utils_streq (argv[optind], "summary") == 0)
+			{
+				view_summary (&tcore, &btheme, &first, &bfilter);
+			}
+			else if (utils_streq (argv[optind], "history") == 0)
+			{
+				view_history (&tcore, &btheme, &first, &bfilter);
+			}
 			else
 			{
 				usage ();
@@ -441,7 +449,7 @@ int main (int argc, char* argv[])
 		}
 		else if (utils_streq (argv[optind], "summary") == 0)
 		{
-			view_summary (&tcore, &btheme, &first);
+			view_summary (&tcore, &btheme, &first, &bfilter);
 		}
 		else if (utils_streq (argv[optind], "history") == 0)
 		{
