@@ -34,7 +34,7 @@ static void search_view (bask_core* tcore, bask_theme* btheme, struct bask_task*
 	bask_filter bfilter;
 	struct bask_task* haystack = NULL;
 	
-	filter_init (&bfilter, 1, -1, -1, -1);
+	filter_init (&bfilter, 1, -1, -1, -1, -1, -1);
 	
 	task_search (tcore, first, &haystack, searchtag);
 	
@@ -224,7 +224,9 @@ static void print_help (void)
 	
 	printf ("\nFILTERS\n");
 	printf ("\t-a, -p\t\t\tThese args can be used, look at ARGUMENTS for more info.\n");
+	printf ("\t--day [day]\t\tUse only tasks if there day of the added date equals day.\n");
 	printf ("\t--month [month]\t\tUse only tasks if there month of the added date equals month.\n");
+	printf ("\t--year [year]\t\tUse only tasks if there year of the added date equals year.\n");
 	
 	printf ("\nLEGEND: <optional> [necessary] [integer] [STRING]\n");
 }
@@ -242,7 +244,7 @@ static void usage (void)
 int main (int argc, char* argv[])
 {
 	int optc, ppri, pact, optindex, tmp;
-	short filter, pmonth;
+	short filter, pday, pmonth, pyear;
 	char padded[T_S_ADDED], pdue[T_S_DUE], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
@@ -252,13 +254,15 @@ int main (int argc, char* argv[])
 	struct option long_options[] = {
 		 {"help", no_argument, 0, B_CMD_ARG_HELP},
 		 {"about", no_argument, 0, B_CMD_ARG_ABOUT},
+		 {"day", required_argument, 0, B_CMD_ARG_DAY},
 		 {"month", required_argument, 0, B_CMD_ARG_MONTH},
+		 {"year", required_argument, 0, B_CMD_ARG_YEAR},
 		 {"due", required_argument, 0, B_CMD_ARG_DUE},
 		 {0,0,0,0}
 	};
 	
 	tcore.flags = optindex = tmp = 0;
-	ppri = pact = pmonth = filter = -1;
+	ppri = pact = pday = pmonth = pyear = filter = -1;
 	
 	strcpy (padded, "");
 	strcpy (pdue, "");
@@ -380,10 +384,22 @@ int main (int argc, char* argv[])
 				print_about ();
 				exit (EXIT_SUCCESS);
 				break;
+			case B_CMD_ARG_DAY:
+				if (isdigit (optarg[0]) != 0)
+				{
+					pday = (short) atoi (optarg);
+				}
+				break;
 			case B_CMD_ARG_MONTH:
 				if (isdigit (optarg[0]) != 0)
 				{
 					pmonth = (short) atoi (optarg);
+				}
+				break;
+			case B_CMD_ARG_YEAR:
+				if (isdigit (optarg[0]) != 0)
+				{
+					pyear = (short) atoi (optarg);
 				}
 				break;
 			case B_CMD_ARG_DUE:
@@ -399,11 +415,11 @@ int main (int argc, char* argv[])
 	
 	if (filter == 1)
 	{
-		filter_init (&bfilter, (short) pact, -1, (short) ppri, pmonth);
+		filter_init (&bfilter, (short) pact, -1, (short) ppri, pday, pmonth, pyear);
 	}
 	else
 	{
-		filter_init (&bfilter, 1, -1, -1, -1);
+		filter_init (&bfilter, 1, -1, -1, -1, -1, -1);
 	}
 	
 	bask_init (&tcore, &first);

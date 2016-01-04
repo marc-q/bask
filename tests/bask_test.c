@@ -538,15 +538,19 @@ static int tst_filter_init (void)
 {
 	bask_filter bfilter;
 	
-	filter_init (&bfilter, 1, -1, 2, 9);
+	filter_init (&bfilter, 1, -1, 2, 9, 9, 2015);
 	
 	if (BITGET (bfilter.flags, T_FLTR_ACTIVE) == FLTR_ON &&
 	    BITGET (bfilter.task.t_flags, TASK_FLAG_ACTIVE) == 1 &&
 	    BITGET (bfilter.flags, T_FLTR_FINISHED) == FLTR_OFF &&
 	    BITGET (bfilter.flags, T_FLTR_PRIORITY) == FLTR_ON &&
 	    bfilter.task.t_priority == 2 &&
+	    BITGET (bfilter.flags, T_FLTR_DAY) == FLTR_ON &&
+	    bfilter.tday == 9 &&
 	    BITGET (bfilter.flags, T_FLTR_MONTH) == FLTR_ON &&
-	    bfilter.tmonth == 9
+	    bfilter.tmonth == 9 &&
+	    BITGET (bfilter.flags, T_FLTR_YEAR) == FLTR_ON &&
+	    bfilter.tyear == 2015
 	    )
 	{
 		tst_print_success ("Filter_Init");
@@ -578,14 +582,14 @@ static int tst_filter_checktask (void)
 	
 	strcpy (btask.t_added, "23/59/59/09/09/2015");
 	
-	filter_init (&bfilter, 1, -1, 2, 9);
+	filter_init (&bfilter, 1, -1, 2, 9, 9, 2015);
 	
 	if (filter_check_task (&bfilter, &btask) == 1)
 	{
 		passed = 1;
 	}
 	
-	filter_init (&bfilter, -1, -1, -1, -1);
+	filter_init (&bfilter, -1, -1, -1, -1, -1, -1);
 	
 	if (passed == 1 &&
 	    filter_check_task (&bfilter, &btask) == 1)
@@ -597,7 +601,7 @@ static int tst_filter_checktask (void)
 		passed = 0;
 	}
 	
-	filter_init (&bfilter, 0, -1, -1, 9);
+	filter_init (&bfilter, 0, -1, -1, 9, 9, 2015);
 	
 	if (passed == 1 &&
 	    filter_check_task (&bfilter, &btask) == 0)
@@ -609,7 +613,7 @@ static int tst_filter_checktask (void)
 		passed = 0;
 	}
 	
-	filter_init (&bfilter, -1, 1, -1, 9);
+	filter_init (&bfilter, -1, 1, -1, 9, 9, 2015);
 	
 	if (passed == 1 &&
 	    filter_check_task (&bfilter, &btask) == 0)
@@ -621,7 +625,7 @@ static int tst_filter_checktask (void)
 		passed = 0;
 	}
 	
-	filter_init (&bfilter, -1, -1, -1, 8);
+	filter_init (&bfilter, -1, -1, -1, 9, 8, 2015);
 	
 	if (passed == 1 &&
 	    filter_check_task (&bfilter, &btask) == 0)

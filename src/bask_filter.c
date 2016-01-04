@@ -11,14 +11,16 @@
 #include "bask_filter.h"
 
 /*
-	Function: filter_init (bask_filter* filter, short tactive, short tfinished, short tpriority);
+	Function: filter_init (bask_filter* filter, short tactive, short tfinished, short tpriority, short tday, short tmonth, short tyear);
 	Description: Inits a filter structure with values.
 	InitVersion: 0.0.1
 */
-void filter_init (bask_filter* filter, short tactive, short tfinished, short tpriority, short tmonth)
+void filter_init (bask_filter* filter, short tactive, short tfinished, short tpriority, short tday, short tmonth, short tyear)
 {
 	filter->flags = 0;
+	filter->tday = 0;
 	filter->tmonth = 0;
+	filter->tyear = 0;
 	filter->task.t_flags = 0;
 	filter->task.t_priority = 0;
 	filter->task.next = NULL;
@@ -41,10 +43,22 @@ void filter_init (bask_filter* filter, short tactive, short tfinished, short tpr
 		filter->task.t_priority = tpriority;
 	}
 	
+	if (tday != -1)
+	{
+		filter->flags ^= BITCOPY (FLTR_ON, 0, filter->flags, T_FLTR_DAY);
+		filter->tday = tday;
+	}
+	
 	if (tmonth != -1)
 	{
 		filter->flags ^= BITCOPY (FLTR_ON, 0, filter->flags, T_FLTR_MONTH);
 		filter->tmonth = tmonth;
+	}
+	
+	if (tyear != -1)
+	{
+		filter->flags ^= BITCOPY (FLTR_ON, 0, filter->flags, T_FLTR_YEAR);
+		filter->tyear = tyear;
 	}
 }
 
@@ -67,9 +81,17 @@ int filter_check_task (bask_filter* filter, struct bask_task* task)
 	       task->t_priority == filter->task.t_priority) ||
 	    BITGET (filter->flags, T_FLTR_PRIORITY) == FLTR_OFF) &&
 	    
+	    ( (BITGET (filter->flags, T_FLTR_DAY) == FLTR_ON &&
+	       time_get_day (task->t_added) == filter->tday) ||
+	    BITGET (filter->flags, T_FLTR_DAY) == FLTR_OFF) &&
+	    
 	    ( (BITGET (filter->flags, T_FLTR_MONTH) == FLTR_ON &&
 	       time_get_month (task->t_added) == filter->tmonth) ||
-	    BITGET (filter->flags, T_FLTR_MONTH) == FLTR_OFF))
+	    BITGET (filter->flags, T_FLTR_MONTH) == FLTR_OFF) &&
+	    
+	    ( (BITGET (filter->flags, T_FLTR_YEAR) == FLTR_ON &&
+	       time_get_year (task->t_added) == filter->tyear) ||
+	    BITGET (filter->flags, T_FLTR_YEAR) == FLTR_OFF))
 	{
 		return 1;
 	}
