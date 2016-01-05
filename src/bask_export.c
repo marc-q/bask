@@ -175,6 +175,58 @@ static int export_ical_event (FILE* exportfile, struct bask_task* task)
 }
 
 /*
+	Function: export_ical_todo (FILE* exportfile, struct bask_task* task);
+	Description: Exports a tasks with an vtodo to an ical file.
+	InitVersion: 0.0.1
+*/
+static int export_ical_todo (FILE* exportfile, struct bask_task* task)
+{
+	char tadded[F_ICAL_S_DATE];
+	char tdue[F_ICAL_S_DATE];
+	char tfinished[F_ICAL_S_DATE];
+	
+	if (exportfile == NULL)
+	{
+		return -1;
+	}
+	
+	strcpy (tadded, "");
+	strcpy (tdue, "");
+	strcpy (tfinished, "");
+	
+	export_ical_getdatestr (tadded, task->t_added);
+	export_ical_getdatestr (tdue, task->t_due);
+	export_ical_getdatestr (tfinished, task->t_finished);
+	
+	if (strlen (tadded) == 0)
+	{
+		return -2;
+	}
+	
+	fprintf (exportfile, "BEGIN:VTODO\n");
+	fprintf (exportfile, "DSTSTAMP:%s\n", tadded);
+	fprintf (exportfile, "UID:%i\n", task->t_id);
+	
+	if (strlen (tdue) > 1)
+	{
+		fprintf (exportfile, "DUE:%s\n", tdue);
+	}
+	
+	fprintf (exportfile, "CREATED:%s\n", tadded);
+	
+	if (strlen (tfinished) > 1)
+	{
+		fprintf (exportfile, "COMPLETED:%s\n", tfinished);
+	}
+	
+	fprintf (exportfile, "DESCRIPTION:%s\n", task->t_description);
+	fprintf (exportfile, "SUMMARY:%s\n", task->t_project);
+	fprintf (exportfile, "END:VTODO\n");
+	
+	return 0;
+}
+
+/*
 	Function: export_ical (bask_core* tcore, struct bask_task** first, char* filename);
 	Description: Exports all tasks to an ical file named filename.
 	InitVersion: 0.0.1
