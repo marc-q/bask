@@ -113,7 +113,6 @@ static int bask_init_local (bask_core* tcore)
 		return 1;
 	}
 
-	config_init (tcore);
 	config_save (tcore);
 	bask_init_baskbin (tcore);
 	bask_init_basktheme (tcore);
