@@ -27,29 +27,26 @@
    |--------------------------------------------| */
 
 /*
-	Function: search_view (bask_core* tcore, bask_theme* btheme, struct bask_task** first, char* searchtag, int view);
+	Function: search_view (bask_core* tcore, bask_theme* btheme, bask_filter* bfilter, struct bask_task** first, char* searchtag, int view);
 	Description: Finds tasks with searchtag in the description, project or finished and uses the view <view> to display the results.
 	InitVersion: 0.0.1
 */
-static void search_view (bask_core* tcore, bask_theme* btheme, struct bask_task** first, char* searchtag, int view)
+static void search_view (bask_core* tcore, bask_theme* btheme, bask_filter* bfilter, struct bask_task** first, char* searchtag, int view)
 {
-	bask_filter bfilter;
 	struct bask_task* haystack = NULL;
-	
-	filter_init (&bfilter, 1, -1, -1, -1, -1, -1);
 	
 	task_search (tcore, first, &haystack, searchtag);
 	
 	switch (view)
 	{
 		case BVIEW_TASKLIST:
-			view_tasklist (tcore, btheme, &haystack, &bfilter);
+			view_tasklist (tcore, btheme, &haystack, bfilter);
 			break;
 		case BVIEW_SUMMARY:
-			view_summary (tcore, btheme, &haystack, &bfilter);
+			view_summary (tcore, btheme, &haystack, bfilter);
 			break;
 		default:
-			view_tasklist (tcore, btheme, &haystack, &bfilter);
+			view_tasklist (tcore, btheme, &haystack, bfilter);
 			break;
 	}
 	
@@ -505,7 +502,7 @@ int main (int argc, char* argv[])
 		}
 		else if (utils_streq (argv[optind], "search") == 0)
 		{
-			search_view (&tcore, &btheme, &first, argv[optind+1], BVIEW_TASKLIST);
+			search_view (&tcore, &btheme, &bfilter, &first, argv[optind+1], BVIEW_TASKLIST);
 		}
 		else if (utils_streq (argv[optind], "stop") == 0)
 		{
@@ -547,11 +544,11 @@ int main (int argc, char* argv[])
 		{
 			if (utils_streq (argv[optind+1], "tasklist") == 0)
 			{
-				search_view (&tcore, &btheme, &first, argv[optind+2], BVIEW_TASKLIST);
+				search_view (&tcore, &btheme, &bfilter, &first, argv[optind+2], BVIEW_TASKLIST);
 			}
 			else if (utils_streq (argv[optind+1], "summary") == 0)
 			{
-				search_view (&tcore, &btheme, &first, argv[optind+2], BVIEW_SUMMARY);
+				search_view (&tcore, &btheme, &bfilter, &first, argv[optind+2], BVIEW_SUMMARY);
 			}
 			else
 			{
