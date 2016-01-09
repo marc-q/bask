@@ -120,8 +120,6 @@ int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, 
 	char tadded[T_S_ADDED], tdue[T_S_DUE], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char tmp[200];
 	
-	tstate = 0;
-	
 	tid = tactive = tpriority = tstate = 0;
 	
 	tid = atoi (token);
