@@ -296,17 +296,17 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 2)
 	{
-		if (utils_streq (argv[optind], "help") == 0)
+		if (utils_streq (argv[optind], B_CMD_HELP) == 0)
 		{
 			print_help ();
 			exit (EXIT_SUCCESS);
 		}
-		else if (utils_streq (argv[optind], "about") == 0)
+		else if (utils_streq (argv[optind], B_CMD_ABOUT) == 0)
 		{
 			print_about ();
 			exit (EXIT_SUCCESS);
 		}
-		else if (utils_streq (argv[optind], "init") == 0)
+		else if (utils_streq (argv[optind], B_CMD_INIT) == 0)
 		{
 			bask_init_local (&tcore);
 			exit (EXIT_SUCCESS);
@@ -314,20 +314,20 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 3)
 	{
-		if (utils_streq (argv[optind], "init") == 0)
+		if (utils_streq (argv[optind], B_CMD_INIT) == 0)
 		{
-			if (utils_streq (argv[optind+1], "baskconf") == 0)
+			if (utils_streq (argv[optind+1], B_CMD_BASKCONF) == 0)
 			{
 				/* Saving the default values and exit. */
 				config_save (&tcore);
 				exit (EXIT_SUCCESS);
 			}
-			else if (utils_streq (argv[optind+1], "baskbin") == 0)
+			else if (utils_streq (argv[optind+1], B_CMD_BASKBIN) == 0)
 			{
 				bask_init_baskbin (&tcore);
 				exit (EXIT_SUCCESS);
 			}
-			else if (utils_streq (argv[optind+1], "basktheme") == 0)
+			else if (utils_streq (argv[optind+1], B_CMD_BASKTHEME) == 0)
 			{
 				bask_init_basktheme (&tcore);
 				exit (EXIT_SUCCESS);
@@ -439,15 +439,15 @@ int main (int argc, char* argv[])
 	{
 		if (argc-optind == 1)
 		{
-			if (utils_streq (argv[optind], "list") == 0)
+			if (utils_streq (argv[optind], B_CMD_LIST) == 0)
 			{
 				view_tasklist (&tcore, &btheme, &first, &bfilter);
 			}
-			else if (utils_streq (argv[optind], "summary") == 0)
+			else if (utils_streq (argv[optind], B_CMD_SUMMARY) == 0)
 			{
 				view_summary (&tcore, &btheme, &first, &bfilter);
 			}
-			else if (utils_streq (argv[optind], "history") == 0)
+			else if (utils_streq (argv[optind], B_CMD_HISTORY) == 0)
 			{
 				view_history (&tcore, &btheme, &first, &bfilter);
 			}
@@ -458,7 +458,7 @@ int main (int argc, char* argv[])
 		}
 		else if (argc-optind == 2)
 		{
-			if (utils_streq (argv[optind], "mod") == 0)
+			if (utils_streq (argv[optind], B_CMD_MOD) == 0)
 			{
 				task_modificate_cmd (&tcore, &first, atoi (argv[optind+1]), pact, -1, ppri, padded, pdue, pfinished, pproject, pdescription);
 			}
@@ -474,15 +474,15 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 2)
 	{
-		if (utils_streq (argv[optind], "list") == 0)
+		if (utils_streq (argv[optind], B_CMD_LIST) == 0)
 		{
 			view_tasklist (&tcore, &btheme, &first, &bfilter);
 		}
-		else if (utils_streq (argv[optind], "summary") == 0)
+		else if (utils_streq (argv[optind], B_CMD_SUMMARY) == 0)
 		{
 			view_summary (&tcore, &btheme, &first, &bfilter);
 		}
-		else if (utils_streq (argv[optind], "history") == 0)
+		else if (utils_streq (argv[optind], B_CMD_HISTORY) == 0)
 		{
 			view_history (&tcore, &btheme, &first, &bfilter);
 		}
@@ -493,35 +493,35 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 3)
 	{
-		if (utils_streq (argv[optind], "finish") == 0)
+		if (utils_streq (argv[optind], B_CMD_FINISH) == 0)
 		{
 			task_finish_cmd (&tcore, &first, atoi (argv[optind+1]));
 		}
-		else if (utils_streq (argv[optind], "remove") == 0)
+		else if (utils_streq (argv[optind], B_CMD_REMOVE) == 0)
 		{
 			task_remove_cmd (&tcore, &first, atoi (argv[optind+1]));
 		}
-		else if (utils_streq (argv[optind], "search") == 0)
+		else if (utils_streq (argv[optind], B_CMD_SEARCH) == 0)
 		{
 			search_view (&tcore, &btheme, &bfilter, &first, argv[optind+1], BVIEW_TASKLIST);
 		}
-		else if (utils_streq (argv[optind], "stop") == 0)
+		else if (utils_streq (argv[optind], B_CMD_STOP) == 0)
 		{
 			task_deactivate_cmd (&tcore, &first, atoi (argv[optind+1]));
 		}
-		else if (utils_streq (argv[optind], "show") == 0)
+		else if (utils_streq (argv[optind], B_CMD_SHOW) == 0)
 		{
 			view_single (&tcore, &first, atoi (argv[optind+1]));
 		}
-		else if (utils_streq (argv[optind], "export") == 0)
+		else if (utils_streq (argv[optind], B_CMD_EXPORT) == 0)
 		{
 			export_baskbin (&tcore, &first, argv[optind+1]);
 		}
-		else if (utils_streq (argv[optind], "import") == 0)
+		else if (utils_streq (argv[optind], B_CMD_IMPORT) == 0)
 		{
 			import_baskbin_cmd (&tcore, &first, argv[optind+1]);
 		}
-		else if (utils_streq (argv[optind], "config") == 0)
+		else if (utils_streq (argv[optind], B_CMD_CONFIG) == 0)
 		{
 			tmp = config_set_str (&tcore, argv[optind+1]);
 			
@@ -541,13 +541,13 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 4)
 	{
-		if (utils_streq (argv[optind], "search") == 0)
+		if (utils_streq (argv[optind], B_CMD_SEARCH) == 0)
 		{
-			if (utils_streq (argv[optind+1], "tasklist") == 0)
+			if (utils_streq (argv[optind+1], B_CMD_TASKLIST) == 0)
 			{
 				search_view (&tcore, &btheme, &bfilter, &first, argv[optind+2], BVIEW_TASKLIST);
 			}
-			else if (utils_streq (argv[optind+1], "summary") == 0)
+			else if (utils_streq (argv[optind+1], B_CMD_SUMMARY) == 0)
 			{
 				search_view (&tcore, &btheme, &bfilter, &first, argv[optind+2], BVIEW_SUMMARY);
 			}
@@ -556,21 +556,21 @@ int main (int argc, char* argv[])
 				usage ();
 			}
 		}
-		else if (utils_streq (argv[optind], "export") == 0)
+		else if (utils_streq (argv[optind], B_CMD_EXPORT) == 0)
 		{
-			if (utils_streq (argv[optind+1], "baskbin") == 0)
+			if (utils_streq (argv[optind+1], B_CMD_BASKBIN) == 0)
 			{
 				export_baskbin (&tcore, &first, argv[optind+2]);
 			}
-			else if (utils_streq (argv[optind+1], "csv") == 0)
+			else if (utils_streq (argv[optind+1], B_CMD_CSV) == 0)
 			{
 				export_csv (&tcore, &first, argv[optind+2]);
 			}
-			else if (utils_streq (argv[optind+1], "ical") == 0)
+			else if (utils_streq (argv[optind+1], B_CMD_ICAL) == 0)
 			{
 				export_ical (&tcore, &first, argv[optind+2]);
 			}
-			else if (utils_streq (argv[optind+1], "web") == 0)
+			else if (utils_streq (argv[optind+1], B_CMD_WEB) == 0)
 			{
 				export_web (&tcore, &first, argv[optind+2]);
 			}
@@ -579,17 +579,17 @@ int main (int argc, char* argv[])
 				usage ();
 			}
 		}
-		else if (utils_streq (argv[optind], "import") == 0)
+		else if (utils_streq (argv[optind], B_CMD_IMPORT) == 0)
 		{
-			if (utils_streq (argv[optind+1], "baskbin") == 0)
+			if (utils_streq (argv[optind+1], B_CMD_BASKBIN) == 0)
 			{
 				import_baskbin_cmd (&tcore, &first, argv[optind+2]);
 			}
-			else if (utils_streq (argv[optind+1], "csv") == 0)
+			else if (utils_streq (argv[optind+1], B_CMD_CSV) == 0)
 			{
 				import_csv_cmd (&tcore, &first, argv[optind+2]);
 			}
-			else if (utils_streq (argv[optind+1], "ical") == 0)
+			else if (utils_streq (argv[optind+1], B_CMD_ICAL) == 0)
 			{
 				import_ical_cmd (&tcore, &first, argv[optind+2]);
 			}
@@ -598,7 +598,7 @@ int main (int argc, char* argv[])
 				usage ();
 			}
 		}
-		else if (utils_streq (argv[optind], "due") == 0)
+		else if (utils_streq (argv[optind], B_CMD_DUE) == 0)
 		{
 			task_due_cmd (&tcore, &first, atoi (argv[optind+1]), argv[optind+2]);
 		}
@@ -609,7 +609,7 @@ int main (int argc, char* argv[])
 	}
 	else if (argc == 5)
 	{	
-		if (utils_streq (argv[optind], "add") == 0)
+		if (utils_streq (argv[optind], B_CMD_ADD) == 0)
 		{
 			task_create_cmd (&tcore, &first, task_get_priority (argv[optind+1]), argv[optind+2], argv[optind+3]);
 		}
