@@ -170,26 +170,26 @@ static void print_about (void)
 static void print_help (void)
 {
 	printf ("%s :\n", P_CMD);
-	printf ("\thelp\t\t\t\t\tThis help.\n");
-	printf ("\tabout\t\t\t\t\tAbout the programm.\n");
-	printf ("\tlist <ARGS>\t\t\t\tLists all tasks.\n");
-	printf ("\tsummary <ARGS>\t\t\t\tSummary of all projects.\n");
-	printf ("\thistory <ARGS>\t\t\t\tHistory of monthly stats.\n");
+	printf ("\t%s\t\t\t\t\tThis help.\n", B_CMD_HELP);
+	printf ("\t%s\t\t\t\t\tAbout the programm.\n", B_CMD_ABOUT);
+	printf ("\t%s <ARGS>\t\t\t\tLists all tasks.\n", B_CMD_LIST);
+	printf ("\t%s <ARGS>\t\t\t\tSummary of all projects.\n", B_CMD_SUMMARY);
+	printf ("\t%s <ARGS>\t\t\t\tHistory of monthly stats.\n", B_CMD_HISTORY);
 	
-	printf ("\tinit <FILE>\t\t\t\tInits the FILE or all files if no FILE is given.\n");
-	printf ("\tadd [priority] [PROJECT] [DESCRIPTION]\tAdd a task.\n");
-	printf ("\tremove [id]\t\t\t\tRemoves a task.\n");
+	printf ("\t%s <FILE>\t\t\t\tInits the FILE or all files if no FILE is given.\n", B_CMD_INIT);
+	printf ("\t%s [priority] [PROJECT] [DESCRIPTION]\tAdd a task.\n", B_CMD_ADD);
+	printf ("\t%s [id]\t\t\t\tRemoves a task.\n", B_CMD_REMOVE);
 	
-	printf ("\tshow [id]\t\t\t\tShows informations about a single task.\n");
-	printf ("\tmod [id] ARGS\t\t\t\tModifies a task.\n");
-	printf ("\tfinish [id]\t\t\t\tSet's a task to finished.\n");
-	printf ("\tstop [id]\t\t\t\tDeactivates (hides) a task.\n");
-	printf ("\tconfig [CONFIGLINE]\t\t\tChanges the settings using a line from the config file.\n");
+	printf ("\t%s [id]\t\t\t\tShows informations about a single task.\n", B_CMD_SHOW);
+	printf ("\t%s [id] ARGS\t\t\t\tModifies a task.\n", B_CMD_MOD);
+	printf ("\t%s [id]\t\t\t\tSet's a task to finished.\n", B_CMD_FINISH);
+	printf ("\t%s [id]\t\t\t\tDeactivates (hides) a task.\n", B_CMD_STOP);
+	printf ("\t%s [CONFIGLINE]\t\t\tChanges the settings using a line from the config file.\n", B_CMD_CONFIG);
 	
-	printf ("\tsearch <VIEW> [SEARCHTAG]\t\tSearches through the tasks and optional uses <VIEW> to show the results.\n");
-	printf ("\texport <EXPORT> [FILENAME]\t\tExports the data from the baskbin to an file with the format <EXPORT> or baskbin.\n");
-	printf ("\timport <IMPORT> [FILENAME]\t\tImports the data from an file with the format <IMPORT> or baskbin to the baskbin.\n");
-	printf ("\tdue [id] [DUEDATE]\t\t\tSet the due date of a task.\n");
+	printf ("\t%s <VIEW> [SEARCHTAG]\t\tSearches through the tasks and optional uses <VIEW> to show the results.\n", B_CMD_SEARCH);
+	printf ("\t%s <EXPORT> [FILENAME]\t\tExports the data from the baskbin to an file with the format <EXPORT> or baskbin.\n", B_CMD_EXPORT);
+	printf ("\t%s <IMPORT> [FILENAME]\t\tImports the data from an file with the format <IMPORT> or baskbin to the baskbin.\n", B_CMD_IMPORT);
+	printf ("\t%s [id] [DUEDATE]\t\t\tSet the due date of a task.\n", B_CMD_DUE);
 	
 	printf ("\nARGUMENTS\n");
 	printf ("\t-a [active]\t\tIf the task is active.\n");
@@ -203,17 +203,17 @@ static void print_help (void)
 	printf ("\t--due [DUEDATE]\t\tThe due date of the task.\n");
 	
 	printf ("\nVIEWS\n");
-	printf ("\ttasklist\t\tThe default view, a list of tasks.\n");
-	printf ("\tsummary\t\t\tA summary of projects.\n");
+	printf ("\t%s\t\tThe default view, a list of tasks.\n", B_CMD_TASKLIST);
+	printf ("\t%s\t\t\tA summary of projects.\n", B_CMD_SUMMARY);
 	
 	printf ("\nEXPORTS\n");
-	printf ("\tbaskbin\t\t\tExports to an baskbin file. (default)\n");
-	printf ("\tcsv\t\t\tExports to an csv file.\n");
-	printf ("\tical\t\t\tExports to an iCalendar file.\n");
+	printf ("\t%s\t\t\tExports to an baskbin file. (default)\n", B_CMD_BASKBIN);
+	printf ("\t%s\t\t\tExports to an csv file.\n", B_CMD_CSV);
+	printf ("\t%s\t\t\tExports to an iCalendar file.\n", B_CMD_ICAL);
 	
 	printf ("\nIMPORTS\n");
-	printf ("\tbaskbin\t\t\tImports from an baskbin file. (default)\n");
-	printf ("\tcsv\t\t\tImports from an csv file.\n");
+	printf ("\t%s\t\t\tImports from an baskbin file. (default)\n", B_CMD_BASKBIN);
+	printf ("\t%s\t\t\tImports from an csv file.\n", B_CMD_CSV);
 	
 	printf ("\nPRIORITYS\n");
 	printf ("\t0\tL\tNormal\n");
