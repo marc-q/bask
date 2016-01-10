@@ -162,11 +162,11 @@ void config_save (bask_core* tcore)
 		
 		fprintf (baskfile, "# Path to the baskbin.\nbaskbin=%s\n#\n", tmp);
 		
-		fprintf (baskfile, "# The minimum length of the project field in characters (0-200; default: 15)\ntask_project_min=%i\n#\n", (int)tcore->t_projectmin);
+		fprintf (baskfile, "# The minimum length of the project field in characters (0-200; default: 15)\ntask_project_min=%hi\n#\n", tcore->t_projectmin);
 		
-		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50)\ntask_description_max=%i\n#\n", (int)tcore->t_descriptionmax);
-		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50)\ntask_description_min=%i\n#\n", (int)tcore->t_descriptionmin);
-		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=%i\n", (int)BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK));
+		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50)\ntask_description_max=%hi\n#\n", tcore->t_descriptionmax);
+		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50)\ntask_description_min=%hi\n#\n", tcore->t_descriptionmin);
+		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=%hi\n", BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK));
 	
 		fclose (baskfile);	
 	}

@@ -69,11 +69,11 @@ void view_print_single (struct bask_task* task)
 }
 
 /*
-	Function: view_single (bask_core* tcore, struct bask_task** first, int id);
+	Function: view_single (bask_core* tcore, struct bask_task** first, unsigned int id);
 	Description: Displays a single task.
 	InitVersion: 0.0.1
 */
-void view_single (bask_core* tcore, struct bask_task** first, int id)
+void view_single (bask_core* tcore, struct bask_task** first, unsigned int id)
 {
 	struct bask_task* ptr = *first;
 	
