@@ -6,6 +6,7 @@
 #include <time.h>
 #include <math.h>
 #include <ctype.h>
+#include <limits.h>
 #include <getopt.h>
 #include <sys/stat.h>
 #include "lib/dutils.h"
@@ -243,8 +244,8 @@ static void usage (void)
 
 int main (int argc, char* argv[])
 {
-	int optc, ppri, pact, optindex, tmp;
-	short filter, pday, pmonth, pyear;
+	int optc, optindex, tmp;
+	short filter, pact, ppri, pday, pmonth, pyear;
 	char padded[T_S_ADDED], pdue[T_S_DUE], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
@@ -351,9 +352,9 @@ int main (int argc, char* argv[])
 				}
 				break;
 			case 'a':
-				if (isdigit (optarg[0]) != 0)
+				if (utils_atos (&pact, optarg) == -2 || pact < 0 || pact > 1)
 				{
-					pact = atoi (optarg);
+					errors_outofrange_int ("-a", 0, 1);
 				}
 				break;
 			case 'D':
@@ -386,21 +387,21 @@ int main (int argc, char* argv[])
 				exit (EXIT_SUCCESS);
 				break;
 			case B_CMD_ARG_DAY:
-				if (isdigit (optarg[0]) != 0)
+				if (utils_atos (&pday, optarg) == -2 || pday < 1 || pday > 31)
 				{
-					pday = (short) atoi (optarg);
+					errors_outofrange_int ("--day", 1, 31);
 				}
 				break;
 			case B_CMD_ARG_MONTH:
-				if (isdigit (optarg[0]) != 0)
+				if (utils_atos (&pmonth, optarg) == -2 || pmonth < 1 || pmonth > 12)
 				{
-					pmonth = (short) atoi (optarg);
+					errors_outofrange_int ("--month", 1, 12);
 				}
 				break;
 			case B_CMD_ARG_YEAR:
-				if (isdigit (optarg[0]) != 0)
+				if (utils_atos (&pyear, optarg) == -2)
 				{
-					pyear = (short) atoi (optarg);
+					errors_outofrange_int ("--year", SHRT_MIN, SHRT_MAX);
 				}
 				break;
 			case B_CMD_ARG_DUE:
@@ -413,9 +414,9 @@ int main (int argc, char* argv[])
 				/* TODO: Improve this. */
 				if (time_get_str (padded, sizeof (padded)) == 0)
 				{
-					pday = time_get_day (padded);
-					pmonth = time_get_month (padded);
-					pyear = time_get_year (padded);
+					pday = (short) time_get_day (padded);
+					pmonth = (short) time_get_month (padded);
+					pyear = (short) time_get_year (padded);
 				}
 				break;
 			default:
@@ -425,7 +426,7 @@ int main (int argc, char* argv[])
 	
 	if (filter == 1)
 	{
-		filter_init (&bfilter, (short) pact, -1, (short) ppri, pday, pmonth, pyear);
+		filter_init (&bfilter, pact, -1, ppri, pday, pmonth, pyear);
 	}
 	else
 	{

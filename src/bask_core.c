@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <limits.h>
 #include "bask_errors.h"
 #include "bask_core.h"
 
@@ -102,7 +103,7 @@ int parser_get_int (char* line, char* key, int* out, char septag, char* saveptr)
 			return -3;
 		}
 		
-		if (isdigit (saveptr[1]) != 0)
+		if (isdigit (saveptr[1]) != 0 || (saveptr[1] == '-' || saveptr[1] == '+') && strlen (saveptr) >= 3)
 		{
 			*out = atoi (saveptr+1);
 		}
@@ -122,7 +123,8 @@ int parser_get_short (char* line, char* key, short* out, char septag, char* save
 {
 	int tmp;
 	
-	if (parser_get_int (line, key, &tmp, septag, saveptr) == 0)
+	if (parser_get_int (line, key, &tmp, septag, saveptr) == 0 &&
+	    tmp >= SHRT_MIN && tmp <= SHRT_MAX)
 	{
 		*out = (short) tmp;
 		 
@@ -146,6 +148,35 @@ int utils_streq (char* one, char* two)
 	
 	return strncmp (one, two, strlen (one));
 }
+
+/*
+	Function: utils_atos (short* out, char* str);
+	Description: Converts a string to a short if it fits between the limits of a short. 
+	InitVersion: 0.0.1
+*/
+int utils_atos (short* out, char* str)
+{
+	int tmp;
+	
+	tmp = 0;
+	
+	if (isdigit (str[0]) == 0 && str[0] != '-' && str[0] != '+')
+	{
+		return -1;
+	}
+	
+	tmp = atoi (str);
+	
+	if (tmp < SHRT_MIN || tmp > SHRT_MAX)
+	{
+		return -2;
+	}
+	
+	*out = (short) tmp;
+	
+	return 0;
+}
+
 
 /*
 	Function: bask_init_local_file (FILE** baskfile, char* filename);

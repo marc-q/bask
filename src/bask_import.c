@@ -21,7 +21,8 @@
 int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	unsigned int tid;
-	int tactive, tpriority, tstate, bb_state;
+	int tstate, bb_state;
+	short tactive, tpriority;
 	char line[200], tadded[T_S_ADDED], tdue[T_S_DUE], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char saveptr[200];
 	FILE* importfile;
@@ -65,8 +66,8 @@ int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 		else
 		{
 			parser_get_int (line, "tid=", &tid, BASKSEP, saveptr);
-			parser_get_int (line, "tactive=", &tactive, BASKSEP, saveptr);
-			parser_get_int (line, "tpriority=", &tpriority, BASKSEP, saveptr);
+			parser_get_short (line, "tactive=", &tactive, BASKSEP, saveptr);
+			parser_get_short (line, "tpriority=", &tpriority, BASKSEP, saveptr);
 			parser_get_str (line, "tadded=", tadded, sizeof (tadded), BASKSEP, saveptr);
 			parser_get_str (line, "tdue=", tdue, sizeof (tdue), BASKSEP, saveptr);
 			
@@ -116,7 +117,8 @@ void import_baskbin_cmd (bask_core* tcore, struct bask_task** first, char* filen
 int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, char* saveptr)
 {
 	unsigned int tid;
-	int tactive, tpriority, tstate;
+	int tstate;
+	short tactive, tpriority;
 	char tadded[T_S_ADDED], tdue[T_S_DUE], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char tmp[200];
 	
@@ -126,11 +128,11 @@ int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, 
 	
 	token = strtok_r (NULL, ";", &saveptr);
 	
-	tactive = atoi (token);
+	utils_atos (&tactive, token);
 	
 	token = strtok_r (NULL, ";", &saveptr);
 	
-	tpriority = atoi (token);
+	utils_atos (&tpriority, token);
 	
 	token = strtok_r (NULL, ";", &saveptr);
 	

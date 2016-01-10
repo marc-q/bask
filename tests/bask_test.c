@@ -13,7 +13,7 @@
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 54
+#define TESTS_AMOUNT 55
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -104,6 +104,33 @@ static int tst_core_streq (void)
 }
 
 /*
+	Function: tst_core_atos (void);
+	Description: Tests the utils_atos function from bask_core.c.
+	InitVersion: 0.0.1
+*/
+static int tst_core_atos (void)
+{
+	short tmp;
+	
+	tmp = 0;
+	
+	if (utils_atos (&tmp, "2015") == 0 && tmp == 2015 &&
+	    utils_atos (&tmp, "+2016") == 0 && tmp == 2016 &&
+	    utils_atos (&tmp, "-2017") == 0 && tmp == -2017 &&
+	    utils_atos (&tmp, "a2015") == -1 &&
+	    utils_atos (&tmp, "32768") == -2 &&
+	    utils_atos (&tmp, "-32769") == -2)
+	{
+		tst_print_success ("Core_Atos");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Core_Atos");
+	return TESTS_FAIL;
+}
+
+
+/*
 	Function: tst_core_parser_str (void);
 	Description: Tests the parser_get_str function from bask_core.c.
 	InitVersion: 0.0.1
@@ -159,6 +186,7 @@ static int tst_core_parser_int (void)
 */
 static int tst_core_parser_short (void)
 {
+	int passed;
 	short out;
 	char instr[50];
 	char saveptr[200];
@@ -168,6 +196,42 @@ static int tst_core_parser_short (void)
 	parser_get_short (instr, "test=", &out, BASKSEP, saveptr);
 	
 	if (out == 2015)
+	{
+		passed = 1;
+	}
+	
+	strcpy (instr, "test=+2015\n");
+	
+	parser_get_short (instr, "test=", &out, BASKSEP, saveptr);
+	
+	if (passed == 1 &&
+	    out != 2015)
+	{
+		passed = 0;
+	}
+	
+	strcpy (instr, "test=-2015\n");
+	
+	parser_get_short (instr, "test=", &out, BASKSEP, saveptr);
+	
+	if (passed == 1 &&
+	    out != -2015)
+	{
+		passed = 0;
+	}
+	
+	strcpy (instr, "test=32768\n");
+	
+	if (passed == 1 && 
+	    parser_get_short (instr, "test=", &out, BASKSEP, saveptr) != -1)
+	{
+		passed = 0;
+	}
+
+	strcpy (instr, "test=-32769\n");
+
+	if (passed == 1 && 
+	    parser_get_short (instr, "test=", &out, BASKSEP, saveptr) == -1)
 	{
 		tst_print_success ("Core_Parser_Short");
 		return TESTS_PASS;
@@ -788,6 +852,7 @@ int main (int argc, char* argv[])
 	printf ("Bask-Tests (c) 2015 - 2016 Marc Volker Dickmann\n\n");
 	
 	points += tst_core_streq ();
+	points += tst_core_atos ();
 	points += tst_core_parser_str ();
 	points += tst_core_parser_int ();
 	points += tst_core_parser_short ();

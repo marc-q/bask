@@ -23,11 +23,11 @@ void project_free_ll (struct bask_project** first)
 }
 
 /*
-	Function: project_insert (struct bask_project** first, int t_active, int t_state, char* tproject);
+	Function: project_insert (struct bask_project** first, short t_active, int t_state, char* tproject);
 	Description: Inserts a new project with data.
 	InitVersion: 0.0.1
 */
-int project_insert (struct bask_project** first, int t_active, int t_state, char* t_project)
+int project_insert (struct bask_project** first, short t_active, int t_state, char* t_project)
 {
 	struct bask_project *newobj = malloc (sizeof (struct bask_project)), *preobj;
 	
