@@ -481,11 +481,11 @@ static int tst_config_setstr (void)
 	}
 	
 	if (passed == 1 &&
-	    config_set_str (&tcore, "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem .") == -1 &&
-	    config_set_str (&tcore, "task_project_min=201;") == -2 &&
-	    config_set_str (&tcore, "task_description_max=201;") == -3 &&
-	    config_set_str (&tcore, "task_description_min=201;") == -4 &&
-	    config_set_str (&tcore, "task_description_break=2;") == -5)
+	    config_set_str (&tcore, "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem .") == CONFIG_ERR_SS_CONFLINE &&
+	    config_set_str (&tcore, "task_project_min=201;") == CONFIG_ERR_SS_PROJMIN &&
+	    config_set_str (&tcore, "task_description_max=201;") == CONFIG_ERR_SS_DESCMAX &&
+	    config_set_str (&tcore, "task_description_min=201;") == CONFIG_ERR_SS_DESCMIN &&
+	    config_set_str (&tcore, "task_description_break=2;") == CONFIG_ERR_SS_DESCBREAK)
 	{
 		tst_print_success ("Config_Set_Str");
 		return TESTS_PASS;

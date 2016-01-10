@@ -25,7 +25,7 @@ int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* ba
 	{
 		if (*tmpsvalue < 0 || *tmpsvalue > 200)
 		{
-			return -2;
+			return CONFIG_ERR_SS_PROJMIN;
 		}
 		else
 		{
@@ -36,7 +36,7 @@ int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* ba
 	{
 		if (*tmpsvalue < 0 || *tmpsvalue > 200)
 		{
-			return -3;
+			return CONFIG_ERR_SS_DESCMAX;
 		}
 		else
 		{
@@ -47,7 +47,7 @@ int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* ba
 	{
 		if (*tmpsvalue < 0 || *tmpsvalue > 200)
 		{
-			return -4;
+			return CONFIG_ERR_SS_DESCMIN;
 		}
 		else
 		{
@@ -58,7 +58,7 @@ int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* ba
 	{
 		if (*tmpsvalue < 0 || *tmpsvalue > 1)
 		{
-			return -5;
+			return CONFIG_ERR_SS_DESCBREAK;
 		}
 		else
 		{
@@ -86,7 +86,7 @@ int config_set_str (bask_core* tcore, char* str)
 	}
 	else
 	{
-		return -1;
+		return CONFIG_ERR_SS_CONFLINE;
 	}
 	
 	return config_set_str_raw (tcore, cline, &tmpsvalue, baskbin, saveptr);
@@ -101,19 +101,19 @@ void config_print_set_str_errors (int error_id)
 {
 	switch (error_id)
 	{
-		case -1:
+		case CONFIG_ERR_SS_CONFLINE:
 			errors_lengthtobig ("Configline");
 			break;
-		case -2:
+		case CONFIG_ERR_SS_PROJMIN:
 			errors_outofrange_int ("task_project_min", 0, 200);
 			break;
-		case -3:
+		case CONFIG_ERR_SS_DESCMAX:
 			errors_outofrange_int ("task_description_max", 0, 200);
 			break;
-		case -4:
+		case CONFIG_ERR_SS_DESCMIN:
 			errors_outofrange_int ("task_description_min", 0, 200);
 			break;
-		case -5:
+		case CONFIG_ERR_SS_DESCBREAK:
 			errors_outofrange_int ("task_description_break", 0, 1);
 			break;
 		default:
