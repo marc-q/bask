@@ -238,7 +238,7 @@ static void print_help (void)
 */
 static void usage (void)
 {
-	printf ("Usage: %s help\n", P_CMD);
+	printf ("Usage: %s %s\n", P_CMD, B_CMD_HELP);
 }
 
 int main (int argc, char* argv[])
