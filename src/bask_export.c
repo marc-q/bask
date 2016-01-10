@@ -39,7 +39,7 @@ int export_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 	while (ptr != NULL)
 	{
 		fprintf (exportfile, "tid=%i\n", ptr->t_id);
-		fprintf (exportfile, "tactive=%i\n", BITGET (ptr->t_flags, TASK_FLAG_ACTIVE));
+		fprintf (exportfile, "tactive=%hi\n", BITGET (ptr->t_flags, TASK_FLAG_ACTIVE));
 		fprintf (exportfile, "tpriority=%hi\n", ptr->t_priority);
 		fprintf (exportfile, "tadded=%s\n", ptr->t_added);
 		fprintf (exportfile, "tdue=%s\n", ptr->t_due);
@@ -81,7 +81,7 @@ int export_csv (bask_core* tcore, struct bask_task** first, char* filename)
 	
 	while (ptr != NULL)
 	{
-		fprintf (exportfile, "%i;%i;%hi;\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"\n", ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, ptr->t_added, ptr->t_due, ptr->t_finished, ptr->t_project, ptr->t_description);
+		fprintf (exportfile, "%i;%hi;%hi;\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"\n", ptr->t_id, BITGET (ptr->t_flags, TASK_FLAG_ACTIVE), ptr->t_priority, ptr->t_added, ptr->t_due, ptr->t_finished, ptr->t_project, ptr->t_description);
 		
 		ptr = ptr->next;
 	}

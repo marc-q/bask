@@ -28,11 +28,11 @@
    |--------------------------------------------| */
 
 /*
-	Function: search_view (bask_core* tcore, bask_theme* btheme, bask_filter* bfilter, struct bask_task** first, char* searchtag, int view);
+	Function: search_view (bask_core* tcore, bask_theme* btheme, bask_filter* bfilter, struct bask_task** first, char* searchtag, short view);
 	Description: Finds tasks with searchtag in the description, project or finished and uses the view <view> to display the results.
 	InitVersion: 0.0.1
 */
-static void search_view (bask_core* tcore, bask_theme* btheme, bask_filter* bfilter, struct bask_task** first, char* searchtag, int view)
+static void search_view (bask_core* tcore, bask_theme* btheme, bask_filter* bfilter, struct bask_task** first, char* searchtag, short view)
 {
 	struct bask_task* haystack = NULL;
 	
