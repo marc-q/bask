@@ -11,6 +11,6 @@ struct bask_project
 };
 
 void project_free_ll (struct bask_project**);
-int project_insert (struct bask_project**, short, int, char*);
+int project_insert (struct bask_project**, short, short, char*);
 
 #endif /* __BASK_PROJECT_H__ */
