@@ -13,7 +13,7 @@
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 55
+#define TESTS_AMOUNT 79
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -31,6 +31,10 @@ static void tst_print_success (char* tstname)
 	printf ("%s:", tstname);
 	
 	if (strlen (tstname) < 15)
+	{
+		printf ("\t\t\t");
+	}
+	else if (strlen (tstname) < 23)
 	{
 		printf ("\t\t");
 	}
@@ -52,6 +56,10 @@ static void tst_print_fail (char* tstname)
 	printf ("%s:", tstname);
 	
 	if (strlen (tstname) < 15)
+	{
+		printf ("\t\t\t");
+	}
+	else if (strlen (tstname) < 23)
 	{
 		printf ("\t\t");
 	}
@@ -714,10 +722,14 @@ static int tst_filter_checktask (void)
 static int tst_ui_getcolor (char* colorname, char* colorcode)
 {
 	char color[UI_S_THEMECOLOR];
+	char tmp[50];
+	
+	strcpy (tmp, "UI_GetColor_");
+	strcat (tmp, colorname);
 	
 	if (strlen (colorname) >= sizeof (color) || strlen (colorcode) >= sizeof (color))
 	{
-		printf ("UI_GetColor_%s:\t%sFAIL%s\n", colorname, BC_BLD_RED, BC_TXT_RST);
+		tst_print_fail (tmp);
 		return TESTS_FAIL;
 	}
 	
@@ -727,11 +739,11 @@ static int tst_ui_getcolor (char* colorname, char* colorcode)
 	
 	if (utils_streq (color, colorcode) == 0)
 	{
-		printf ("UI_GetColor_%s:\t%sSUCCESS%s\n", colorname, BC_BLD_GREEN, BC_TXT_RST);
+		tst_print_success (tmp);
 		return TESTS_PASS;
 	}
 	
-	printf ("UI_GetColor_%s:\t%sFAIL%s\n", colorname, BC_BLD_RED, BC_TXT_RST);
+	tst_print_fail (tmp);
 	return TESTS_FAIL;
 }
 
@@ -897,6 +909,17 @@ int main (int argc, char* argv[])
 	
 	printf ("\n");
 	
+	points += tst_ui_getcolor ("txt_black_h", "\033[0;90m");
+	points += tst_ui_getcolor ("txt_red_h", "\033[0;91m");
+	points += tst_ui_getcolor ("txt_green_h", "\033[0;92m");
+	points += tst_ui_getcolor ("txt_yellow_h", "\033[0;93m");
+	points += tst_ui_getcolor ("txt_blue_h", "\033[0;94m");
+	points += tst_ui_getcolor ("txt_purple_h", "\033[0;95m");
+	points += tst_ui_getcolor ("txt_cyan_h", "\033[0;96m");
+	points += tst_ui_getcolor ("txt_white_h", "\033[0;97m");
+	
+	printf ("\n");
+	
 	points += tst_ui_getcolor ("bld_black", "\033[1;30m");
 	points += tst_ui_getcolor ("bld_red", "\033[1;31m");
 	points += tst_ui_getcolor ("bld_green", "\033[1;32m");
@@ -905,6 +928,17 @@ int main (int argc, char* argv[])
 	points += tst_ui_getcolor ("bld_purple", "\033[1;35m");
 	points += tst_ui_getcolor ("bld_cyan", "\033[1;36m");
 	points += tst_ui_getcolor ("bld_white", "\033[1;37m");
+	
+	printf ("\n");
+	
+	points += tst_ui_getcolor ("bld_black_h", "\033[1;90m");
+	points += tst_ui_getcolor ("bld_red_h", "\033[1;91m");
+	points += tst_ui_getcolor ("bld_green_h", "\033[1;92m");
+	points += tst_ui_getcolor ("bld_yellow_h", "\033[1;93m");
+	points += tst_ui_getcolor ("bld_blue_h", "\033[1;94m");
+	points += tst_ui_getcolor ("bld_purple_h", "\033[1;95m");
+	points += tst_ui_getcolor ("bld_cyan_h", "\033[1;96m");
+	points += tst_ui_getcolor ("bld_white_h", "\033[1;97m");
 	
 	printf ("\n");
 	
@@ -927,6 +961,17 @@ int main (int argc, char* argv[])
 	points += tst_ui_getcolor ("bak_purple", "\033[45m");
 	points += tst_ui_getcolor ("bak_cyan", "\033[46m");
 	points += tst_ui_getcolor ("bak_white", "\033[47m");
+	
+	printf ("\n");
+	
+	points += tst_ui_getcolor ("bak_black_h", "\033[0;100m");
+	points += tst_ui_getcolor ("bak_red_h", "\033[0;101m");
+	points += tst_ui_getcolor ("bak_green_h", "\033[0;102m");
+	points += tst_ui_getcolor ("bak_yellow_h", "\033[0;103m");
+	points += tst_ui_getcolor ("bak_blue_h", "\033[0;104m");
+	points += tst_ui_getcolor ("bak_purple_h", "\033[0;105m");
+	points += tst_ui_getcolor ("bak_cyan_h", "\033[0;106m");
+	points += tst_ui_getcolor ("bak_white_h", "\033[0;107m");
 	
 	printf ("\n");
 	

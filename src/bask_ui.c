@@ -53,7 +53,10 @@ void ui_print_nspaces_str (char* tag, int length)
 */
 void ui_theme_get_color (char* color)
 {	
+	short tmp;
 	char precolor[UI_S_THEMECOLOR];
+	
+	tmp = 0;
 	
 	if (color != NULL && strlen (color) < UI_S_THEMECOLOR)
 	{
@@ -61,11 +64,13 @@ void ui_theme_get_color (char* color)
 		
 		if (strncmp (precolor, "txt", strlen ("txt")) == 0)
 		{
-			strcpy (color, "\033[0;3");
+			strcpy (color, "\033[0;");
+			tmp = 1;
 		}
 		else if (strncmp (precolor, "bld", strlen ("bld")) == 0)
 		{
-			strcpy (color, "\033[1;3");
+			strcpy (color, "\033[1;");
+			tmp = 1;
 		}
 		else if (strncmp (precolor, "und", strlen ("und")) == 0)
 		{
@@ -73,7 +78,17 @@ void ui_theme_get_color (char* color)
 		}
 		else if (strncmp (precolor, "bak", strlen ("bak")) == 0)
 		{
-			strcpy (color, "\033[4");
+			strcpy (color, "\033[");
+			tmp = 2;
+		}
+	
+		if (tmp == 1)
+		{
+			strcat (color, (strstr (precolor, "_h") != NULL ? BC_HIGH_TXT : BC_LOW_TXT));
+		}
+		else if (tmp == 2)
+		{
+			strcat (color, (strstr (precolor, "_h") != NULL ? BC_HIGH_BAK : BC_LOW_BAK));
 		}
 		
 		if (strstr (precolor, "black") != NULL)

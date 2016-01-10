@@ -10,7 +10,13 @@
 #define BC_CYAN "6"
 #define BC_WHITE "7"
 
-#define UI_S_THEMECOLOR 11
+#define BC_LOW_TXT "3"
+#define BC_LOW_BAK "4"
+
+#define BC_HIGH_TXT "9"
+#define BC_HIGH_BAK "0;10"
+
+#define UI_S_THEMECOLOR 13
 
 #define DENULL(a) (((a)) == 0 ? (a+1) : (a))
 #define GETDIGITS(a) ((int)log10((double)DENULL(a)))
