@@ -108,11 +108,16 @@ int task_check_input (bask_core* tcore, char* added, char* due, char* finished, 
 	Description: Converts the str to the priority number.
 	InitVersion: 0.0.1
 */
-int task_get_priority (char* str)
+short task_get_priority (char* str)
 {
+	short tmp;
+	
 	if (isdigit (str[0]) != 0)
 	{
-		return atoi (str);
+		if (utils_atos (&tmp, str) == 0)
+		{
+			return tmp;
+		}
 	}
 	else if (isalpha (str[0]) != 0)
 	{
