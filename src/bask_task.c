@@ -29,7 +29,7 @@ int task_check_input_nbrs (int id, short priority, short active, short printout)
 		{
 			errors_notunsigned ("id");
 		}
-		return -5;
+		return TASK_ERR_CHECK_ID;
 	}
 	else if (priority < TASK_PRIORITY_MIN || priority > TASK_PRIORITY_MAX)
 	{
@@ -37,7 +37,7 @@ int task_check_input_nbrs (int id, short priority, short active, short printout)
 		{
 			errors_outofrange_int ("priority", TASK_PRIORITY_MIN, TASK_PRIORITY_MAX);
 		}
-		return -6;
+		return TASK_ERR_CHECK_PRIORITY;
 	}
 	else if (ISBOOL (active) != 0)
 	{
@@ -45,7 +45,7 @@ int task_check_input_nbrs (int id, short priority, short active, short printout)
 		{
 			errors_outofrange_int ("active", 0, 1);
 		}
-		return -7;
+		return TASK_ERR_CHECK_ACTIVE;
 	}
 	
 	return 0;
@@ -64,7 +64,7 @@ int task_check_input (bask_core* tcore, char* added, char* due, char* finished, 
 		{
 			errors_lengthtobig ("added");
 		}
-		return -1;
+		return TASK_ERR_CHECK_ADDED;
 	}
 	else if (strlen (due) >= T_S_DUE)
 	{
@@ -72,7 +72,7 @@ int task_check_input (bask_core* tcore, char* added, char* due, char* finished, 
 		{
 			errors_lengthtobig ("due");
 		}
-		return -5;
+		return TASK_ERR_CHECK_DUE;
 	}
 	else if (strlen (finished) >= T_S_FINISHED)
 	{
@@ -80,7 +80,7 @@ int task_check_input (bask_core* tcore, char* added, char* due, char* finished, 
 		{
 			errors_lengthtobig ("finished");
 		}
-		return -2;
+		return TASK_ERR_CHECK_FINISHED;
 	}
 	else if (strlen (project) >= T_S_PROJECT)
 	{
@@ -88,7 +88,7 @@ int task_check_input (bask_core* tcore, char* added, char* due, char* finished, 
 		{
 			errors_lengthtobig ("project");
 		}
-		return -3;
+		return TASK_ERR_CHECK_PROJECT;
 	}
 	else if (strlen (description) >= T_S_DESCRIPTION ||
 		 strlen (description) > tcore->t_descriptionmax && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == 0)
@@ -97,7 +97,7 @@ int task_check_input (bask_core* tcore, char* added, char* due, char* finished, 
 		{
 			errors_lengthtobig ("description");
 		}
-		return -4;
+		return TASK_ERR_CHECK_DESCRIPTION;
 	}
 	
 	return 0;

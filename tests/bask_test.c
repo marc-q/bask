@@ -506,11 +506,11 @@ static int tst_config_setstr (void)
 */
 static int tst_task_checkinputnbrs (void)
 {	
-	if (task_check_input_nbrs (-1, 0, 0, 0) == -5 &&
-	    task_check_input_nbrs (0, TASK_PRIORITY_MAX+1, 0, 0) == -6 &&
-	    task_check_input_nbrs (0, TASK_PRIORITY_MIN-1, 0, 0) == -6 &&
-	    task_check_input_nbrs (0, 0, 2, 0) == -7 &&
-	    task_check_input_nbrs (0, 0, -1, 0) == -7 &&
+	if (task_check_input_nbrs (-1, 0, 0, 0) == TASK_ERR_CHECK_ID &&
+	    task_check_input_nbrs (0, TASK_PRIORITY_MAX+1, 0, 0) == TASK_ERR_CHECK_PRIORITY &&
+	    task_check_input_nbrs (0, TASK_PRIORITY_MIN-1, 0, 0) == TASK_ERR_CHECK_PRIORITY &&
+	    task_check_input_nbrs (0, 0, 2, 0) == TASK_ERR_CHECK_ACTIVE &&
+	    task_check_input_nbrs (0, 0, -1, 0) == TASK_ERR_CHECK_ACTIVE &&
 	    task_check_input_nbrs (0, 0, 0, 0) == 0)
 	{
 		tst_print_success ("Task_Check_Input_Nbrs");
@@ -537,18 +537,18 @@ static int tst_task_checkinput (void)
 	tcore.t_options = 0;
 	
 	if (task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == 0 &&
-	    task_check_input (&tcore, "23/59/59/09/09/02015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -1 &&
-	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/02015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -5 &&
-	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/02015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -2 &&
-	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == -3 &&
-	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015","23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", 0) == -4)
+	    task_check_input (&tcore, "23/59/59/09/09/02015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == TASK_ERR_CHECK_ADDED &&
+	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/02015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == TASK_ERR_CHECK_DUE &&
+	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/02015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == TASK_ERR_CHECK_FINISHED &&
+	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == TASK_ERR_CHECK_PROJECT &&
+	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015","23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", 0) == TASK_ERR_CHECK_DESCRIPTION)
 	{
 		passed = 1;
 	}
 	
 	tcore.t_options ^= BITCOPY (1, 0, tcore.t_options, T_O_DESCRIPTIONBREAK);
 	
-	if (passed == 1 && task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem  .", 0) == -4 &&
+	if (passed == 1 && task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem  .", 0) == TASK_ERR_CHECK_DESCRIPTION &&
 	task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem .", 0) == 0)
 	{
 		tst_print_success ("Task_Check_Input");
