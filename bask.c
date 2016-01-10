@@ -352,7 +352,7 @@ int main (int argc, char* argv[])
 				}
 				break;
 			case 'a':
-				if (utils_atos (&pact, optarg) == -2 || pact < 0 || pact > 1)
+				if (utils_atos (&pact, optarg) == -2 || ISBOOL (pact) != 0)
 				{
 					errors_outofrange_int ("-a", 0, 1);
 				}
