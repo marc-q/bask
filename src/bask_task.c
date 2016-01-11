@@ -409,7 +409,7 @@ void task_deactivate (struct bask_task** first, unsigned int id)
 */
 int task_due (struct bask_task** first, unsigned int id, char* due)
 {	
-	task_modificate (first, id, -1, 1, -1, "", due, "", "", "");
+	task_modificate (first, id, -1, -1, -1, "", due, "", "", "");
 	
 	return 0;
 }
