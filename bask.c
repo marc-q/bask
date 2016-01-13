@@ -112,7 +112,7 @@ static int bask_init_local (bask_core* tcore)
 	{
 		mkdir (tcore->path_baskpath, 0700);
 		bask_init_local (tcore);
-		return 1;
+		return -1;
 	}
 
 	config_save (tcore);
@@ -431,7 +431,7 @@ int main (int argc, char* argv[])
 	}
 	else
 	{
-		filter_init (&bfilter, 1, -1, -1, -1, -1, -1);
+		filter_init (&bfilter, TRUE, -1, -1, -1, -1, -1);
 	}
 	
 	bask_init (&tcore, &first);
