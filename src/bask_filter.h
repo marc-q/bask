@@ -1,8 +1,8 @@
 #ifndef __BASK_FILTER_H__
 #define __BASK_FILTER_H__
 
-#define FLTR_OFF 0
-#define FLTR_ON 1
+#define FLTR_OFF FALSE
+#define FLTR_ON TRUE
 
 #define T_FLTR_ACTIVE 0
 #define T_FLTR_FINISHED 1

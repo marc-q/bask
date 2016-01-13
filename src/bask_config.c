@@ -56,7 +56,7 @@ int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* ba
 	}
 	else if (parser_get_short (line, "task_description_break=", tmpsvalue, BASKSEP, saveptr) == 0)
 	{
-		if (ISBOOL (*tmpsvalue) != 0)
+		if (ISBOOL (*tmpsvalue) != TRUE)
 		{
 			return CONFIG_ERR_SS_DESCBREAK;
 		}

@@ -68,7 +68,7 @@ void view_print_single (bask_core* tcore, struct bask_task* task)
 		printf ("\tProject:\t%s\n", task->t_project);
 		
 		/* TODO: Put this into an functions! */
-		if (strlen (task->t_description) > tcore->t_descriptionmin && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == 1)
+		if (strlen (task->t_description) > tcore->t_descriptionmin && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == TRUE)
 		{
 			printf ("\tDescription:\t");
 			
@@ -136,9 +136,9 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 	
 	while (ptr != NULL)
 	{
-		if (filter_check_task (bfilter, ptr) == 1)
+		if (filter_check_task (bfilter, ptr) == TRUE)
 		{
-			project_insert (&tprojects, 1, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_project);
+			project_insert (&tprojects, TRUE, BITGET (ptr->t_flags, TASK_FLAG_FINISHED), ptr->t_project);
 		
 			i = strlen (ptr->t_project);
 		
@@ -160,7 +160,7 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 	pptr = tprojects;
 	while (pptr != NULL)
 	{
-		if (pptr->p_active == 1)
+		if (pptr->p_active == TRUE)
 		{
 			if (pptr->p_complete == 0.0)
 			{
@@ -219,7 +219,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	
 	while (ptr != NULL)
 	{
-		if (filter_check_task (filter, ptr) == 1)
+		if (filter_check_task (filter, ptr) == TRUE)
 		{
 			i = strlen (ptr->t_project);
 		
@@ -230,7 +230,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 			
 			i = strlen (ptr->t_description);
 			
-			if (i > tdescriptionmax && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == 0)
+			if (i > tdescriptionmax && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == FALSE)
 			{
 				tdescriptionmax = i;
 			}
@@ -249,7 +249,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	ptr = *first;
 	while (ptr != NULL)
 	{
-		if (filter_check_task (filter, ptr) == 1)
+		if (filter_check_task (filter, ptr) == TRUE)
 		{
 			switch (ptr->t_priority)
 			{
@@ -275,7 +275,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 					break;
 			}
 		
-			if (BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == 1)
+			if (BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == TRUE)
 			{
 				strcpy (prefix, btheme->color_finished);
 			}
@@ -291,7 +291,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 			ui_tbl_print_field_str (pri, -1, 4);
 			
 			/* TODO: Put this into an functions! */
-			if (strlen (ptr->t_description) > tdescriptionmax && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == 1)
+			if (strlen (ptr->t_description) > tdescriptionmax && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == TRUE)
 			{
 				for (j = 0, x = 0; j < strlen (ptr->t_description); j++, x++)
 				{
@@ -352,7 +352,7 @@ void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 		while (ptr != NULL)
 		{
 			if (strlen (ptr->t_added) == F_BB_S_DATE-1 &&
-			    filter_check_task (filter, ptr) == 1)
+			    filter_check_task (filter, ptr) == TRUE)
 			{
 				year_added = time_get_year (ptr->t_added);
 				month_added = time_get_month (ptr->t_added);

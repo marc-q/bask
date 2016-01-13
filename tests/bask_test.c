@@ -191,46 +191,48 @@ static int tst_core_parser_short (void)
 	char instr[50];
 	char saveptr[200];
 	
+	passed = FALSE;
+	
 	strcpy (instr, "test=2015\n");
 	
 	parser_get_short (instr, "test=", &out, BASKSEP, saveptr);
 	
 	if (out == 2015)
 	{
-		passed = 1;
+		passed = TRUE;
 	}
 	
 	strcpy (instr, "test=+2015\n");
 	
 	parser_get_short (instr, "test=", &out, BASKSEP, saveptr);
 	
-	if (passed == 1 &&
+	if (passed == TRUE &&
 	    out != 2015)
 	{
-		passed = 0;
+		passed = FALSE;
 	}
 	
 	strcpy (instr, "test=-2015\n");
 	
 	parser_get_short (instr, "test=", &out, BASKSEP, saveptr);
 	
-	if (passed == 1 &&
+	if (passed == TRUE &&
 	    out != -2015)
 	{
-		passed = 0;
+		passed = FALSE;
 	}
 	
 	strcpy (instr, "test=32768\n");
 	
-	if (passed == 1 && 
+	if (passed == TRUE && 
 	    parser_get_short (instr, "test=", &out, BASKSEP, saveptr) != -1)
 	{
-		passed = 0;
+		passed = FALSE;
 	}
 
 	strcpy (instr, "test=-32769\n");
 
-	if (passed == 1 && 
+	if (passed == TRUE && 
 	    parser_get_short (instr, "test=", &out, BASKSEP, saveptr) == -1)
 	{
 		tst_print_success ("Core_Parser_Short");
@@ -460,7 +462,7 @@ static int tst_config_setstr (void)
 	int passed;
 	bask_core tcore;
 	
-	passed = 0;
+	passed = FALSE;
 	
 	tcore.t_projectmin = 0;
 	tcore.t_descriptionmax = 0;
@@ -475,12 +477,12 @@ static int tst_config_setstr (void)
 	if (tcore.t_projectmin == 50 &&
 	    tcore.t_descriptionmax == 50 &&
 	    tcore.t_descriptionmin == 50 &&
-	    BITGET (tcore.t_options, T_O_DESCRIPTIONBREAK) == 1)
+	    BITGET (tcore.t_options, T_O_DESCRIPTIONBREAK) == TRUE)
 	{
-		passed = 1;
+		passed = TRUE;
 	}
 	
-	if (passed == 1 &&
+	if (passed == TRUE &&
 	    config_set_str (&tcore, "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem .") == CONFIG_ERR_SS_CONFLINE &&
 	    config_set_str (&tcore, "task_project_min=201;") == CONFIG_ERR_SS_PROJMIN &&
 	    config_set_str (&tcore, "task_description_max=201;") == CONFIG_ERR_SS_DESCMAX &&
@@ -506,12 +508,12 @@ static int tst_config_setstr (void)
 */
 static int tst_task_checkinputnbrs (void)
 {	
-	if (task_check_input_nbrs (-1, 0, 0, 0) == TASK_ERR_CHECK_ID &&
-	    task_check_input_nbrs (0, TASK_PRIORITY_MAX+1, 0, 0) == TASK_ERR_CHECK_PRIORITY &&
-	    task_check_input_nbrs (0, TASK_PRIORITY_MIN-1, 0, 0) == TASK_ERR_CHECK_PRIORITY &&
-	    task_check_input_nbrs (0, 0, 2, 0) == TASK_ERR_CHECK_ACTIVE &&
-	    task_check_input_nbrs (0, 0, -1, 0) == TASK_ERR_CHECK_ACTIVE &&
-	    task_check_input_nbrs (0, 0, 0, 0) == 0)
+	if (task_check_input_nbrs (-1, 0, FALSE, FALSE) == TASK_ERR_CHECK_ID &&
+	    task_check_input_nbrs (0, TASK_PRIORITY_MAX+1, FALSE, FALSE) == TASK_ERR_CHECK_PRIORITY &&
+	    task_check_input_nbrs (0, TASK_PRIORITY_MIN-1, FALSE, FALSE) == TASK_ERR_CHECK_PRIORITY &&
+	    task_check_input_nbrs (0, 0, 2, FALSE) == TASK_ERR_CHECK_ACTIVE &&
+	    task_check_input_nbrs (0, 0, -1, FALSE) == TASK_ERR_CHECK_ACTIVE &&
+	    task_check_input_nbrs (0, 0, FALSE, FALSE) == 0)
 	{
 		tst_print_success ("Task_Check_Input_Nbrs");
 		return TESTS_PASS;
@@ -531,24 +533,24 @@ static int tst_task_checkinput (void)
 	int passed;
 	bask_core tcore;
 	
-	passed = 0;
+	passed = FALSE;
 	
 	tcore.t_descriptionmax = 50;
 	tcore.t_options = 0;
 	
-	if (task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == 0 &&
-	    task_check_input (&tcore, "23/59/59/09/09/02015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == TASK_ERR_CHECK_ADDED &&
-	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/02015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == TASK_ERR_CHECK_DUE &&
-	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/02015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == TASK_ERR_CHECK_FINISHED &&
-	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", 0) == TASK_ERR_CHECK_PROJECT &&
-	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015","23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", 0) == TASK_ERR_CHECK_DESCRIPTION)
+	if (task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", FALSE) == 0 &&
+	    task_check_input (&tcore, "23/59/59/09/09/02015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", FALSE) == TASK_ERR_CHECK_ADDED &&
+	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/02015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", FALSE) == TASK_ERR_CHECK_DUE &&
+	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/02015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", FALSE) == TASK_ERR_CHECK_FINISHED &&
+	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", FALSE) == TASK_ERR_CHECK_PROJECT &&
+	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015","23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", FALSE) == TASK_ERR_CHECK_DESCRIPTION)
 	{
-		passed = 1;
+		passed = FALSE;
 	}
 	
-	tcore.t_options ^= BITCOPY (1, 0, tcore.t_options, T_O_DESCRIPTIONBREAK);
+	tcore.t_options ^= BITCOPY (TRUE, 0, tcore.t_options, T_O_DESCRIPTIONBREAK);
 	
-	if (passed == 1 && task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem  .", 0) == TASK_ERR_CHECK_DESCRIPTION &&
+	if (passed == FALSE && task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem  .", 0) == TASK_ERR_CHECK_DESCRIPTION &&
 	task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem .", 0) == 0)
 	{
 		tst_print_success ("Task_Check_Input");
@@ -602,10 +604,10 @@ static int tst_filter_init (void)
 {
 	bask_filter bfilter;
 	
-	filter_init (&bfilter, 1, -1, 2, 9, 9, 2015);
+	filter_init (&bfilter, TRUE, -1, 2, 9, 9, 2015);
 	
 	if (BITGET (bfilter.flags, T_FLTR_ACTIVE) == FLTR_ON &&
-	    BITGET (bfilter.task.t_flags, TASK_FLAG_ACTIVE) == 1 &&
+	    BITGET (bfilter.task.t_flags, TASK_FLAG_ACTIVE) == TRUE &&
 	    BITGET (bfilter.flags, T_FLTR_FINISHED) == FLTR_OFF &&
 	    BITGET (bfilter.flags, T_FLTR_PRIORITY) == FLTR_ON &&
 	    bfilter.task.t_priority == 2 &&
@@ -636,7 +638,7 @@ static int tst_filter_checktask (void)
 	bask_filter bfilter;
 	struct bask_task btask;
 	
-	passed = 0;
+	passed = FALSE;
 	
 	btask.t_id = 0;
 	btask.t_flags = 0;
@@ -646,53 +648,53 @@ static int tst_filter_checktask (void)
 	
 	strcpy (btask.t_added, "23/59/59/09/09/2015");
 	
-	filter_init (&bfilter, 1, -1, 2, 9, 9, 2015);
+	filter_init (&bfilter, TRUE, -1, 2, 9, 9, 2015);
 	
-	if (filter_check_task (&bfilter, &btask) == 1)
+	if (filter_check_task (&bfilter, &btask) == TRUE)
 	{
-		passed = 1;
+		passed = TRUE;
 	}
 	
 	filter_init (&bfilter, -1, -1, -1, -1, -1, -1);
 	
-	if (passed == 1 &&
-	    filter_check_task (&bfilter, &btask) == 1)
+	if (passed == TRUE &&
+	    filter_check_task (&bfilter, &btask) == TRUE)
 	{
-		passed = 1;
+		passed = TRUE;
 	}
 	else
 	{
-		passed = 0;
+		passed = FALSE;
 	}
 	
-	filter_init (&bfilter, 0, -1, -1, 9, 9, 2015);
+	filter_init (&bfilter, FALSE, -1, -1, 9, 9, 2015);
 	
-	if (passed == 1 &&
-	    filter_check_task (&bfilter, &btask) == 0)
+	if (passed == TRUE &&
+	    filter_check_task (&bfilter, &btask) == FALSE)
 	{
-		passed = 1;
+		passed = TRUE;
 	}
 	else
 	{
-		passed = 0;
+		passed = FALSE;
 	}
 	
 	filter_init (&bfilter, -1, 1, -1, 9, 9, 2015);
 	
-	if (passed == 1 &&
-	    filter_check_task (&bfilter, &btask) == 0)
+	if (passed == TRUE &&
+	    filter_check_task (&bfilter, &btask) == FALSE)
 	{
-		passed = 1;
+		passed = TRUE;
 	}
 	else
 	{
-		passed = 0;
+		passed = FALSE;
 	}
 	
 	filter_init (&bfilter, -1, -1, -1, 9, 8, 2015);
 	
-	if (passed == 1 &&
-	    filter_check_task (&bfilter, &btask) == 0)
+	if (passed == TRUE &&
+	    filter_check_task (&bfilter, &btask) == FALSE)
 	{
 		tst_print_success ("Filter_Check_Task");
 		return TESTS_PASS;
@@ -798,8 +800,8 @@ static int tst_import_csvparser (void)
 	
 	if (first->t_id == 1 &&
 	    first->t_priority == 2 &&
-	    BITGET (first->t_flags, TASK_FLAG_ACTIVE) == 1 &&
-	    BITGET (first->t_flags, TASK_FLAG_FINISHED) == 0 &&
+	    BITGET (first->t_flags, TASK_FLAG_ACTIVE) == TRUE &&
+	    BITGET (first->t_flags, TASK_FLAG_FINISHED) == FALSE &&
 	    utils_streq (first->t_added, "23/59/59/09/09/2015") == 0 &&
 	    utils_streq (first->t_due, "NONE") == 0 &&
 	    utils_streq (first->t_finished, "NONE") == 0 &&

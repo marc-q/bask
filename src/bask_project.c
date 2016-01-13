@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../lib/dutils.h"
 #include "bask_core.h"
 #include "bask_project.h"
 
@@ -48,7 +49,7 @@ int project_insert (struct bask_project** first, short t_active, short t_state, 
 	
 	if (*first == NULL)
 	{
-		if (t_state == 1)
+		if (t_state == TRUE)
 		{
 			newobj->p_complete = 1.0;
 		}
@@ -69,7 +70,7 @@ int project_insert (struct bask_project** first, short t_active, short t_state, 
 		{
 			if (utils_streq (preobj->p_name, newobj->p_name) == 0)
 			{
-				if (t_state == 1)
+				if (t_state == TRUE)
 				{
 					preobj->p_complete++;
 				}
@@ -80,7 +81,7 @@ int project_insert (struct bask_project** first, short t_active, short t_state, 
 			}
 			else if (preobj->next == NULL)
 			{
-				if (t_state == 1)
+				if (t_state == TRUE)
 				{
 					newobj->p_complete = 1.0;
 				}

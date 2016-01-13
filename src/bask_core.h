@@ -25,7 +25,7 @@
 
 #define BIGGEST(a,b) ((a>b) ? (a) : (b))
 #define SMALLEST(a,b) ((a)<(b) ? (a) : (b))
-#define ISBOOL(a) ((((a) == (0)) || ((a) == (1))) ? (0) : (1)) 
+#define ISBOOL(a) ((((a) == (FALSE)) || ((a) == (TRUE))) ? (TRUE) : (FALSE)) 
 
 struct _bask_core
 {
