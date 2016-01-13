@@ -355,7 +355,7 @@ int main (int argc, char* argv[])
 			case 'a':
 				if (utils_atos (&pact, optarg) == -2 || ISBOOL (pact) != TRUE)
 				{
-					errors_outofrange_int ("-a", 0, 1);
+					errors_outofrange_int ("-a", FALSE, TRUE);
 				}
 				break;
 			case 'D':
