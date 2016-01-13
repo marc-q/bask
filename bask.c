@@ -1,5 +1,6 @@
 /* Copyright 2015 - 2016 Marc Volker Dickmann */
 /* Project: Bask */
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -272,7 +273,7 @@ int main (int argc, char* argv[])
 	strcpy (pproject, "");
 	strcpy (pdescription, "");
 	
-	strcpy (tcore.path_baskpath, getenv("HOME"));
+	strcpy (tcore.path_baskpath, secure_getenv("HOME"));
 	
 	if (tcore.path_baskpath == NULL || *tcore.path_baskpath == '\0')
 	{

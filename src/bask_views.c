@@ -47,12 +47,14 @@ void view_legend (bask_theme* btheme)
    |--------------------------------------------| */
 
 /*
-	Function: view_print_single (struct bask_task* task);
+	Function: view_print_single (bask_core* tcore, struct bask_task* task);
 	Description: Prints informations about a single task.
 	InitVersion: 0.0.1
 */
-void view_print_single (struct bask_task* task)
+void view_print_single (bask_core* tcore, struct bask_task* task)
 {
+	unsigned int i, j;
+	
 	if (task != NULL)
 	{
 		printf ("\nTask:\n");
@@ -64,7 +66,32 @@ void view_print_single (struct bask_task* task)
 		printf ("\tDue:\t\t%s\n", task->t_due);
 		printf ("\tFinished:\t%s\n", task->t_finished);
 		printf ("\tProject:\t%s\n", task->t_project);
-		printf ("\tDescription:\t%s\n", task->t_description);
+		
+		/* TODO: Put this into an functions! */
+		if (strlen (task->t_description) > tcore->t_descriptionmin && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == 1)
+		{
+			printf ("\tDescription:\t");
+			
+			for (i = 0, j = 0; i < strlen (task->t_description); i++, j++)
+			{
+				if (j == tcore->t_descriptionmin)
+				{
+					/* NOTE: That can be improved but for now thats a acceptable solution. */
+					printf ("\n\t");
+					ui_print_nspaces (12);
+					printf ("\t");
+					j = 0;
+				}
+					
+				printf ("%c", task->t_description[i]);
+			}
+			
+			printf ("\n");
+		}
+		else
+		{
+			printf ("\tDescription:\t%s\n", task->t_description);
+		}
 	}
 }
 
@@ -81,7 +108,7 @@ void view_single (bask_core* tcore, struct bask_task** first, unsigned int id)
 	{
 		if (ptr->t_id == id)
 		{
-			view_print_single (ptr);
+			view_print_single (tcore, ptr);
 			break;
 		}
 		
@@ -263,6 +290,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 			ui_tbl_print_field_str (ptr->t_project, -1, tprojectmax+1);
 			ui_tbl_print_field_str (pri, -1, 4);
 			
+			/* TODO: Put this into an functions! */
 			if (strlen (ptr->t_description) > tdescriptionmax && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == 1)
 			{
 				for (j = 0, x = 0; j < strlen (ptr->t_description); j++, x++)
