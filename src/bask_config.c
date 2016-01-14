@@ -114,7 +114,7 @@ void config_print_set_str_errors (int error_id)
 			errors_outofrange_int ("task_description_min", 0, 200);
 			break;
 		case CONFIG_ERR_SS_DESCBREAK:
-			errors_outofrange_int ("task_description_break", 0, 1);
+			errors_outofrange_int ("task_description_break", FALSE, TRUE);
 			break;
 		default:
 			break;
