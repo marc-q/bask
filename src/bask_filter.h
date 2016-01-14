@@ -23,6 +23,6 @@ struct _bask_filter
 typedef struct _bask_filter bask_filter;
 
 void filter_init (bask_filter*, short, short, short, short, short, short);
-int filter_check_task (bask_filter*, struct bask_task*);
+short filter_check_task (bask_filter*, struct bask_task*);
 
 #endif /* __BASK_FILTER_H__ */

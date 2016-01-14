@@ -319,7 +319,7 @@ int export_web (bask_core* tcore, struct bask_task** first, char* filename)
 	
 	while (ptr != NULL)
 	{
-		if (BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == 1)
+		if (BITGET (ptr->t_flags, TASK_FLAG_ACTIVE) == TRUE)
 		{
 			switch (ptr->t_priority)
 			{
