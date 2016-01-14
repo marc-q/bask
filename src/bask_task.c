@@ -21,7 +21,7 @@
 	InitVersion: 0.0.1
 */
 
-int task_check_input_nbrs (int id, short priority, short active, short printout)
+short task_check_input_nbrs (int id, short priority, short active, short printout)
 {
 	if (id < 0)
 	{
@@ -56,7 +56,7 @@ int task_check_input_nbrs (int id, short priority, short active, short printout)
 	Description: Checks if the input is correct and displays the error messages if printout equals 1!
 	InitVersion: 0.0.1
 */
-int task_check_input (bask_core* tcore, char* added, char* due, char* finished, char* project, char* description, short printout)
+short task_check_input (bask_core* tcore, char* added, char* due, char* finished, char* project, char* description, short printout)
 {
 	if (strlen (added) >= T_S_ADDED)
 	{
@@ -91,7 +91,7 @@ int task_check_input (bask_core* tcore, char* added, char* due, char* finished, 
 		return TASK_ERR_CHECK_PROJECT;
 	}
 	else if (strlen (description) >= T_S_DESCRIPTION ||
-		 strlen (description) > tcore->t_descriptionmax && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == 0)
+		 strlen (description) > tcore->t_descriptionmax && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == FALSE)
 	{
 		if (printout == TRUE)
 		{
@@ -169,7 +169,7 @@ void task_free_ll (struct bask_task** first)
 	Description: Upgrades a task. (Internal use f.e. new versions upgrades.)
 	InitVersion: 0.0.1
 */
-static int task_upgrade (struct bask_task* task)
+static short task_upgrade (struct bask_task* task)
 {
 	return 0;
 }
@@ -217,7 +217,7 @@ int task_insert (struct bask_task** first, unsigned int n, unsigned int tid, sho
 	{
 		preobj = *first;
 		
-		while (1)
+		while (TRUE)
 		{
 			if (preobj->n == newobj->n)
 			{
@@ -428,7 +428,7 @@ int task_finish (struct bask_task** first, unsigned int id)
 		return -1;
 	}
 	
-	task_modificate (first, id, -1, 1, -1, "", "", finished, "", "");
+	task_modificate (first, id, -1, TRUE, -1, "", "", finished, "", "");
 	
 	return 0;
 }

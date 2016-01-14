@@ -48,14 +48,14 @@ int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 	{		
 		if (utils_streq (line, "BASKBIN\n") == 0)
 		{
-			bb_state = 1;
+			bb_state = TRUE;
 		}
 		else if (utils_streq (line, "BBEND\n") == 0)
 		{
-			bb_state = 0;
+			bb_state = FALSE;
 		}
 			
-		if (bb_state == 1)
+		if (bb_state == TRUE)
 		{
 			parser_get_int (line, "bbuid=", &tcore->baskbin_uid, BASKSEP, saveptr);
 		}

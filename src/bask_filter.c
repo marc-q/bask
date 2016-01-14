@@ -67,7 +67,7 @@ void filter_init (bask_filter* filter, short tactive, short tfinished, short tpr
 	Description: Checks if a task matches the filter.
 	InitVersion: 0.0.1
 */
-int filter_check_task (bask_filter* filter, struct bask_task* task)
+short filter_check_task (bask_filter* filter, struct bask_task* task)
 {	
 	if (( (BITGET (filter->flags, T_FLTR_ACTIVE) == FLTR_ON &&
 	       BITGET (task->t_flags, TASK_FLAG_ACTIVE) == BITGET (filter->task.t_flags, TASK_FLAG_ACTIVE)) ||
