@@ -25,7 +25,7 @@ int task_check_input_nbrs (int id, short priority, short active, short printout)
 {
 	if (id < 0)
 	{
-		if (printout == 1)
+		if (printout == TRUE)
 		{
 			errors_notunsigned ("id");
 		}
@@ -33,17 +33,17 @@ int task_check_input_nbrs (int id, short priority, short active, short printout)
 	}
 	else if (priority < TASK_PRIORITY_MIN || priority > TASK_PRIORITY_MAX)
 	{
-		if (printout == 1)
+		if (printout == TRUE)
 		{
 			errors_outofrange_int ("priority", TASK_PRIORITY_MIN, TASK_PRIORITY_MAX);
 		}
 		return TASK_ERR_CHECK_PRIORITY;
 	}
-	else if (ISBOOL (active) != 0)
+	else if (ISBOOL (active) != TRUE)
 	{
-		if (printout == 1)
+		if (printout == TRUE)
 		{
-			errors_outofrange_int ("active", 0, 1);
+			errors_outofrange_int ("active", FALSE, TRUE);
 		}
 		return TASK_ERR_CHECK_ACTIVE;
 	}
@@ -60,7 +60,7 @@ int task_check_input (bask_core* tcore, char* added, char* due, char* finished, 
 {
 	if (strlen (added) >= T_S_ADDED)
 	{
-		if (printout == 1)
+		if (printout == TRUE)
 		{
 			errors_lengthtobig ("added");
 		}
@@ -68,7 +68,7 @@ int task_check_input (bask_core* tcore, char* added, char* due, char* finished, 
 	}
 	else if (strlen (due) >= T_S_DUE)
 	{
-		if (printout == 1)
+		if (printout == TRUE)
 		{
 			errors_lengthtobig ("due");
 		}
@@ -76,7 +76,7 @@ int task_check_input (bask_core* tcore, char* added, char* due, char* finished, 
 	}
 	else if (strlen (finished) >= T_S_FINISHED)
 	{
-		if (printout == 1)
+		if (printout == TRUE)
 		{
 			errors_lengthtobig ("finished");
 		}
@@ -84,7 +84,7 @@ int task_check_input (bask_core* tcore, char* added, char* due, char* finished, 
 	}
 	else if (strlen (project) >= T_S_PROJECT)
 	{
-		if (printout == 1)
+		if (printout == TRUE)
 		{
 			errors_lengthtobig ("project");
 		}
@@ -93,7 +93,7 @@ int task_check_input (bask_core* tcore, char* added, char* due, char* finished, 
 	else if (strlen (description) >= T_S_DESCRIPTION ||
 		 strlen (description) > tcore->t_descriptionmax && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == 0)
 	{
-		if (printout == 1)
+		if (printout == TRUE)
 		{
 			errors_lengthtobig ("description");
 		}
@@ -385,7 +385,7 @@ int task_create (bask_core* tcore, struct bask_task** first, short priority, cha
 	
 	tcore->baskbin_uid++;
 	
-	task_insert (first, tcore->tc_amount, tcore->baskbin_uid, 1, priority, 0, added, "NONE", "NONE", project, description);
+	task_insert (first, tcore->tc_amount, tcore->baskbin_uid, TRUE, priority, FALSE, added, "NONE", "NONE", project, description);
 	
 	tcore->tc_amount++;
 
@@ -399,7 +399,7 @@ int task_create (bask_core* tcore, struct bask_task** first, short priority, cha
 */
 void task_deactivate (struct bask_task** first, unsigned int id)
 {	
-	task_modificate (first, id, 0, -1, -1, "", "", "", "", "");
+	task_modificate (first, id, FALSE, -1, -1, "", "", "", "", "");
 }
 
 /*
@@ -494,8 +494,8 @@ int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** 
 void task_create_cmd (bask_core* tcore, struct bask_task** first, short priority, char* project, char* description)
 {
 	/* TODO: Move the range check of the priority variable into the task_check_input function. */
-	if (task_check_input (tcore, "", "", "", project, description, 1) == 0 &&
-	    task_check_input_nbrs (0, priority, 1, 1) == 0)
+	if (task_check_input (tcore, "", "", "", project, description, TRUE) == 0 &&
+	    task_check_input_nbrs (0, priority, TRUE, TRUE) == 0)
 	{
 		task_create (tcore, first, priority, project, description);
 		printf ("Created task %i.\n", tcore->baskbin_uid);
@@ -523,8 +523,8 @@ void task_remove_cmd (bask_core* tcore, struct bask_task** first, unsigned int i
 void task_modificate_cmd (bask_core* tcore, struct bask_task** first, unsigned int id, short active, int state, short priority, char* added, char* due, char* finished, char* project, char* description)
 {
 	/* TODO: Move the range check of the priority variable into the task_check_input function. */
-	if (task_check_input (tcore, added, due, finished, project, description, 1) == 0 &&
-	    task_check_input_nbrs (id, (priority == -1 ? 0 : priority), (active == -1 ? 0 : active), 1) == 0)
+	if (task_check_input (tcore, added, due, finished, project, description, TRUE) == 0 &&
+	    task_check_input_nbrs (id, (priority == -1 ? 0 : priority), (active == -1 ? FALSE : active), TRUE) == 0)
 	{
 		task_modificate (first, id, active, state, priority, added, due, finished, project, description);
 		printf ("Modificated task %i.\n", id);
@@ -551,7 +551,7 @@ void task_deactivate_cmd (bask_core* tcore, struct bask_task** first, unsigned i
 */
 void task_due_cmd (bask_core* tcore, struct bask_task** first, unsigned int id, char* due)
 {
-	if (task_check_input (tcore, "", due, "", "", "", 1) == 0)
+	if (task_check_input (tcore, "", due, "", "", "", TRUE) == 0)
 	{
 		task_due (first, id, due);
 		printf ("Updated task %i.\n", id);

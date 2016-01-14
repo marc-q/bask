@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "../lib/dutils.h"
 #include "bask_core.h"
 #include "bask_errors.h"
 #include "bask_task.h"
@@ -76,11 +77,11 @@ int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 				/* Use this instead of tstate because this tells us already the state. */
 				if (strlen (tfinished) == F_BB_S_DATE-1)
 				{
-					tstate = 1;
+					tstate = TRUE;
 				}
 				else
 				{
-					tstate = 0;
+					tstate = FALSE;
 				}
 			}
 			
@@ -210,7 +211,7 @@ int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, 
 		/* If the string isnt set to NONE its finished. */
 		if (strlen (tfinished) > 4)
 		{
-			tstate = 1;
+			tstate = TRUE;
 		}
 	}
 	else
@@ -289,7 +290,7 @@ int import_csv (bask_core* tcore, struct bask_task** first, char* filename)
 	char *token, *saveptr;
 	FILE* importfile;
 	
-	tt_state = 0;
+	tt_state = FALSE;
 
 	importfile = fopen (filename, "r");
 
@@ -303,9 +304,9 @@ int import_csv (bask_core* tcore, struct bask_task** first, char* filename)
 	{
 		token = strtok_r (line, ";", &saveptr);
 		
-		if (tt_state == 0)
+		if (tt_state == FALSE)
 		{
-			tt_state = 1;
+			tt_state = TRUE;
 		}
 		else
 		{
@@ -410,7 +411,7 @@ int import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 			if (utils_streq (tt_tmp, "VEVENT") == 0)
 			{
 				tcore->baskbin_uid++;
-				task_insert (first, tcore->tc_amount, tcore->baskbin_uid, 1, 0, 0, tadded, "NONE", tfinished, tproject, tdescription);
+				task_insert (first, tcore->tc_amount, tcore->baskbin_uid, TRUE, 0, FALSE, tadded, "NONE", tfinished, tproject, tdescription);
 				tcore->tc_amount++;
 			}
 		}

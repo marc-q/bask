@@ -22,7 +22,7 @@
 
 /* DUTILS STUFF */
 
-#define DUTILS_VERSION "0.0.2 A"
+#define DUTILS_VERSION "0.0.3 A"
 
 /* BASH COLORS */
 
@@ -98,5 +98,9 @@
 
 #define BITCOPY(a,b,c,d) ((-(((a) >> (b)) & 1) ^ (c)) & (1 << (d)))
 #define BITGET(a,b) (((a) >> (b)) & 1)
+
+/* BOOL */
+#define FALSE 0
+#define TRUE 1
 
 #endif /* __DUTILS_H__ */

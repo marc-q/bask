@@ -56,7 +56,7 @@ int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* ba
 	}
 	else if (parser_get_short (line, "task_description_break=", tmpsvalue, BASKSEP, saveptr) == 0)
 	{
-		if (ISBOOL (*tmpsvalue) != 0)
+		if (ISBOOL (*tmpsvalue) != TRUE)
 		{
 			return CONFIG_ERR_SS_DESCBREAK;
 		}
@@ -114,7 +114,7 @@ void config_print_set_str_errors (int error_id)
 			errors_outofrange_int ("task_description_min", 0, 200);
 			break;
 		case CONFIG_ERR_SS_DESCBREAK:
-			errors_outofrange_int ("task_description_break", 0, 1);
+			errors_outofrange_int ("task_description_break", FALSE, TRUE);
 			break;
 		default:
 			break;
@@ -134,7 +134,7 @@ void config_init (bask_core* tcore)
 	tcore->t_descriptionmin = 50;
 	
 	tcore->t_options = 0;
-	tcore->t_options ^= BITCOPY (1, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
+	tcore->t_options ^= BITCOPY (TRUE, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
 }
 
 /*

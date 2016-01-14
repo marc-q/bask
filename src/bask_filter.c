@@ -93,8 +93,8 @@ int filter_check_task (bask_filter* filter, struct bask_task* task)
 	       time_get_year (task->t_added) == filter->tyear) ||
 	    BITGET (filter->flags, T_FLTR_YEAR) == FLTR_OFF))
 	{
-		return 1;
+		return TRUE;
 	}
 	
-	return 0;
+	return FALSE;
 }

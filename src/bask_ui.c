@@ -19,13 +19,12 @@
 */
 void ui_print_nspaces (int amount)
 {
-	int i;
-	
 	if (amount > 0)
 	{
-		for (i = 0; i < amount; i++)
+		while (amount > 0)
 		{
 			printf (" ");
+			amount--;
 		}
 	}
 }
@@ -36,10 +35,8 @@ void ui_print_nspaces (int amount)
 	InitVersion: 0.0.1
 */
 void ui_print_nspaces_str (char* tag, int length)
-{
-	size_t tl = strlen (tag);
-	
-	ui_print_nspaces (length-tl);
+{	
+	ui_print_nspaces (length - strlen (tag));
 }
 
 /* |--------------------------------------------|

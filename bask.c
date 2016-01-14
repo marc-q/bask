@@ -1,5 +1,6 @@
 /* Copyright 2015 - 2016 Marc Volker Dickmann */
 /* Project: Bask */
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -111,7 +112,7 @@ static int bask_init_local (bask_core* tcore)
 	{
 		mkdir (tcore->path_baskpath, 0700);
 		bask_init_local (tcore);
-		return 1;
+		return -1;
 	}
 
 	config_save (tcore);
@@ -263,8 +264,8 @@ int main (int argc, char* argv[])
 		 {0,0,0,0}
 	};
 	
-	tcore.flags = optindex = tmp = 0;
-	ppri = pact = pday = pmonth = pyear = filter = -1;
+	tcore.flags = optindex = tmp = filter = 0;
+	ppri = pact = pday = pmonth = pyear = -1;
 	
 	strcpy (padded, "");
 	strcpy (pdue, "");
@@ -272,7 +273,7 @@ int main (int argc, char* argv[])
 	strcpy (pproject, "");
 	strcpy (pdescription, "");
 	
-	strcpy (tcore.path_baskpath, getenv("HOME"));
+	strcpy (tcore.path_baskpath, secure_getenv("HOME"));
 	
 	if (tcore.path_baskpath == NULL || *tcore.path_baskpath == '\0')
 	{
@@ -352,9 +353,9 @@ int main (int argc, char* argv[])
 				}
 				break;
 			case 'a':
-				if (utils_atos (&pact, optarg) == -2 || ISBOOL (pact) != 0)
+				if (utils_atos (&pact, optarg) == -2 || ISBOOL (pact) != TRUE)
 				{
-					errors_outofrange_int ("-a", 0, 1);
+					errors_outofrange_int ("-a", FALSE, TRUE);
 				}
 				break;
 			case 'D':
@@ -376,7 +377,7 @@ int main (int argc, char* argv[])
 				}
 				break;
 			case 'f':
-				filter = 1;
+				filter = TRUE;
 				break;
 			case B_CMD_ARG_HELP:
 				print_help ();
@@ -424,13 +425,13 @@ int main (int argc, char* argv[])
 		}
 	}
 	
-	if (filter == 1)
+	if (filter == TRUE)
 	{
 		filter_init (&bfilter, pact, -1, ppri, pday, pmonth, pyear);
 	}
 	else
 	{
-		filter_init (&bfilter, 1, -1, -1, -1, -1, -1);
+		filter_init (&bfilter, TRUE, -1, -1, -1, -1, -1);
 	}
 	
 	bask_init (&tcore, &first);
