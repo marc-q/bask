@@ -134,7 +134,7 @@ void config_init (bask_core* tcore)
 	tcore->t_descriptionmin = 50;
 	
 	tcore->t_options = 0;
-	tcore->t_options ^= BITCOPY (1, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
+	tcore->t_options ^= BITCOPY (TRUE, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
 }
 
 /*
