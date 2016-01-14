@@ -264,8 +264,8 @@ int main (int argc, char* argv[])
 		 {0,0,0,0}
 	};
 	
-	tcore.flags = optindex = tmp = 0;
-	ppri = pact = pday = pmonth = pyear = filter = -1;
+	tcore.flags = optindex = tmp = filter = 0;
+	ppri = pact = pday = pmonth = pyear = -1;
 	
 	strcpy (padded, "");
 	strcpy (pdue, "");
@@ -377,7 +377,7 @@ int main (int argc, char* argv[])
 				}
 				break;
 			case 'f':
-				filter = 1;
+				filter = TRUE;
 				break;
 			case B_CMD_ARG_HELP:
 				print_help ();
@@ -425,7 +425,7 @@ int main (int argc, char* argv[])
 		}
 	}
 	
-	if (filter == 1)
+	if (filter == TRUE)
 	{
 		filter_init (&bfilter, pact, -1, ppri, pday, pmonth, pyear);
 	}
