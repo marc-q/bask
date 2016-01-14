@@ -485,6 +485,8 @@ int main (int argc, char* argv[])
 		}
 		else if (utils_streq (argv[optind], B_CMD_HISTORY) == 0)
 		{
+			/* This allows History to use all tasks including the hidden ones. */
+			filter_init (&bfilter, -1, -1, -1, -1, -1, -1);
 			view_history (&tcore, &btheme, &first, &bfilter);
 		}
 		else
