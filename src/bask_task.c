@@ -179,7 +179,7 @@ static short task_upgrade (struct bask_task* task)
 	Description: Inserts a new task with data.
 	InitVersion: 0.0.1
 */
-int task_insert (struct bask_task** first, unsigned int n, unsigned int tid, short tactive, short tpriority, int tstate, char* tadded, char* tdue, char* tfinished, char* tproject, char* tdescription)
+short task_insert (struct bask_task** first, unsigned int n, unsigned int tid, short tactive, short tpriority, int tstate, char* tadded, char* tdue, char* tfinished, char* tproject, char* tdescription)
 {
 	struct bask_task *newobj = malloc (sizeof (struct bask_task)), *preobj;
 	
@@ -248,7 +248,7 @@ int task_insert (struct bask_task** first, unsigned int n, unsigned int tid, sho
 	Description: Removes a task!
 	InitVersion: 0.0.1
 */
-int task_remove (struct bask_task** first, unsigned int id)
+short task_remove (struct bask_task** first, unsigned int id)
 {
 	struct bask_task* ptr = *first, *pre = NULL;
 	
@@ -289,7 +289,7 @@ int task_remove (struct bask_task** first, unsigned int id)
 	Description: Modificates a task!
 	InitVersion: 0.0.1
 */
-int task_modificate (struct bask_task** first, unsigned int id, short active, int state, short priority, char* added, char* due, char* finished, char* project, char* description)
+short task_modificate (struct bask_task** first, unsigned int id, short active, int state, short priority, char* added, char* due, char* finished, char* project, char* description)
 {
 	struct bask_task* ptr = *first;
 	
@@ -374,7 +374,7 @@ int task_modificate (struct bask_task** first, unsigned int id, short active, in
 	Description: Creates a task!
 	InitVersion: 0.0.1
 */
-int task_create (bask_core* tcore, struct bask_task** first, short priority, char* project, char* description)
+short task_create (bask_core* tcore, struct bask_task** first, short priority, char* project, char* description)
 {	
 	char added[T_S_ADDED];
 
@@ -407,11 +407,9 @@ void task_deactivate (struct bask_task** first, unsigned int id)
 	Description: Set the due date!
 	InitVersion: 0.0.1
 */
-int task_due (struct bask_task** first, unsigned int id, char* due)
+void task_due (struct bask_task** first, unsigned int id, char* due)
 {	
 	task_modificate (first, id, -1, -1, -1, "", due, "", "", "");
-	
-	return 0;
 }
 
 /*
@@ -419,7 +417,7 @@ int task_due (struct bask_task** first, unsigned int id, char* due)
 	Description: Finished a task!
 	InitVersion: 0.0.1
 */
-int task_finish (struct bask_task** first, unsigned int id)
+short task_finish (struct bask_task** first, unsigned int id)
 {
 	char finished[T_S_FINISHED];
 
@@ -442,7 +440,7 @@ int task_finish (struct bask_task** first, unsigned int id)
 	Description: Build a tasklist haystack with bask whos description containing searchtag.
 	InitVersion: 0.0.1
 */
-int task_search (bask_core* tcore, struct bask_task** first, struct bask_task** haystack, char* searchtag)
+short task_search (bask_core* tcore, struct bask_task** first, struct bask_task** haystack, char* searchtag)
 {
 	int i = 0;
 	struct bask_task* ptr = *first;

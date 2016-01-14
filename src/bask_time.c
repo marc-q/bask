@@ -17,7 +17,7 @@
 	Description: Builds a string with the current date.
 	InitVersion: 0.0.1
 */
-int time_get_str (char* out, size_t outsize)
+short time_get_str (char* out, size_t outsize)
 {
 	time_t t;
 	struct tm *tmp;
@@ -45,7 +45,7 @@ int time_get_str (char* out, size_t outsize)
 	Description: Converts the baskdate string to an tm struct.
 	InitVersion: 0.0.1
 */
-int time_get_tm_str (struct tm* out, char* datestr)
+short time_get_tm_str (struct tm* out, char* datestr)
 {
 	if (strlen (datestr) != F_BB_S_DATE-1)
 	{

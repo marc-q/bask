@@ -97,7 +97,7 @@ static void tst_print_summary (int points)
 	Description: Tests the utils_streq function from bask_core.c.
 	InitVersion: 0.0.1
 */
-static int tst_core_streq (void)
+static short tst_core_streq (void)
 {
 	if (utils_streq ("this is a str test.", "this is a str test.") == 0 &&
 	    utils_streq ("this is a str test", "this is a str test.") == -1 &&
@@ -116,7 +116,7 @@ static int tst_core_streq (void)
 	Description: Tests the utils_atos function from bask_core.c.
 	InitVersion: 0.0.1
 */
-static int tst_core_atos (void)
+static short tst_core_atos (void)
 {
 	short tmp;
 	
@@ -143,7 +143,7 @@ static int tst_core_atos (void)
 	Description: Tests the parser_get_str function from bask_core.c.
 	InitVersion: 0.0.1
 */
-static int tst_core_parser_str (void)
+static short tst_core_parser_str (void)
 {
 	char outstr[50], instr[50];
 	char saveptr[200];
@@ -167,7 +167,7 @@ static int tst_core_parser_str (void)
 	Description: Tests the parser_get_int function from bask_core.c.
 	InitVersion: 0.0.1
 */
-static int tst_core_parser_int (void)
+static short tst_core_parser_int (void)
 {
 	int outint;
 	char instr[50];
@@ -192,10 +192,9 @@ static int tst_core_parser_int (void)
 	Description: Tests the parser_get_short function from bask_core.c.
 	InitVersion: 0.0.1
 */
-static int tst_core_parser_short (void)
+static short tst_core_parser_short (void)
 {
-	int passed;
-	short out;
+	short out, passed;
 	char instr[50];
 	char saveptr[200];
 	
@@ -256,7 +255,7 @@ static int tst_core_parser_short (void)
 	Description: Tests the bask_get_baskpath function from bask_core.c.
 	InitVersion: 0.0.1
 */
-static int tst_core_get_baskpath (void)
+static short tst_core_get_baskpath (void)
 {
 	char out[200];
 	bask_core tcore;
@@ -285,7 +284,7 @@ static int tst_core_get_baskpath (void)
 	Description: Tests the time_get_str function from bask_time.c.
 	InitVersion: 0.0.1
 */
-static int tst_time_getstr (void)
+static short tst_time_getstr (void)
 {
 	char datestr[F_BB_S_DATE];
 	
@@ -317,7 +316,7 @@ static int tst_time_getstr (void)
 	Description: Tests the time_get_tm_str function from bask_time.c.
 	InitVersion: 0.0.1
 */
-static int tst_time_gettm_str (void)
+static short tst_time_gettm_str (void)
 {
 	struct tm out;
 	
@@ -348,7 +347,7 @@ static int tst_time_gettm_str (void)
 	Description: Tests the time_get_hours function from bask_time.c.
 	InitVersion: 0.0.1
 */
-static int tst_time_gethours (void)
+static short tst_time_gethours (void)
 {
 	if (time_get_hours ("23/59/59/09/09/2015") == 23 &&
 	    time_get_hours ("23/59/59/9/9/2015") == -1)
@@ -366,7 +365,7 @@ static int tst_time_gethours (void)
 	Description: Tests the time_get_minutes function from bask_time.c.
 	InitVersion: 0.0.1
 */
-static int tst_time_getminutes (void)
+static short tst_time_getminutes (void)
 {
 	
 	if (time_get_minutes ("23/59/59/09/09/2015") == 59 &&
@@ -385,7 +384,7 @@ static int tst_time_getminutes (void)
 	Description: Tests the time_get_seconds function from bask_time.c.
 	InitVersion: 0.0.1
 */
-static int tst_time_getseconds (void)
+static short tst_time_getseconds (void)
 {
 	
 	if (time_get_seconds ("23/59/59/09/09/2015") == 59 &&
@@ -404,7 +403,7 @@ static int tst_time_getseconds (void)
 	Description: Tests the time_get_day function from bask_time.c.
 	InitVersion: 0.0.1
 */
-static int tst_time_getday (void)
+static short tst_time_getday (void)
 {
 	
 	if (time_get_day ("23/59/59/09/09/2015") == 9 &&
@@ -423,7 +422,7 @@ static int tst_time_getday (void)
 	Description: Tests the time_get_month function from bask_time.c.
 	InitVersion: 0.0.1
 */
-static int tst_time_getmonth (void)
+static short tst_time_getmonth (void)
 {
 	
 	if (time_get_month ("23/59/59/09/09/2015") == 9 &&
@@ -442,7 +441,7 @@ static int tst_time_getmonth (void)
 	Description: Tests the time_get_year function from bask_time.c.
 	InitVersion: 0.0.1
 */
-static int tst_time_getyear (void)
+static short tst_time_getyear (void)
 {
 	
 	if (time_get_year ("23/59/59/09/09/2015") == 2015 &&
@@ -465,9 +464,9 @@ static int tst_time_getyear (void)
 	Description: Tests the config_set_str function from bask_config.c.
 	InitVersion: 0.0.1
 */
-static int tst_config_setstr (void)
+static short tst_config_setstr (void)
 {
-	int passed;
+	short passed;
 	bask_core tcore;
 	
 	passed = FALSE;
@@ -514,7 +513,7 @@ static int tst_config_setstr (void)
 	Description: Tests the task_check_input_nbrs function from bask_task.c.
 	InitVersion: 0.0.1
 */
-static int tst_task_checkinputnbrs (void)
+static short tst_task_checkinputnbrs (void)
 {	
 	if (task_check_input_nbrs (-1, 0, FALSE, FALSE) == TASK_ERR_CHECK_ID &&
 	    task_check_input_nbrs (0, TASK_PRIORITY_MAX+1, FALSE, FALSE) == TASK_ERR_CHECK_PRIORITY &&
@@ -536,9 +535,9 @@ static int tst_task_checkinputnbrs (void)
 	Description: Tests the task_check_input function from bask_task.c.
 	InitVersion: 0.0.1
 */
-static int tst_task_checkinput (void)
+static short tst_task_checkinput (void)
 {
-	int passed;
+	short passed;
 	bask_core tcore;
 	
 	passed = FALSE;
@@ -574,7 +573,7 @@ static int tst_task_checkinput (void)
 	Description: Tests the task_get_priority function from bask_task.c.
 	InitVersion: 0.0.1
 */
-static int tst_task_getpriority (void)
+static short tst_task_getpriority (void)
 {	
 	if (task_get_priority ("0") == 0 &&
 	    task_get_priority ("1") == 1 &&
@@ -608,7 +607,7 @@ static int tst_task_getpriority (void)
 	Description: Tests the filter_init function from bask_filter.c.
 	InitVersion: 0.0.1
 */
-static int tst_filter_init (void)
+static short tst_filter_init (void)
 {
 	bask_filter bfilter;
 	
@@ -640,9 +639,9 @@ static int tst_filter_init (void)
 	Description: Tests the filter_check_task function from bask_filter.c.
 	InitVersion: 0.0.1
 */
-static int tst_filter_checktask (void)
+static short tst_filter_checktask (void)
 {
-	int passed;
+	short passed;
 	bask_filter bfilter;
 	struct bask_task btask;
 	
@@ -721,7 +720,7 @@ static int tst_filter_checktask (void)
 	Description: Tests the ui_theme_get_color function from bask_ui.c.
 	InitVersion: 0.0.1
 */
-static int tst_ui_getcolor (char* colorname, char* colorcode)
+static short tst_ui_getcolor (char* colorname, char* colorcode)
 {
 	char color[UI_S_THEMECOLOR];
 	char tmp[50];
@@ -758,7 +757,7 @@ static int tst_ui_getcolor (char* colorname, char* colorcode)
 	Description: Tests the export_ical_getdatestr function from bask_export.c.
 	InitVersion: 0.0.1
 */
-static int tst_export_icaldate (void)
+static short tst_export_icaldate (void)
 {
 	char datestr[F_ICAL_S_DATE];
 	
@@ -789,7 +788,7 @@ static int tst_export_icaldate (void)
 	Description: Tests the import_csv_parser function from bask_import.c.
 	InitVersion: 0.0.1
 */
-static int tst_import_csvparser (void)
+static short tst_import_csvparser (void)
 {
 	char line[200];
 	char *token, *saveptr;
@@ -835,7 +834,7 @@ static int tst_import_csvparser (void)
 	Description: Tests the import_ical_getdatestr function from bask_import.c.
 	InitVersion: 0.0.1
 */
-static int tst_import_icaldate (void)
+static short tst_import_icaldate (void)
 {
 	char datestr[F_BB_S_DATE];
 	

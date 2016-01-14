@@ -16,7 +16,7 @@
 	Description: Parses a row and return the value if the key is right. (!DEPRECATED!)
 	InitVersion: 0.0.1
 */
-int parser_get_str_old (char* token, char* key, char* out, size_t outsize, char* septags, char* saveptr)
+short parser_get_str_old (char* token, char* key, char* out, size_t outsize, char* septags, char* saveptr)
 {
 	if (utils_streq (token, key) == 0)
 	{
@@ -40,7 +40,7 @@ int parser_get_str_old (char* token, char* key, char* out, size_t outsize, char*
 	Description: Parses a row and return the value if the key is right.
 	InitVersion: 0.0.1
 */
-int parser_get_str (char* line, char* key, char* out, size_t outsize, char septag, char* saveptr)
+short parser_get_str (char* line, char* key, char* out, size_t outsize, char septag, char* saveptr)
 {
 	if (strncmp (line, key, strlen (key)) == 0)
 	{
@@ -68,7 +68,7 @@ int parser_get_str (char* line, char* key, char* out, size_t outsize, char septa
 	Description: Parses a row and return the value if the key is right. (!DEPRECATED!)
 	InitVersion: 0.0.1
 */
-int parser_get_int_old (char* token, char* key, int* out, char* septags, char* saveptr)
+short parser_get_int_old (char* token, char* key, int* out, char* septags, char* saveptr)
 {
 	if (utils_streq (token, key) == 0)
 	{
@@ -92,7 +92,7 @@ int parser_get_int_old (char* token, char* key, int* out, char* septags, char* s
 	Description: Parses a row and return the value if the key is right.
 	InitVersion: 0.0.1
 */
-int parser_get_int (char* line, char* key, int* out, char septag, char* saveptr)
+short parser_get_int (char* line, char* key, int* out, char septag, char* saveptr)
 {
 	if (strncmp (line, key, strlen (key)) == 0)
 	{
@@ -119,7 +119,7 @@ int parser_get_int (char* line, char* key, int* out, char septag, char* saveptr)
 	Description: Parses a row and return the value if the key is right.
 	InitVersion: 0.0.1
 */
-int parser_get_short (char* line, char* key, short* out, char septag, char* saveptr)
+short parser_get_short (char* line, char* key, short* out, char septag, char* saveptr)
 {
 	int tmp;
 	
@@ -154,7 +154,7 @@ int utils_streq (char* one, char* two)
 	Description: Converts a string to a short if it fits between the limits of a short. 
 	InitVersion: 0.0.1
 */
-int utils_atos (short* out, char* str)
+short utils_atos (short* out, char* str)
 {
 	int tmp;
 	
@@ -183,7 +183,7 @@ int utils_atos (short* out, char* str)
 	Description: Creates a file if not exist.
 	InitVersion: 0.0.1
 */
-int bask_init_local_file (FILE** baskfile, char* filename)
+short bask_init_local_file (FILE** baskfile, char* filename)
 {
 	*baskfile = fopen (filename, "w+");
 	

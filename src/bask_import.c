@@ -19,7 +19,7 @@
 	Description: Imports the tasks from a baskbin formated file.
 	InitVersion: 0.0.1
 */
-int import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
+short import_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	unsigned int tid;
 	int tstate, bb_state;
@@ -115,7 +115,7 @@ void import_baskbin_cmd (bask_core* tcore, struct bask_task** first, char* filen
 	Description: Parses a task data line from a csv formated file. 
 	InitVersion: 0.0.1
 */
-int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, char* saveptr)
+void import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, char* saveptr)
 {
 	unsigned int tid;
 	int tstate;
@@ -274,8 +274,6 @@ int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, 
 	tcore->baskbin_uid++;
 	task_insert (first, tcore->tc_amount, tid, tactive, tpriority, tstate, tadded, tdue, tfinished, tproject, tdescription);
 	tcore->tc_amount++;
-	
-	return 0;
 }
 
 /*
@@ -283,7 +281,7 @@ int import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, 
 	Description: Imports tasks from a csv formated file.
 	InitVersion: 0.0.1
 */
-int import_csv (bask_core* tcore, struct bask_task** first, char* filename)
+short import_csv (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	int tt_state;
 	char line[200];
@@ -342,7 +340,7 @@ void import_csv_cmd (bask_core* tcore, struct bask_task** first, char* filename)
 	Description: Converts an ical datestr to an baskbin datestr.
 	InitVersion: 0.0.1
 */
-int import_ical_getdatestr (char* out, char* datestr)
+short import_ical_getdatestr (char* out, char* datestr)
 {	
 	char bdate[F_BB_S_DATE];
 	
@@ -382,7 +380,7 @@ int import_ical_getdatestr (char* out, char* datestr)
 	Description: Imports tasks from a ical formated file.
 	InitVersion: 0.0.1
 */
-int import_ical (bask_core* tcore, struct bask_task** first, char* filename)
+short import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	char line[200], tadded[T_S_ADDED], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char tt_tmp[50];

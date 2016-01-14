@@ -38,16 +38,16 @@ short task_check_input (bask_core*, char*, char*, char*, char*, char*, short);
 short task_get_priority (char*);
 
 void task_free_ll (struct bask_task**);
-int task_insert (struct bask_task**, unsigned int, unsigned int, short, short, int, char*, char*, char*, char*, char*);
-int task_remove (struct bask_task**, unsigned int);
-int task_modificate (struct bask_task**, unsigned int, short, int, short, char*, char*, char*, char*, char*);
+short task_insert (struct bask_task**, unsigned int, unsigned int, short, short, int, char*, char*, char*, char*, char*);
+short task_remove (struct bask_task**, unsigned int);
+short task_modificate (struct bask_task**, unsigned int, short, int, short, char*, char*, char*, char*, char*);
 
-int task_create (bask_core*, struct bask_task**, short, char*, char*);
+short task_create (bask_core*, struct bask_task**, short, char*, char*);
 void task_deactivate (struct bask_task**, unsigned int);
-int task_due (struct bask_task**, unsigned int, char*); 
-int task_finish (struct bask_task**, unsigned int); 
+void task_due (struct bask_task**, unsigned int, char*); 
+short task_finish (struct bask_task**, unsigned int); 
 
-int task_search (bask_core*, struct bask_task**, struct bask_task**, char*);
+short task_search (bask_core*, struct bask_task**, struct bask_task**, char*);
 
 void task_create_cmd (bask_core*, struct bask_task**, short, char*, char*);
 void task_remove_cmd (bask_core*, struct bask_task**, unsigned int);

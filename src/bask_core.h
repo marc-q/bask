@@ -44,14 +44,14 @@ struct _bask_core
 
 typedef struct _bask_core bask_core;
 
-int parser_get_str_old (char*, char*, char*, size_t, char*, char*);
-int parser_get_str (char*, char*, char*, size_t, char, char*);
-int parser_get_int_old (char*, char*, int*, char*, char*);
-int parser_get_int (char*, char*, int*, char, char*);
-int parser_get_short (char*, char*, short*, char, char*);
+short parser_get_str_old (char*, char*, char*, size_t, char*, char*);
+short parser_get_str (char*, char*, char*, size_t, char, char*);
+short parser_get_int_old (char*, char*, int*, char*, char*);
+short parser_get_int (char*, char*, int*, char, char*);
+short parser_get_short (char*, char*, short*, char, char*);
 int utils_streq (char*, char*);
-int utils_atos (short*, char*);
-int bask_init_local_file (FILE**, char*);
+short utils_atos (short*, char*);
+short bask_init_local_file (FILE**, char*);
 void bask_get_baskpath (bask_core*, char*, char*);
 
 #endif /* __BASK_CORE_H__ */

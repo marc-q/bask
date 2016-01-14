@@ -1,8 +1,8 @@
 #ifndef __BASK_TIME_H__
 #define __BASK_TIME_H__
 
-int time_get_str (char*, size_t);
-int time_get_tm_str (struct tm*, char*);
+short time_get_str (char*, size_t);
+short time_get_tm_str (struct tm*, char*);
 
 int time_get_hours (char*);
 int time_get_minutes (char*);

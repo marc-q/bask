@@ -12,7 +12,7 @@
 	Description: Sets config values with a str without declaration of new variables. (internal use)
 	InitVersion: 0.0.1
 */
-int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* baskbin, char* saveptr)
+short config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* baskbin, char* saveptr)
 {	
 	if (parser_get_str (line, "baskbin=", baskbin, 150, BASKSEP, saveptr) == 0)
 	{
@@ -74,7 +74,7 @@ int config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* ba
 	Description: Sets config values with a str.
 	InitVersion: 0.0.1
 */
-int config_set_str (bask_core* tcore, char* str)
+short config_set_str (bask_core* tcore, char* str)
 {
 	short tmpsvalue;
 	char saveptr[200], baskbin[151], cline[200];
@@ -97,7 +97,7 @@ int config_set_str (bask_core* tcore, char* str)
 	Description: Prints the errormessages for the function config_set_str.
 	InitVersion: 0.0.1
 */
-void config_print_set_str_errors (int error_id)
+void config_print_set_str_errors (short error_id)
 {
 	switch (error_id)
 	{
@@ -179,13 +179,12 @@ void config_save (bask_core* tcore)
 */
 void config_load (bask_core* tcore)
 {
-	int error;
-	short tmpsvalue;
+	short error, tmpsvalue;
 	char line[200], baskbin[151];
 	char saveptr[200];
 	FILE *baskconf;
 	
-	tmpsvalue = error = 0;
+	error = tmpsvalue = 0;
 	
 	baskconf = fopen (tcore->path_baskconf, "r");
 	

@@ -104,7 +104,7 @@ static void bask_init_basktheme (bask_core* tcore)
 	Description: Inits Bask local, creates the needed files.
 	InitVersion: 0.0.1
 */
-static int bask_init_local (bask_core* tcore)
+static short bask_init_local (bask_core* tcore)
 {
 	struct stat sb;
 
@@ -245,8 +245,8 @@ static void usage (void)
 
 int main (int argc, char* argv[])
 {
-	int optc, optindex, tmp;
-	short filter, pact, ppri, pday, pmonth, pyear;
+	int optc, optindex;
+	short filter, pact, ppri, pday, pmonth, pyear, tmp;
 	char padded[T_S_ADDED], pdue[T_S_DUE], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;

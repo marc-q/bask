@@ -17,7 +17,7 @@
 	Description: Exports all tasks to the baskbin <filename>.
 	InitVersion: 0.0.1
 */
-int export_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
+short export_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	FILE* exportfile;
 	struct bask_task* ptr = *first;
@@ -64,7 +64,7 @@ int export_baskbin (bask_core* tcore, struct bask_task** first, char* filename)
 	Description: Exports all tasks to an csv file named filename.
 	InitVersion: 0.0.1
 */
-int export_csv (bask_core* tcore, struct bask_task** first, char* filename)
+short export_csv (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	FILE *exportfile;
 	struct bask_task* ptr = *first;
@@ -100,7 +100,7 @@ int export_csv (bask_core* tcore, struct bask_task** first, char* filename)
 	Description: Converts an baskbin datestr to an ical datestr.
 	InitVersion: 0.0.1
 */
-int export_ical_getdatestr (char* out, char* datestr)
+short export_ical_getdatestr (char* out, char* datestr)
 {
 	char idate[F_ICAL_S_DATE];
 	
@@ -136,7 +136,7 @@ int export_ical_getdatestr (char* out, char* datestr)
 	Description: Exports a tasks with an vevent to an ical file.
 	InitVersion: 0.0.1
 */
-static int export_ical_event (FILE* exportfile, struct bask_task* task)
+static short export_ical_event (FILE* exportfile, struct bask_task* task)
 {
 	char tadded[F_ICAL_S_DATE];
 	char tfinished[F_ICAL_S_DATE];
@@ -179,7 +179,7 @@ static int export_ical_event (FILE* exportfile, struct bask_task* task)
 	Description: Exports a tasks with an vtodo to an ical file.
 	InitVersion: 0.0.1
 */
-static int export_ical_todo (FILE* exportfile, struct bask_task* task)
+static short export_ical_todo (FILE* exportfile, struct bask_task* task)
 {
 	char tadded[F_ICAL_S_DATE];
 	char tdue[F_ICAL_S_DATE];
@@ -231,7 +231,7 @@ static int export_ical_todo (FILE* exportfile, struct bask_task* task)
 	Description: Exports all tasks to an ical file named filename.
 	InitVersion: 0.0.1
 */
-int export_ical (bask_core* tcore, struct bask_task** first, char* filename)
+short export_ical (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	FILE *exportfile;
 	struct bask_task* ptr = *first;
@@ -297,7 +297,7 @@ static void export_web_strrpl (char* str)
 	Description: Exports all tasks to an html file named filename.
 	InitVersion: 0.0.1
 */
-int export_web (bask_core* tcore, struct bask_task** first, char* filename)
+short export_web (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	int i = 0;
 	char prefix[30], pri[4], description[200];

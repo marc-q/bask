@@ -10,9 +10,9 @@ enum
 	CONFIG_ERR_SS_CONFLINE
 };
 
-int config_set_str_raw (bask_core*, char*, short*, char*, char*);
-int config_set_str (bask_core*, char*);
-void config_print_set_str_errors (int);
+short config_set_str_raw (bask_core*, char*, short*, char*, char*);
+short config_set_str (bask_core*, char*);
+void config_print_set_str_errors (short);
 void config_init (bask_core*);
 void config_save (bask_core*);
 void config_load (bask_core*);
