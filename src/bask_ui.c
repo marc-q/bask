@@ -36,10 +36,8 @@ void ui_print_nspaces (int amount)
 	InitVersion: 0.0.1
 */
 void ui_print_nspaces_str (char* tag, int length)
-{
-	size_t tl = strlen (tag);
-	
-	ui_print_nspaces (length-tl);
+{	
+	ui_print_nspaces (length - strlen (tag));
 }
 
 /* |--------------------------------------------|
