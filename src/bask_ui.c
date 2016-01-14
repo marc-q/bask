@@ -19,13 +19,12 @@
 */
 void ui_print_nspaces (int amount)
 {
-	int i;
-	
 	if (amount > 0)
 	{
-		for (i = 0; i < amount; i++)
+		while (amount > 0)
 		{
 			printf (" ");
+			amount--;
 		}
 	}
 }
