@@ -642,8 +642,8 @@ static int tst_filter_checktask (void)
 	
 	btask.t_id = 0;
 	btask.t_flags = 0;
-	btask.t_flags ^= BITCOPY (1, 0, btask.t_flags, TASK_FLAG_ACTIVE);
-	btask.t_flags ^= BITCOPY (0, 0, btask.t_flags, TASK_FLAG_FINISHED);
+	btask.t_flags ^= BITCOPY (TRUE, 0, btask.t_flags, TASK_FLAG_ACTIVE);
+	btask.t_flags ^= BITCOPY (FALSE, 0, btask.t_flags, TASK_FLAG_FINISHED);
 	btask.t_priority = 2;
 	
 	strcpy (btask.t_added, "23/59/59/09/09/2015");
