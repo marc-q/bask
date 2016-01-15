@@ -11,6 +11,20 @@
 #include "bask_import.h"
 
 /* |--------------------------------------------|
+   |			Utils			|
+   |--------------------------------------------| */
+/*
+	Function: import_msg_success (char* filename);
+	Description: Prints the message for when the import is successfull.
+	InitVersion: 0.0.1
+*/
+static void import_msg_success (char* filename)
+{
+	printf ("%s successfully imported to the Baskbin.\n", filename);
+}
+
+
+/* |--------------------------------------------|
    |			Baskbin			|
    |--------------------------------------------| */
 
@@ -104,6 +118,7 @@ void import_baskbin_cmd (bask_core* tcore, struct bask_task** first, char* filen
 {
 	import_baskbin (tcore, first, filename);
 	export_baskbin (tcore, first, tcore->path_baskbin);
+	import_msg_success (filename);
 }
 
 /* |--------------------------------------------|
@@ -326,6 +341,7 @@ void import_csv_cmd (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	import_csv (tcore, first, filename);
 	export_baskbin (tcore, first, tcore->path_baskbin);
+	import_msg_success (filename);
 }
 
 /* |--------------------------------------------|
@@ -442,4 +458,5 @@ void import_ical_cmd (bask_core* tcore, struct bask_task** first, char* filename
 {
 	import_ical (tcore, first, filename);
 	export_baskbin (tcore, first, tcore->path_baskbin);
+	import_msg_success (filename);
 }
