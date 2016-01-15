@@ -9,6 +9,19 @@
 #include "bask_task.h"
 
 /* |--------------------------------------------|
+   |			Utils			|
+   |--------------------------------------------| */
+/*
+	Function: export_msg_success (char* filename);
+	Description: Prints the message for when the export is successfull.
+	InitVersion: 0.0.1
+*/
+static void export_msg_success (char* filename)
+{
+	printf ("Baskbin successfully exportet as %s.\n", filename);
+}
+
+/* |--------------------------------------------|
    |			Baskbin			|
    |--------------------------------------------| */
    
@@ -55,6 +68,19 @@ short export_baskbin (bask_core* tcore, struct bask_task** first, char* filename
 	return 0;
 }
 
+/*
+	Function: export_baskbin_cmd (bask_core* tcore, struct bask_task** first, char* filename);
+	Description: Cmd handle for exporting to a baskbin file.
+	InitVersion: 0.0.1
+*/
+void export_baskbin_cmd (bask_core* tcore, struct bask_task** first, char* filename)
+{
+	if (export_baskbin (tcore, first, filename) == 0)
+	{
+		export_msg_success (filename);
+	}
+}
+
 /* |--------------------------------------------|
    |			CSV			|
    |--------------------------------------------| */
@@ -89,6 +115,19 @@ short export_csv (bask_core* tcore, struct bask_task** first, char* filename)
 	fclose (exportfile);
 	
 	return 0;
+}
+
+/*
+	Function: export_csv_cmd (bask_core* tcore, struct bask_task** first, char* filename);
+	Description: Cmd handle for exporting to a csv file.
+	InitVersion: 0.0.1
+*/
+void export_csv_cmd (bask_core* tcore, struct bask_task** first, char* filename)
+{
+	if (export_csv (tcore, first, filename) == 0)
+	{
+		export_msg_success (filename);
+	}
 }
 
 /* |--------------------------------------------|
@@ -258,6 +297,19 @@ short export_ical (bask_core* tcore, struct bask_task** first, char* filename)
 	fclose (exportfile);
 	
 	return 0;
+}
+
+/*
+	Function: export_ical_cmd (bask_core* tcore, struct bask_task** first, char* filename);
+	Description: Cmd handle for exporting to a ical file.
+	InitVersion: 0.0.1
+*/
+void export_ical_cmd (bask_core* tcore, struct bask_task** first, char* filename)
+{
+	if (export_ical (tcore, first, filename) == 0)
+	{
+		export_msg_success (filename);
+	}
 }
 
 /* |--------------------------------------------|

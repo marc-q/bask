@@ -518,7 +518,7 @@ int main (int argc, char* argv[])
 		}
 		else if (utils_streq (argv[optind], B_CMD_EXPORT) == 0)
 		{
-			export_baskbin (&tcore, &first, argv[optind+1]);
+			export_baskbin_cmd (&tcore, &first, argv[optind+1]);
 		}
 		else if (utils_streq (argv[optind], B_CMD_IMPORT) == 0)
 		{
@@ -563,15 +563,15 @@ int main (int argc, char* argv[])
 		{
 			if (utils_streq (argv[optind+1], B_CMD_BASKBIN) == 0)
 			{
-				export_baskbin (&tcore, &first, argv[optind+2]);
+				export_baskbin_cmd (&tcore, &first, argv[optind+2]);
 			}
 			else if (utils_streq (argv[optind+1], B_CMD_CSV) == 0)
 			{
-				export_csv (&tcore, &first, argv[optind+2]);
+				export_csv_cmd (&tcore, &first, argv[optind+2]);
 			}
 			else if (utils_streq (argv[optind+1], B_CMD_ICAL) == 0)
 			{
-				export_ical (&tcore, &first, argv[optind+2]);
+				export_ical_cmd (&tcore, &first, argv[optind+2]);
 			}
 			else if (utils_streq (argv[optind+1], B_CMD_WEB) == 0)
 			{
