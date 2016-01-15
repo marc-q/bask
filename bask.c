@@ -264,7 +264,7 @@ int main (int argc, char* argv[])
 		 {0,0,0,0}
 	};
 	
-	tcore.flags = optindex = tmp = filter = 0;
+	optindex = tmp = filter = 0;
 	ppri = pact = pday = pmonth = pyear = -1;
 	
 	strcpy (padded, "");

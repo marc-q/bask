@@ -20,9 +20,6 @@
 
 #define T_O_DESCRIPTIONBREAK 0
 
-/* TODO: Create a merge function and use this later. */
-#define T_FLAG_MERGE 0
-
 #define BIGGEST(a,b) ((a>b) ? (a) : (b))
 #define SMALLEST(a,b) ((a)<(b) ? (a) : (b))
 #define ISBOOL(a) ((((a) == (FALSE)) || ((a) == (TRUE))) ? (TRUE) : (FALSE)) 
@@ -35,7 +32,6 @@ struct _bask_core
 	short t_descriptionmax; /* 0 - 200 */
 	short t_descriptionmin; /* 0 - 200 */
 	short t_options;
-	short flags;
 	char path_baskpath[200];
 	char path_baskconf[200];
 	char path_basktheme[200];
