@@ -116,9 +116,12 @@ short import_baskbin (bask_core* tcore, struct bask_task** first, char* filename
 */
 void import_baskbin_cmd (bask_core* tcore, struct bask_task** first, char* filename)
 {
-	import_baskbin (tcore, first, filename);
+	if (import_baskbin (tcore, first, filename) == 0)
+	{
+		import_msg_success (filename);
+	}
+	
 	export_baskbin (tcore, first, tcore->path_baskbin);
-	import_msg_success (filename);
 }
 
 /* |--------------------------------------------|
@@ -339,9 +342,12 @@ short import_csv (bask_core* tcore, struct bask_task** first, char* filename)
 */
 void import_csv_cmd (bask_core* tcore, struct bask_task** first, char* filename)
 {
-	import_csv (tcore, first, filename);
+	if (import_csv (tcore, first, filename) == 0)
+	{
+		import_msg_success (filename);
+	}
+	
 	export_baskbin (tcore, first, tcore->path_baskbin);
-	import_msg_success (filename);
 }
 
 /* |--------------------------------------------|
@@ -456,7 +462,10 @@ short import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 */
 void import_ical_cmd (bask_core* tcore, struct bask_task** first, char* filename)
 {
-	import_ical (tcore, first, filename);
+	if (import_ical (tcore, first, filename) == 0)
+	{
+		import_msg_success (filename);
+	}
+	
 	export_baskbin (tcore, first, tcore->path_baskbin);
-	import_msg_success (filename);
 }
