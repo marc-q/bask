@@ -8,13 +8,13 @@
 #include "bask_config.h"
 
 /*
-	Function: config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* baskbin, char* saveptr);
+	Function: config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* baskbin, size_t baskbin_size, char* saveptr);
 	Description: Sets config values with a str without declaration of new variables. (internal use)
 	InitVersion: 0.0.1
 */
-short config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* baskbin, char* saveptr)
+short config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* baskbin, size_t baskbin_size, char* saveptr)
 {	
-	if (parser_get_str (line, "baskbin=", baskbin, 150, BASKSEP, saveptr) == 0)
+	if (parser_get_str (line, "baskbin=", baskbin, baskbin_size, BASKSEP, saveptr) == 0)
 	{
 		if (utils_streq (baskbin, "default") != 0)
 		{
@@ -89,7 +89,7 @@ short config_set_str (bask_core* tcore, char* str)
 		return CONFIG_ERR_SS_CONFLINE;
 	}
 	
-	return config_set_str_raw (tcore, cline, &tmpsvalue, baskbin, saveptr);
+	return config_set_str_raw (tcore, cline, &tmpsvalue, baskbin, sizeof (baskbin), saveptr);
 }
 
 /*
@@ -200,7 +200,7 @@ void config_load (bask_core* tcore)
 		if (line[0] != '#')
 		{
 			/* NOTE: Using this we only must change one function in order to add options. */
-			if ((error = config_set_str_raw (tcore, line, &tmpsvalue, baskbin, saveptr)) != 0)
+			if ((error = config_set_str_raw (tcore, line, &tmpsvalue, baskbin, sizeof (baskbin), saveptr)) != 0)
 			{
 				config_print_set_str_errors (error);
 				
