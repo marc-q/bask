@@ -158,6 +158,7 @@ short task_insert (struct bask_task** first, unsigned int n, unsigned int tid, s
 	
 	if (strlen (tadded) >= T_S_ADDED || strlen (tdue) >= T_S_DUE || strlen (tfinished) >= T_S_FINISHED || strlen (tproject) >= T_S_PROJECT || strlen (tdescription) >= T_S_DESCRIPTION)
 	{
+		free (newobj);
 		return -2;
 	}
 

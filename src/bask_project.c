@@ -42,6 +42,7 @@ short project_insert (struct bask_project** first, short t_active, short t_state
 	
 	if (strlen (t_project) >= T_S_PROJECT)
 	{
+		free (newobj);
 		return -2;
 	}
 
