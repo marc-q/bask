@@ -19,6 +19,7 @@
 #include "src/bask_project.h"
 #include "src/bask_filter.h"
 #include "src/bask_ui.h"
+#include "src/bask_priority.h"
 #include "src/bask_views.h"
 #include "src/bask_export.h"
 #include "src/bask_import.h"
@@ -29,11 +30,11 @@
    |--------------------------------------------| */
 
 /*
-	Function: search_view (bask_core* tcore, bask_theme* btheme, bask_filter* bfilter, struct bask_task** first, char* searchtag, short view);
+	Function: search_view (bask_core* tcore, bask_theme* btheme, bask_priority** bprioritys, bask_filter* bfilter, struct bask_task** first, char* searchtag, short view);
 	Description: Finds tasks with searchtag in the description, project or finished and uses the view <view> to display the results.
 	InitVersion: 0.0.1
 */
-static void search_view (bask_core* tcore, bask_theme* btheme, bask_filter* bfilter, struct bask_task** first, char* searchtag, short view)
+static void search_view (bask_core* tcore, bask_theme* btheme, bask_priority** bprioritys, bask_filter* bfilter, struct bask_task** first, char* searchtag, short view)
 {
 	struct bask_task* haystack = NULL;
 	
@@ -42,13 +43,13 @@ static void search_view (bask_core* tcore, bask_theme* btheme, bask_filter* bfil
 	switch (view)
 	{
 		case BVIEW_TASKLIST:
-			view_tasklist (tcore, btheme, &haystack, bfilter);
+			view_tasklist (tcore, btheme, bprioritys, &haystack, bfilter);
 			break;
 		case BVIEW_SUMMARY:
 			view_summary (tcore, btheme, &haystack, bfilter);
 			break;
 		default:
-			view_tasklist (tcore, btheme, &haystack, bfilter);
+			view_tasklist (tcore, btheme, bprioritys, &haystack, bfilter);
 			break;
 	}
 	
@@ -139,12 +140,13 @@ static void bask_init (bask_core* tcore, struct bask_task** first)
 }
 
 /*
-	Function: bask_unload (struct bask_task** first);
+	Function: bask_unload (bask_priority** bprioritys, struct bask_task** first);
 	Description: Unloads the Bask application.
 	InitVersion: 0.0.1
 */
-static void bask_unload (struct bask_task** first)
+static void bask_unload (bask_priority** bprioritys, struct bask_task** first)
 {
+	priority_free_ll (bprioritys);
 	task_free_ll (first);
 }
 
@@ -251,6 +253,7 @@ int main (int argc, char* argv[])
 	char padded[T_S_ADDED], pdue[T_S_DUE], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
+	bask_priority* bprioritys = NULL;
 	bask_filter bfilter;
 	struct bask_task* first = NULL;
 	
@@ -340,12 +343,18 @@ int main (int argc, char* argv[])
 	config_load (&tcore);
 	ui_theme_load (&tcore, &btheme);
 	
+	/* Default Prioritys */
+	priority_insert (&bprioritys, 0, btheme.color_normal, "L", "Normal");
+	priority_insert (&bprioritys, 1, btheme.color_important, "I", "Important");
+	priority_insert (&bprioritys, 2, btheme.color_today, "T", "Today");
+	priority_insert (&bprioritys, 3, btheme.color_critical, "C", "Critical");
+	
 	while ((optc = getopt_long (argc, argv, "p:P:a:D:F:A:fh", long_options, &optindex)) != -1)
 	{
 		switch (optc)
 		{
 			case 'p':
-				ppri = task_get_priority (optarg);
+				ppri = priority_get_idfromstr (&bprioritys, optarg);
 				break;
 			case 'P':
 				if (strlen (optarg) < sizeof (pproject))
@@ -443,7 +452,7 @@ int main (int argc, char* argv[])
 		{
 			if (utils_streq (argv[optind], B_CMD_LIST) == 0)
 			{
-				view_tasklist (&tcore, &btheme, &first, &bfilter);
+				view_tasklist (&tcore, &btheme, &bprioritys, &first, &bfilter);
 			}
 			else if (utils_streq (argv[optind], B_CMD_SUMMARY) == 0)
 			{
@@ -478,7 +487,7 @@ int main (int argc, char* argv[])
 	{
 		if (utils_streq (argv[optind], B_CMD_LIST) == 0)
 		{
-			view_tasklist (&tcore, &btheme, &first, &bfilter);
+			view_tasklist (&tcore, &btheme, &bprioritys, &first, &bfilter);
 		}
 		else if (utils_streq (argv[optind], B_CMD_SUMMARY) == 0)
 		{
@@ -507,7 +516,7 @@ int main (int argc, char* argv[])
 		}
 		else if (utils_streq (argv[optind], B_CMD_SEARCH) == 0)
 		{
-			search_view (&tcore, &btheme, &bfilter, &first, argv[optind+1], BVIEW_TASKLIST);
+			search_view (&tcore, &btheme, &bprioritys, &bfilter, &first, argv[optind+1], BVIEW_TASKLIST);
 		}
 		else if (utils_streq (argv[optind], B_CMD_STOP) == 0)
 		{
@@ -549,11 +558,11 @@ int main (int argc, char* argv[])
 		{
 			if (utils_streq (argv[optind+1], B_CMD_TASKLIST) == 0)
 			{
-				search_view (&tcore, &btheme, &bfilter, &first, argv[optind+2], BVIEW_TASKLIST);
+				search_view (&tcore, &btheme, &bprioritys, &bfilter, &first, argv[optind+2], BVIEW_TASKLIST);
 			}
 			else if (utils_streq (argv[optind+1], B_CMD_SUMMARY) == 0)
 			{
-				search_view (&tcore, &btheme, &bfilter, &first, argv[optind+2], BVIEW_SUMMARY);
+				search_view (&tcore, &btheme, &bprioritys, &bfilter, &first, argv[optind+2], BVIEW_SUMMARY);
 			}
 			else
 			{
@@ -615,7 +624,7 @@ int main (int argc, char* argv[])
 	{	
 		if (utils_streq (argv[optind], B_CMD_ADD) == 0)
 		{
-			task_create_cmd (&tcore, &first, task_get_priority (argv[optind+1]), argv[optind+2], argv[optind+3]);
+			task_create_cmd (&tcore, &first, priority_get_idfromstr (&bprioritys, argv[optind+1]), argv[optind+2], argv[optind+3]);
 		}
 		else
 		{
@@ -628,6 +637,6 @@ int main (int argc, char* argv[])
 	}
 	
 	config_save (&tcore);
-	bask_unload (&first);
+	bask_unload (&bprioritys, &first);
 	return 0;
 }

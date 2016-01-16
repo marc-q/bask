@@ -10,6 +10,7 @@
 #include "bask_project.h"
 #include "bask_filter.h"
 #include "bask_ui.h"
+#include "bask_priority.h"
 #include "bask_views.h"
 
 /* |--------------------------------------------|
@@ -27,17 +28,23 @@ void view_print_legend_tag (char* tagname, char* tagcolor)
 }
 
 /*
-	Function: view_legend (bask_theme* btheme);
+	Function: view_legend (bask_theme* btheme, bask_priority** bprioritys);
 	Description: Displays a legend for the meanings of colors.
 	InitVersion: 0.0.1
 */
-void view_legend (bask_theme* btheme)
+void view_legend (bask_theme* btheme, bask_priority** bprioritys)
 {
+	bask_priority* ptr = *bprioritys;
+	
 	printf ("\n\nLegend: ");
-	view_print_legend_tag ("Normal", btheme->color_normal);
-	view_print_legend_tag ("Critical", btheme->color_critical);
-	view_print_legend_tag ("Today", btheme->color_today);
-	view_print_legend_tag ("Important", btheme->color_important);
+	
+	while (ptr != NULL)
+	{
+		view_print_legend_tag (ptr->p_name, ptr->p_color);
+		
+		ptr = ptr->next;
+	}
+	
 	view_print_legend_tag ("Finished", btheme->color_finished);
 	printf ("\n");
 }
@@ -203,14 +210,14 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
    |--------------------------------------------| */
 
 /*
-	Function: view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first, bask_filter* filter);
+	Function: view_tasklist (bask_core* tcore, bask_theme* btheme, bask_priority** bprioritys, struct bask_task** first, bask_filter* filter);
 	Description: Displays all tasks in a table!
 	InitVersion: 0.0.1
 */
-void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** first, bask_filter* filter)
+void view_tasklist (bask_core* tcore, bask_theme* btheme, bask_priority** bprioritys, struct bask_task** first, bask_filter* filter)
 {
 	int i, j, x, tprojectmax, idmax, tdescriptionmax;
-	char prefix[22], pri[4];
+	char prefix[UI_S_THEMECOLOR*2], pri[PRI_S_PALIAS];
 	struct bask_task* ptr = *first;
 	
 	i = j = x = idmax = 0;
@@ -255,30 +262,8 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	while (ptr != NULL)
 	{
 		if (filter_check_task (filter, ptr) == TRUE)
-		{
-			switch (ptr->t_priority)
-			{
-				case 0:
-					strcpy (prefix, btheme->color_normal);
-					strcpy (pri, "L");
-					break;
-				case 1:
-					strcpy (prefix, btheme->color_important);
-					strcpy (pri, "I");
-					break;
-				case 2:
-					strcpy (prefix, btheme->color_today);
-					strcpy (pri, "T");
-					break;
-				case 3:
-					strcpy (prefix, btheme->color_critical);
-					strcpy (pri, "C");
-					break;
-				default:
-					strcpy (prefix, btheme->color_normal);
-					strcpy (pri, "N");
-					break;
-			}
+		{	
+			priority_get_viewdata (bprioritys, ptr->t_priority, prefix, sizeof (prefix), pri, sizeof (pri));
 		
 			if (BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == TRUE)
 			{
@@ -331,7 +316,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, struct bask_task** fir
 	{
 		printf ("\n%i tasks\n", i);
 	}
-	view_legend (btheme);
+	view_legend (btheme, bprioritys);
 }
 
 /* |--------------------------------------------|

@@ -103,46 +103,6 @@ short task_check_input (bask_core* tcore, char* added, char* due, char* finished
 	return 0;
 }
 
-/*
-	Function: task_get_priority (char* str);
-	Description: Converts the str to the priority number.
-	InitVersion: 0.0.1
-*/
-short task_get_priority (char* str)
-{
-	short tmp;
-	
-	if (isdigit (str[0]) != 0)
-	{
-		if (utils_atos (&tmp, str) == 0)
-		{
-			return tmp;
-		}
-	}
-	else if (isalpha (str[0]) != 0)
-	{
-		switch (toupper (str[0]))
-		{
-			case 'L':
-				return 0;
-				break;
-			case 'I':
-				return 1;
-				break;
-			case 'T':
-				return 2;
-				break;
-			case 'C':
-				return 3;
-				break;
-			default:
-				break;
-		}
-	}
-	
-	return -1;
-}
-
 /* |--------------------------------------------|
    |			Core			|
    |--------------------------------------------| */

@@ -10,10 +10,11 @@
 #include "../src/bask_task.h"
 #include "../src/bask_filter.h"
 #include "../src/bask_ui.h"
+#include "../src/bask_priority.h"
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 79
+#define TESTS_AMOUNT 80
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -568,36 +569,6 @@ static short tst_task_checkinput (void)
 	return TESTS_FAIL;
 }
 
-/*
-	Function: tst_task_getpriority (void);
-	Description: Tests the task_get_priority function from bask_task.c.
-	InitVersion: 0.0.1
-*/
-static short tst_task_getpriority (void)
-{	
-	if (task_get_priority ("0") == 0 &&
-	    task_get_priority ("1") == 1 &&
-	    task_get_priority ("2") == 2 &&
-	    task_get_priority ("3") == 3 &&
-	    task_get_priority ("l") == 0 &&
-	    task_get_priority ("i") == 1 &&
-	    task_get_priority ("t") == 2 &&
-	    task_get_priority ("c") == 3 &&
-	    task_get_priority ("L") == 0 &&
-	    task_get_priority ("I") == 1 &&
-	    task_get_priority ("T") == 2 &&
-	    task_get_priority ("C") == 3 &&
-	    task_get_priority ("b") == -1 &&
-	    task_get_priority ("B") == -1)
-	{
-		tst_print_success ("Task_Get_Priority");
-		return TESTS_PASS;
-	}
-	
-	tst_print_fail ("Task_Get_Priority");
-	return TESTS_FAIL;
-}
-
 /* |--------------------------------------------|
    |		    Tests-Filter		|
    |--------------------------------------------| */
@@ -749,6 +720,90 @@ static short tst_ui_getcolor (char* colorname, char* colorcode)
 }
 
 /* |--------------------------------------------|
+   |		  Tests-Priority		|
+   |--------------------------------------------| */
+
+/*
+	Function: tst_pri_getidfromstr (void);
+	Description: Tests the priority_get_idfromstr function from bask_priority.c.
+	InitVersion: 0.0.1
+*/
+static short tst_pri_getidfromstr (void)
+{
+	bask_priority* first = NULL;
+	
+	priority_insert (&first, 0, BC_TXT_WHITE, "L", "Normal");
+	priority_insert (&first, 1, BC_BLD_GREEN, "I", "Important");
+	priority_insert (&first, 2, BC_BLD_BLUE, "T", "Today");
+	priority_insert (&first, 3, BC_BLD_RED, "C", "Critical");
+	priority_insert (&first, -1, BC_BLD_RED, "TE", "Test2");
+	
+	if (priority_get_idfromstr (&first, "0") == 0 &&
+	    priority_get_idfromstr (&first, "1") == 1 &&
+	    priority_get_idfromstr (&first, "2") == 2 &&
+	    priority_get_idfromstr (&first, "3") == 3 &&
+	    priority_get_idfromstr (&first, "-1") == -1 &&
+	    priority_get_idfromstr (&first, "l") == 0 &&
+	    priority_get_idfromstr (&first, "i") == 0 &&
+	    priority_get_idfromstr (&first, "t") == 0 &&
+	    priority_get_idfromstr (&first, "te") == 0 &&
+	    priority_get_idfromstr (&first, "c") == 0 &&
+	    priority_get_idfromstr (&first, "L") == 0 &&
+	    priority_get_idfromstr (&first, "I") == 1 &&
+	    priority_get_idfromstr (&first, "T") == 2 &&
+	    priority_get_idfromstr (&first, "C") == 3 &&
+	    priority_get_idfromstr (&first, "TE") == -1 &&
+	    priority_get_idfromstr (&first, "b") == 0 &&
+	    priority_get_idfromstr (&first, "B") == 0)
+	{
+		priority_free_ll (&first);
+		tst_print_success ("Priority_Get_Idfromstr");
+		return TESTS_PASS;
+	}
+	
+	priority_free_ll (&first);
+	tst_print_fail ("Priority_Get_Idfromstr");
+	return TESTS_FAIL;
+}
+
+/*
+	Function: tst_pri_getviewdata (void);
+	Description: Tests the priority_get_viewdata function from bask_priority.c.
+	InitVersion: 0.0.1
+*/
+static short tst_pri_getviewdata (void)
+{
+	char color[PRI_S_PCOLOR], pri[PRI_S_PALIAS];
+	bask_priority* first = NULL;
+	
+	strcpy (color, "");
+	strcpy (pri, "");
+	
+	if (priority_insert (&first, 0, "TestTestTestT", "T", "Test") != -2 ||
+	    priority_insert (&first, 0, BC_TXT_GREEN, "Test", "Test") != -2 ||
+	    priority_insert (&first, 0, BC_TXT_GREEN, "T", "TestTestTestTestTest") != -2 ||
+	    priority_insert (&first, 0, BC_TXT_GREEN, "T", "TestTestTestTestTes") != 0 ||
+	    priority_get_viewdata (&first, 0, color, sizeof (color), pri, sizeof (pri)) != 0)
+	{
+		priority_free_ll (&first);
+		tst_print_fail ("Priority_Get_Viewdata");
+		return TESTS_FAIL;
+	}
+	
+	if (utils_streq (color, BC_TXT_GREEN) == 0 &&
+	    utils_streq (pri, "T") == 0)
+	{
+		priority_free_ll (&first);
+		tst_print_success ("Priority_Get_Viewdata");
+		return TESTS_PASS;
+	}
+	
+	priority_free_ll (&first);
+	tst_print_fail ("Priority_Get_Viewdata");
+	return TESTS_FAIL;
+}  
+
+/* |--------------------------------------------|
    |		   Tests-Export			|
    |--------------------------------------------| */
    
@@ -890,7 +945,6 @@ int main (int argc, char* argv[])
 	
 	points += tst_task_checkinputnbrs ();
 	points += tst_task_checkinput ();
-	points += tst_task_getpriority ();
 	
 	printf ("\n");
 	
@@ -973,6 +1027,11 @@ int main (int argc, char* argv[])
 	points += tst_ui_getcolor ("bak_purple_h", "\033[0;105m");
 	points += tst_ui_getcolor ("bak_cyan_h", "\033[0;106m");
 	points += tst_ui_getcolor ("bak_white_h", "\033[0;107m");
+	
+	printf ("\n");
+	
+	points += tst_pri_getidfromstr ();
+	points += tst_pri_getviewdata ();
 	
 	printf ("\n");
 	
