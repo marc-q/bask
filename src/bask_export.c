@@ -262,7 +262,7 @@ static short export_ical_todo (FILE* exportfile, struct bask_task* task)
 	fprintf (exportfile, "DESCRIPTION:%s\n", task->t_description);
 	fprintf (exportfile, "SUMMARY:%s\n", task->t_project);
 	
-	fprintf (exportfile, "STATUS:%s\n", (BITGET (task->t_flags, TASK_FLAG_ACTIVE) == 1 ? "IN-PROCESS" : "NEEDS-ACTION"));
+	fprintf (exportfile, "STATUS:%s\n", (BITGET (task->t_flags, TASK_FLAG_ACTIVE) == TRUE ? "IN-PROCESS" : "NEEDS-ACTION"));
 	
 	fprintf (exportfile, "END:VTODO\n");
 	

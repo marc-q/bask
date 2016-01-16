@@ -412,7 +412,7 @@ short import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 	FILE* importfile;
 	
 	tid = tpriority = tstate = 0;
-	tactive = 1;
+	tactive = TRUE;
 	
 	strcpy (tt_tmp, " ");
 	strcpy (tadded, " ");
@@ -448,7 +448,8 @@ short import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 				tid = tpriority= 0;
 				
 				/* If there is no clue to tactive we enable it by default. */
-				tactive = 1;
+				tactive = TRUE;
+				tstate = FALSE;
 			}
 		}
 		else
@@ -469,11 +470,11 @@ short import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 				if (import_ical_getdatestr (tfinished, tt_tmp) == -1)
 				{
 					strcpy (tfinished, "NONE");
-					tstate = 0;
+					tstate = FALSE;
 				}
 				else
 				{
-					tstate = 1;
+					tstate = TRUE;
 				}
 			}
 			else if (parser_get_str (line, "DTEND:", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
@@ -481,11 +482,11 @@ short import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 				if (import_ical_getdatestr (tfinished, tt_tmp) == -1)
 				{
 					strcpy (tfinished, "NONE");
-					tstate = 0;
+					tstate = FALSE;
 				}
 				else
 				{
-					tstate = 1;
+					tstate = TRUE;
 				}
 			}
 			else if (parser_get_str (line, "DUE:", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
@@ -504,11 +505,11 @@ short import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 			{
 				if (utils_streq (tt_tmp, "IN-PROCESS") == 0)
 				{
-					tactive = 1;
+					tactive = TRUE;
 				}
 				else if (utils_streq (tt_tmp, "NEEDS-ACTION") == 0)
 				{
-					tactive = 0;
+					tactive = FALSE;
 				}
 			}
 		}
