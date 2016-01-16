@@ -14,7 +14,7 @@
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 80
+#define TESTS_AMOUNT 81
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -388,7 +388,6 @@ static short tst_time_gethours (void)
 */
 static short tst_time_getminutes (void)
 {
-	
 	if (time_get_minutes ("23/59/59/09/09/2015") == 59 &&
 	    time_get_minutes ("23/59/59/9/9/2015") == -1)
 	{
@@ -407,7 +406,6 @@ static short tst_time_getminutes (void)
 */
 static short tst_time_getseconds (void)
 {
-	
 	if (time_get_seconds ("23/59/59/09/09/2015") == 59 &&
 	    time_get_seconds ("23/59/59/9/9/2015") == -1)
 	{
@@ -426,7 +424,6 @@ static short tst_time_getseconds (void)
 */
 static short tst_time_getday (void)
 {
-	
 	if (time_get_day ("23/59/59/09/09/2015") == 9 &&
 	    time_get_day ("23/59/59/9/9/2015") == -1)
 	{
@@ -444,8 +441,7 @@ static short tst_time_getday (void)
 	InitVersion: 0.0.1
 */
 static short tst_time_getmonth (void)
-{
-	
+{	
 	if (time_get_month ("23/59/59/09/09/2015") == 9 &&
 	    time_get_month ("23/59/59/9/9/2015") == -1)
 	{
@@ -464,7 +460,6 @@ static short tst_time_getmonth (void)
 */
 static short tst_time_getyear (void)
 {
-	
 	if (time_get_year ("23/59/59/09/09/2015") == 2015 &&
 	    time_get_year ("23/59/59/9/9/2015") == -1)
 	{
@@ -522,6 +517,30 @@ static short tst_config_setstr (void)
 	}
 	
 	tst_print_fail ("Config_Set_Str");
+	return TESTS_FAIL;
+}
+
+/*
+	Function: tst_config_init (void);
+	Description: Tests the config_init function from bask_config.c.
+	InitVersion: 0.0.1
+*/
+static short tst_config_init (void)
+{
+	bask_core tcore;
+	
+	config_init (&tcore);
+	
+	if (tcore.t_projectmin == 15 &&
+	    tcore.t_descriptionmax == 50 &&
+	    tcore.t_descriptionmin == 50 &&
+	    BITGET (tcore.t_options, T_O_DESCRIPTIONBREAK) == TRUE)
+	{
+		tst_print_success ("Config_Init");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Config_Init");
 	return TESTS_FAIL;
 }
 
@@ -960,6 +979,7 @@ int main (int argc, char* argv[])
 	printf ("\n");
 	
 	points += tst_config_setstr ();
+	points += tst_config_init ();
 	
 	printf ("\n");
 	
