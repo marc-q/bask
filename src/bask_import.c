@@ -404,13 +404,19 @@ short import_ical_getdatestr (char* out, char* datestr)
 */
 short import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 {
-	char line[200], tadded[T_S_ADDED], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
+	unsigned int tid;
+	short tactive, tpriority, tstate;
+	char line[200], tadded[T_S_ADDED], tdue[T_S_DUE], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char tt_tmp[50];
 	char saveptr[200];
 	FILE* importfile;
 	
+	tid = tpriority = tstate = 0;
+	tactive = 1;
+	
 	strcpy (tt_tmp, " ");
 	strcpy (tadded, " ");
+	strcpy (tdue, " ");
 	strcpy (tfinished, " ");
 	strcpy (tproject, " ");
 	strcpy (tdescription, " "); 
@@ -428,25 +434,83 @@ short import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 		
 		if (parser_get_str (line, "END:", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
 		{
-			if (utils_streq (tt_tmp, "VEVENT") == 0)
+			if (utils_streq (tt_tmp, "VTODO") == 0)
 			{
-				tcore->baskbin_uid++;
-				task_insert (first, tcore->tc_amount, tcore->baskbin_uid, TRUE, 0, FALSE, tadded, "NONE", tfinished, tproject, tdescription);
+				if (tid == 0)
+				{
+					tcore->baskbin_uid++;
+					tid = tcore->baskbin_uid;
+				}
+				
+				task_insert (first, tcore->tc_amount, tid, tactive, tpriority, tstate, tadded, tdue, tfinished, tproject, tdescription);
+				
 				tcore->tc_amount++;
+				tid = tpriority= 0;
+				
+				/* If there is no clue to tactive we enable it by default. */
+				tactive = 1;
 			}
 		}
 		else
 		{
+			parser_get_int (line, "UID:", &tid, ICALSEP, saveptr);
+			
+			/* Try multiple ways to find the data. */
 			if (parser_get_str (line, "CREATED:", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
 			{
 				import_ical_getdatestr (tadded, tt_tmp);
 			}
+			else if (parser_get_str (line, "DTSTART:", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
+			{
+				import_ical_getdatestr (tadded, tt_tmp);
+			}
+			else if (parser_get_str (line, "COMPLETED:", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
+			{
+				if (import_ical_getdatestr (tfinished, tt_tmp) == -1)
+				{
+					strcpy (tfinished, "NONE");
+					tstate = 0;
+				}
+				else
+				{
+					tstate = 1;
+				}
+			}
 			else if (parser_get_str (line, "DTEND:", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
 			{
-				import_ical_getdatestr (tfinished, tt_tmp);
+				if (import_ical_getdatestr (tfinished, tt_tmp) == -1)
+				{
+					strcpy (tfinished, "NONE");
+					tstate = 0;
+				}
+				else
+				{
+					tstate = 1;
+				}
+			}
+			else if (parser_get_str (line, "DUE:", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
+			{
+				if (import_ical_getdatestr (tdue, tt_tmp) == -1)
+				{
+					strcpy (tdue, "NONE");
+				}
 			}
 			
+			parser_get_short (line, "PRIORITY:", &tpriority, ICALSEP, saveptr);
 			parser_get_str (line, "DESCRIPTION:", tdescription, sizeof (tdescription), ICALSEP, saveptr);
+			parser_get_str (line, "SUMMARY:", tproject, sizeof (tproject), ICALSEP, saveptr);
+			
+			if (parser_get_str (line, "STATUS:", tt_tmp, sizeof (tt_tmp), ICALSEP, saveptr) == 0)
+			{
+				if (utils_streq (tt_tmp, "IN-PROCESS") == 0)
+				{
+					tactive = 1;
+				}
+				else if (utils_streq (tt_tmp, "NEEDS-ACTION") == 0)
+				{
+					tactive = 0;
+				}
+			}
 		}
 	}
 	

@@ -216,6 +216,7 @@ static void print_help (void)
 	printf ("\nIMPORTS\n");
 	printf ("\t%s\t\t\tImports from an baskbin file. (default)\n", B_CMD_BASKBIN);
 	printf ("\t%s\t\t\tImports from an csv file.\n", B_CMD_CSV);
+	printf ("\t%s\t\t\tImports from an iCalendar file.\n", B_CMD_ICAL);
 	
 	printf ("\nPRIORITYS\n");
 	printf ("\t0\tL\tNormal\n");

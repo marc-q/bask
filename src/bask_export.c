@@ -204,6 +204,7 @@ static short export_ical_event (FILE* exportfile, struct bask_task* task)
 	fprintf (exportfile, "DTSTART:%s\n", tadded);
 	fprintf (exportfile, "DTEND:%s\n", tfinished);
 	fprintf (exportfile, "DSTSTAMP:%s\n", tadded);
+	fprintf (exportfile, "UID:%i\n", task->t_id);
 	fprintf (exportfile, "CREATED:%s\n", tadded);
 	fprintf (exportfile, "DESCRIPTION:%s\n", task->t_description);
 	fprintf (exportfile, "LAST-MODIFIED:%s\n", tadded);
@@ -243,23 +244,26 @@ static short export_ical_todo (FILE* exportfile, struct bask_task* task)
 	}
 	
 	fprintf (exportfile, "BEGIN:VTODO\n");
-	fprintf (exportfile, "DSTSTAMP:%s\n", tadded);
 	fprintf (exportfile, "UID:%i\n", task->t_id);
+	fprintf (exportfile, "DSTSTAMP:%s\n", tadded);
+	fprintf (exportfile, "DTSTART:%s\n", tadded);
 	
 	if (strlen (tdue) > 1)
 	{
 		fprintf (exportfile, "DUE:%s\n", tdue);
 	}
 	
-	fprintf (exportfile, "CREATED:%s\n", tadded);
-	
 	if (strlen (tfinished) > 1)
 	{
 		fprintf (exportfile, "COMPLETED:%s\n", tfinished);
 	}
 	
+	fprintf (exportfile, "PRIORITY:%hi\n", task->t_priority);
 	fprintf (exportfile, "DESCRIPTION:%s\n", task->t_description);
 	fprintf (exportfile, "SUMMARY:%s\n", task->t_project);
+	
+	fprintf (exportfile, "STATUS:%s\n", (BITGET (task->t_flags, TASK_FLAG_ACTIVE) == 1 ? "IN-PROCESS" : "NEEDS-ACTION"));
+	
 	fprintf (exportfile, "END:VTODO\n");
 	
 	return 0;
@@ -287,7 +291,7 @@ short export_ical (bask_core* tcore, struct bask_task** first, char* filename)
 	
 	while (ptr != NULL)
 	{
-		export_ical_event (exportfile, ptr);
+		export_ical_todo (exportfile, ptr);
 		
 		ptr = ptr->next;
 	}
