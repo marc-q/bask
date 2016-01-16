@@ -1,6 +1,5 @@
 /* Copyright 2015 - 2016 Marc Volker Dickmann */
 #include <stdio.h>
-#include <string.h>
 #include "bask_core.h"
 #include "bask_errors.h"
 

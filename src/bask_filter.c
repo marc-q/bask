@@ -1,9 +1,7 @@
 /* Copyright 2015 - 2016 Marc Volker Dickmann */
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <ctype.h>
 #include "../lib/dutils.h"
 #include "bask_core.h"
 #include "bask_time.h"
