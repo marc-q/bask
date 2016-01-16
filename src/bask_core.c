@@ -47,7 +47,7 @@ short parser_get_str (char* line, char* key, char* out, size_t outsize, char sep
 		strcpy (saveptr, strchr (line, septag));
 
 		if (strlen (saveptr+2) < outsize &&
-		    strlen (saveptr+2) > 2)
+		    strlen (saveptr) > 1)
 		{
 			if (saveptr[strlen (saveptr)-1] == '\n')
 			{

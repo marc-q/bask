@@ -146,14 +146,34 @@ static short tst_core_atos (void)
 */
 static short tst_core_parser_str (void)
 {
+	short passed;
 	char outstr[50], instr[50];
 	char saveptr[200];
 
+	passed = FALSE;
+
 	strcpy (instr, "test=this is a str test with an ;.\n");
-	
 	parser_get_str (instr, "test=", outstr, sizeof (outstr), BASKSEP, saveptr);
 	
 	if (utils_streq (outstr, "this is a str test with an ;.") == 0)
+	{
+		passed = TRUE;
+	}
+	
+	strcpy (instr, "test=T\n");
+	parser_get_str (instr, "test=", outstr, sizeof (outstr), BASKSEP, saveptr);
+	
+	if (passed == TRUE &&
+	    utils_streq (outstr, "T") != 0)
+	{
+		passed = FALSE;
+	}
+	
+	strcpy (instr, "test=\n");
+	parser_get_str (instr, "test=", outstr, sizeof (outstr), BASKSEP, saveptr);
+	
+	if (passed == TRUE &&
+	    utils_streq (outstr, "") == 0)
 	{
 		tst_print_success ("Core_Parser_Str");
 		return TESTS_PASS;
