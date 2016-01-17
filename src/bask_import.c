@@ -7,6 +7,7 @@
 #include "bask_core.h"
 #include "bask_errors.h"
 #include "bask_task.h"
+#include "bask_time.h"
 #include "bask_export.h"
 #include "bask_import.h"
 
@@ -38,7 +39,7 @@ short import_baskbin (bask_core* tcore, struct bask_task** first, char* filename
 	unsigned int tid;
 	int tstate, bb_state;
 	short tactive, tpriority;
-	char line[200], tadded[T_S_ADDED], tdue[T_S_DUE], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
+	char line[200], today[T_S_DUE], tadded[T_S_ADDED], tdue[T_S_DUE], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char saveptr[200];
 	FILE* importfile;
 
@@ -48,7 +49,9 @@ short import_baskbin (bask_core* tcore, struct bask_task** first, char* filename
 	strcpy (tdue, "NONE");
 	strcpy (tfinished, "NONE");
 	strcpy (tproject, " ");
-	strcpy (tdescription, " "); 
+	strcpy (tdescription, " ");
+	
+	time_get_str (today, sizeof (today));
 
 	importfile = fopen (filename, "r");
 
@@ -75,6 +78,16 @@ short import_baskbin (bask_core* tcore, struct bask_task** first, char* filename
 		}
 		else if (utils_streq (line, "END\n") == 0)
 		{
+			/* TODO: Put that into a function! */
+			if (BITGET (tcore->t_options, T_O_AUTODUETODAY) == TRUE &&
+			    utils_streq (tdue, "NONE") != 0 &&
+			    ( time_get_day (today) == time_get_day (tdue) &&
+			      time_get_month (today) == time_get_month (tdue) &&
+			      time_get_year (today) == time_get_year (tdue)))
+			{
+				tpriority = 2;
+			}
+			
 			task_insert (first, tcore->tc_amount, tid, tactive, tpriority, tstate, tadded, tdue, tfinished, tproject, tdescription);
 			tcore->tc_amount++;
 		}
@@ -129,11 +142,11 @@ void import_baskbin_cmd (bask_core* tcore, struct bask_task** first, char* filen
    |--------------------------------------------| */
 
 /*
-	Function: import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, char* saveptr);
+	Function: import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, char* today, char* saveptr);
 	Description: Parses a task data line from a csv formated file. 
 	InitVersion: 0.0.1
 */
-void import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, char* saveptr)
+void import_csv_parser (bask_core* tcore, struct bask_task** first, char* token, char* today, char* saveptr)
 {
 	unsigned int tid;
 	int tstate;
@@ -289,6 +302,16 @@ void import_csv_parser (bask_core* tcore, struct bask_task** first, char* token,
 		strcpy (tdescription, " ");
 	}
 	
+	/* TODO: Put that into a function! */
+	if (BITGET (tcore->t_options, T_O_AUTODUETODAY) == TRUE &&
+	    utils_streq (tdue, "NONE") != 0 &&
+	    ( time_get_day (today) == time_get_day (tdue) &&
+	      time_get_month (today) == time_get_month (tdue) &&
+	      time_get_year (today) == time_get_year (tdue)))
+	{
+		tpriority = 2;
+	}
+	
 	tcore->baskbin_uid++;
 	task_insert (first, tcore->tc_amount, tid, tactive, tpriority, tstate, tadded, tdue, tfinished, tproject, tdescription);
 	tcore->tc_amount++;
@@ -302,11 +325,13 @@ void import_csv_parser (bask_core* tcore, struct bask_task** first, char* token,
 short import_csv (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	int tt_state;
-	char line[200];
+	char line[200], today[T_S_DUE];
 	char *token, *saveptr;
 	FILE* importfile;
 	
 	tt_state = FALSE;
+
+	time_get_str (today, sizeof (today));
 
 	importfile = fopen (filename, "r");
 
@@ -326,7 +351,7 @@ short import_csv (bask_core* tcore, struct bask_task** first, char* filename)
 		}
 		else
 		{
-			import_csv_parser (tcore, first, token, saveptr);
+			import_csv_parser (tcore, first, token, today, saveptr);
 		}
 	}
 	
@@ -406,7 +431,7 @@ short import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 {
 	unsigned int tid;
 	short tactive, tpriority, tstate;
-	char line[200], tadded[T_S_ADDED], tdue[T_S_DUE], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
+	char line[200], today[T_S_DUE], tadded[T_S_ADDED], tdue[T_S_DUE], tfinished[T_S_FINISHED], tproject[T_S_PROJECT], tdescription[T_S_DESCRIPTION];
 	char tt_tmp[50];
 	char saveptr[200];
 	FILE* importfile;
@@ -420,6 +445,8 @@ short import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 	strcpy (tfinished, " ");
 	strcpy (tproject, " ");
 	strcpy (tdescription, " "); 
+
+	time_get_str (today, sizeof (today));
 
 	importfile = fopen (filename, "r");
 
@@ -440,6 +467,16 @@ short import_ical (bask_core* tcore, struct bask_task** first, char* filename)
 				{
 					tcore->baskbin_uid++;
 					tid = tcore->baskbin_uid;
+				}
+				
+				/* TODO: Put that into a function! */
+				if (BITGET (tcore->t_options, T_O_AUTODUETODAY) == TRUE &&
+				    utils_streq (tdue, "NONE") != 0 &&
+				   ( time_get_day (today) == time_get_day (tdue) &&
+				      time_get_month (today) == time_get_month (tdue) &&
+				      time_get_year (today) == time_get_year (tdue)))
+				{
+					tpriority = 2;
 				}
 				
 				task_insert (first, tcore->tc_amount, tid, tactive, tpriority, tstate, tadded, tdue, tfinished, tproject, tdescription);

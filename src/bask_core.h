@@ -19,6 +19,7 @@
 #define T_S_DESCRIPTION 201
 
 #define T_O_DESCRIPTIONBREAK 0
+#define T_O_AUTODUETODAY 1
 
 #define BIGGEST(a,b) ((a>b) ? (a) : (b))
 #define SMALLEST(a,b) ((a)<(b) ? (a) : (b))

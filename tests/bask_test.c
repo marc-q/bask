@@ -950,16 +950,22 @@ static short tst_import_csvparser (void)
 {
 	char line[200];
 	char *token, *saveptr;
+	char today[T_S_DUE];
 	bask_core tcore;
 	struct bask_task* first = NULL;
 	
 	tcore.baskbin_uid = 1;
 	tcore.tc_amount = 0;
+	tcore.t_options;
+	
+	tcore.t_options ^= BITCOPY (FALSE, 0, tcore.t_options, T_O_AUTODUETODAY);
+	
+	strcpy (today, "23/59/59/09/09/2015");
 	
 	strcpy (line, "1;1;2;\"23/59/59/09/09/2015\";\"NONE\";\"NONE\";\"Test\";\"This is a test.\"\n");
 	token = strtok_r (line, ";", &saveptr); 
 	
-	import_csv_parser (&tcore, &first, token, saveptr);
+	import_csv_parser (&tcore, &first, token, today, saveptr);
 	
 	if (first == NULL)
 	{

@@ -65,6 +65,17 @@ short config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* 
 			tcore->t_options ^= BITCOPY (*tmpsvalue, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
 		}
 	}
+	else if (parser_get_short (line, "automatic_due_today=", tmpsvalue, BASKSEP, saveptr) == 0)
+	{
+		if (ISBOOL (*tmpsvalue) != TRUE)
+		{
+			return CONFIG_ERR_SS_AUTODUETODAY;
+		}
+		else
+		{
+			tcore->t_options ^= BITCOPY (*tmpsvalue, 0, tcore->t_options, T_O_AUTODUETODAY);
+		}
+	}
 	
 	return 0;
 }
@@ -116,6 +127,9 @@ void config_print_set_str_errors (short error_id)
 		case CONFIG_ERR_SS_DESCBREAK:
 			errors_outofrange_int ("task_description_break", FALSE, TRUE);
 			break;
+		case CONFIG_ERR_SS_AUTODUETODAY:
+			errors_outofrange_int ("automatic_due_today", FALSE, TRUE);
+			break;
 		default:
 			break;
 			
@@ -135,6 +149,7 @@ void config_init (bask_core* tcore)
 	
 	tcore->t_options = 0;
 	tcore->t_options ^= BITCOPY (TRUE, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
+	tcore->t_options ^= BITCOPY (TRUE, 0, tcore->t_options, T_O_AUTODUETODAY);
 }
 
 /*
@@ -166,7 +181,8 @@ void config_save (bask_core* tcore)
 		
 		fprintf (baskfile, "# The maximum length of descriptions in characters (0-200; default: 50)\ntask_description_max=%hi\n#\n", tcore->t_descriptionmax);
 		fprintf (baskfile, "# The minimum length of the description field in characters (0-200; default: 50)\ntask_description_min=%hi\n#\n", tcore->t_descriptionmin);
-		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=%hi\n", BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK));
+		fprintf (baskfile, "# Should longer lines be broken when viewed? (0/1; default: 1)\ntask_description_break=%hi\n#\n", BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK));
+		fprintf (baskfile, "# Should tasks with the due date of today automaticly set to the priority today? (0/1; default: 1)\nautomatic_due_today=%hi\n", BITGET (tcore->t_options, T_O_AUTODUETODAY));
 	
 		fclose (baskfile);	
 	}

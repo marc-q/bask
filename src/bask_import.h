@@ -5,7 +5,7 @@
 
 short import_baskbin (bask_core*, struct bask_task**, char*);
 void import_baskbin_cmd (bask_core*, struct bask_task**, char*);
-void import_csv_parser (bask_core*, struct bask_task**, char*, char*);
+void import_csv_parser (bask_core*, struct bask_task**, char*, char*, char*);
 short import_csv (bask_core*, struct bask_task**, char*);
 void import_csv_cmd (bask_core*, struct bask_task**, char*);
 short import_ical_getdatestr (char*, char*);
