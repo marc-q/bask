@@ -268,7 +268,7 @@ int main (int argc, char* argv[])
 		 {0,0,0,0}
 	};
 	
-	optindex = tmp = filter = 0;
+	optindex = tmp = filter = tcore.priority_min = tcore.priority_max = 0;
 	ppri = pact = pday = pmonth = pyear = pfin = -1;
 	
 	strcpy (padded, "");
@@ -344,10 +344,10 @@ int main (int argc, char* argv[])
 	ui_theme_load (&tcore, &btheme);
 	
 	/* Default Prioritys */
-	priority_insert (&bprioritys, 0, btheme.color_normal, "L", "Normal");
-	priority_insert (&bprioritys, 1, btheme.color_important, "I", "Important");
-	priority_insert (&bprioritys, 2, btheme.color_today, "T", "Today");
-	priority_insert (&bprioritys, 3, btheme.color_critical, "C", "Critical");
+	priority_create (&tcore, &bprioritys, 0, btheme.color_normal, "L", "Normal");
+	priority_create (&tcore, &bprioritys, 1, btheme.color_important, "I", "Important");
+	priority_create (&tcore, &bprioritys, 2, btheme.color_today, "T", "Today");
+	priority_create (&tcore, &bprioritys, 3, btheme.color_critical, "C", "Critical");
 	
 	while ((optc = getopt_long (argc, argv, "p:P:a:D:F:A:s:fh", long_options, &optindex)) != -1)
 	{

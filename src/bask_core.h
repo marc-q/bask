@@ -32,6 +32,8 @@ struct _bask_core
 	short t_descriptionmax; /* 0 - 200 */
 	short t_descriptionmin; /* 0 - 200 */
 	short t_options;
+	short priority_max;
+	short priority_min;
 	char path_baskpath[200];
 	char path_baskconf[200];
 	char path_basktheme[200];

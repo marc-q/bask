@@ -20,5 +20,6 @@ void priority_free_ll (bask_priority**);
 short priority_insert (bask_priority**, short, char*, char*, char*);
 short priority_get_idfromstr (bask_priority**, char*);
 short priority_get_viewdata (bask_priority**, short, char*, size_t, char*, size_t);
+void priority_create (bask_core*, bask_priority**, short, char*, char*, char*);
 
 #endif /* __BASK_PRIORITY_H__ */

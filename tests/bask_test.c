@@ -14,7 +14,7 @@
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 81
+#define TESTS_AMOUNT 82
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -555,12 +555,17 @@ static short tst_config_init (void)
 */
 static short tst_task_checkinputnbrs (void)
 {	
-	if (task_check_input_nbrs (-1, 0, FALSE, FALSE) == TASK_ERR_CHECK_ID &&
-	    task_check_input_nbrs (0, TASK_PRIORITY_MAX+1, FALSE, FALSE) == TASK_ERR_CHECK_PRIORITY &&
-	    task_check_input_nbrs (0, TASK_PRIORITY_MIN-1, FALSE, FALSE) == TASK_ERR_CHECK_PRIORITY &&
-	    task_check_input_nbrs (0, 0, 2, FALSE) == TASK_ERR_CHECK_ACTIVE &&
-	    task_check_input_nbrs (0, 0, -1, FALSE) == TASK_ERR_CHECK_ACTIVE &&
-	    task_check_input_nbrs (0, 0, FALSE, FALSE) == 0)
+	bask_core tcore;
+	
+	tcore.priority_min = 0;
+	tcore.priority_max = 3;
+	
+	if (task_check_input_nbrs (&tcore, -1, 0, FALSE, FALSE) == TASK_ERR_CHECK_ID &&
+	    task_check_input_nbrs (&tcore, 0, tcore.priority_max+1, FALSE, FALSE) == TASK_ERR_CHECK_PRIORITY &&
+	    task_check_input_nbrs (&tcore, 0, tcore.priority_min-1, FALSE, FALSE) == TASK_ERR_CHECK_PRIORITY &&
+	    task_check_input_nbrs (&tcore, 0, 0, 2, FALSE) == TASK_ERR_CHECK_ACTIVE &&
+	    task_check_input_nbrs (&tcore, 0, 0, -1, FALSE) == TASK_ERR_CHECK_ACTIVE &&
+	    task_check_input_nbrs (&tcore, 0, 0, FALSE, FALSE) == 0)
 	{
 		tst_print_success ("Task_Check_Input_Nbrs");
 		return TESTS_PASS;
@@ -842,6 +847,65 @@ static short tst_pri_getviewdata (void)
 	return TESTS_FAIL;
 }  
 
+/*
+	Function: tst_pri_create (void);
+	Description: Tests the priority_create function from bask_priority.c.
+	InitVersion: 0.0.1
+*/
+static short tst_pri_create (void)
+{
+	short passed;
+	char color[PRI_S_PCOLOR], pri[PRI_S_PALIAS];
+	bask_core tcore;
+	bask_priority* first = NULL;
+	
+	passed = FALSE;
+	tcore.priority_min = tcore.priority_max = 0;
+	
+	strcpy (color, "");
+	strcpy (pri, "");
+	
+	priority_create (&tcore, &first, 0, BC_TXT_GREEN, "T", "Test");
+	priority_create (&tcore, &first, 1, BC_TXT_BLUE, "1", "Test1");
+	priority_create (&tcore, &first, 2, BC_TXT_RED, "2", "Test2");
+	
+	if (tcore.priority_min == 0 &&
+	    tcore.priority_max == 2 &&
+	    priority_get_viewdata (&first, 0, color, sizeof (color), pri, sizeof (pri)) == 0)
+	{
+		passed = TRUE;
+	}
+	
+	if (passed == TRUE &&
+	    (utils_streq (color, BC_TXT_GREEN) != 0 ||
+	    utils_streq (pri, "T") != 0 ||
+	    priority_get_viewdata (&first, 1, color, sizeof (color), pri, sizeof (pri)) != 0))
+	{
+		passed = FALSE;
+	}
+	
+	if (passed == TRUE &&
+	    (utils_streq (color, BC_TXT_BLUE) != 0 ||
+	    utils_streq (pri, "1") != 0 ||
+	    priority_get_viewdata (&first, 2, color, sizeof (color), pri, sizeof (pri)) != 0))
+	{
+		passed = FALSE;
+	}
+	
+	if (passed == TRUE &&
+	    utils_streq (color, BC_TXT_RED) == 0 &&
+	    utils_streq (pri, "2") == 0)
+	{
+		priority_free_ll (&first);
+		tst_print_success ("Priority_Create");
+		return TESTS_PASS;
+	}
+	
+	priority_free_ll (&first);
+	tst_print_fail ("Priority_Create");
+	return TESTS_FAIL;
+}  
+
 /* |--------------------------------------------|
    |		   Tests-Export			|
    |--------------------------------------------| */
@@ -1072,6 +1136,7 @@ int main (int argc, char* argv[])
 	
 	points += tst_pri_getidfromstr ();
 	points += tst_pri_getviewdata ();
+	points += tst_pri_create ();
 	
 	printf ("\n");
 	

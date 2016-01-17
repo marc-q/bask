@@ -8,6 +8,10 @@
 #include "bask_ui.h"
 #include "bask_priority.h"
 
+/* |--------------------------------------------|
+   |			Core			|
+   |--------------------------------------------| */
+
 /*
 	Function: priority_free_ll (bask_priority** first);
 	Description: Free's all elements from a bask_priority linked list.
@@ -87,6 +91,10 @@ short priority_insert (bask_priority** first, short p_id, char* p_color, char* p
 	return 0;
 }
 
+/* |--------------------------------------------|
+   |			Base			|
+   |--------------------------------------------| */
+
 /*
 	Function: priority_get_idfromstr (bask_priority** first, char* str);
 	Description: Converts the str to the priority number.
@@ -160,4 +168,25 @@ short priority_get_viewdata (bask_priority** first, short p_id, char* p_color, s
 	}
 	
 	return 0;
+}
+   
+/*
+	Function: priority_create (bask_core* tcore, bask_priority** first, short p_id, char* p_color, char* p_alias, char* p_name);
+	Description: Created a new priority with the given data and updates the limits.
+	InitVersion: 0.0.1
+*/
+void priority_create (bask_core* tcore, bask_priority** first, short p_id, char* p_color, char* p_alias, char* p_name)
+{
+	if (priority_insert (first, p_id, p_color, p_alias, p_name) == 0)
+	{
+		if (tcore->priority_max < p_id)
+		{
+			tcore->priority_max = p_id;
+		}
+		
+		if (tcore->priority_min > p_id)
+		{
+			tcore->priority_min = p_id;
+		}
+	}
 }

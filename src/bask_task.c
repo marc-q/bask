@@ -16,12 +16,12 @@
    |--------------------------------------------| */
 
 /*
-	Function: task_check_input_nbrs (int id, short priority, short active, short printout);
+	Function: task_check_input_nbrs (bask_core* tcore, int id, short priority, short active, short printout);
 	Description: Checks if the input nbrs is correct and displays the error messages if printout equals 1!
 	InitVersion: 0.0.1
 */
 
-short task_check_input_nbrs (int id, short priority, short active, short printout)
+short task_check_input_nbrs (bask_core* tcore, int id, short priority, short active, short printout)
 {
 	if (id < 0)
 	{
@@ -31,11 +31,11 @@ short task_check_input_nbrs (int id, short priority, short active, short printou
 		}
 		return TASK_ERR_CHECK_ID;
 	}
-	else if (priority < TASK_PRIORITY_MIN || priority > TASK_PRIORITY_MAX)
+	else if (priority < tcore->priority_min || priority > tcore->priority_max)
 	{
 		if (printout == TRUE)
 		{
-			errors_outofrange_int ("priority", TASK_PRIORITY_MIN, TASK_PRIORITY_MAX);
+			errors_outofrange_int ("priority", tcore->priority_min, tcore->priority_max);
 		}
 		return TASK_ERR_CHECK_PRIORITY;
 	}
@@ -454,7 +454,7 @@ void task_create_cmd (bask_core* tcore, struct bask_task** first, short priority
 {
 	/* TODO: Move the range check of the priority variable into the task_check_input function. */
 	if (task_check_input (tcore, "", "", "", project, description, TRUE) == 0 &&
-	    task_check_input_nbrs (0, priority, TRUE, TRUE) == 0)
+	    task_check_input_nbrs (tcore, 0, priority, TRUE, TRUE) == 0)
 	{
 		task_create (tcore, first, priority, project, description);
 		printf ("Created task %i.\n", tcore->baskbin_uid);
@@ -483,7 +483,7 @@ void task_modificate_cmd (bask_core* tcore, struct bask_task** first, unsigned i
 {
 	/* TODO: Move the range check of the priority variable into the task_check_input function. */
 	if (task_check_input (tcore, added, due, finished, project, description, TRUE) == 0 &&
-	    task_check_input_nbrs (id, (priority == -1 ? 0 : priority), (active == -1 ? FALSE : active), TRUE) == 0)
+	    task_check_input_nbrs (tcore, id, (priority == -1 ? 0 : priority), (active == -1 ? FALSE : active), TRUE) == 0)
 	{
 		task_modificate (first, id, active, state, priority, added, due, finished, project, description);
 		printf ("Modificated task %i.\n", id);
