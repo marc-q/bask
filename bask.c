@@ -47,6 +47,8 @@ static void search_view (bask_core* tcore, bask_theme* btheme, bask_priority** b
 			break;
 		case BVIEW_SUMMARY:
 			view_summary (tcore, btheme, &haystack, bfilter);
+		case BVIEW_DETAILED:
+			view_single (tcore, &haystack, 0, TRUE);
 			break;
 		default:
 			view_tasklist (tcore, btheme, bprioritys, &haystack, bfilter);
@@ -208,6 +210,7 @@ static void print_help (void)
 	printf ("\nVIEWS\n");
 	printf ("\t%s\t\tThe default view, a list of tasks.\n", B_CMD_TASKLIST);
 	printf ("\t%s\t\t\tA summary of projects.\n", B_CMD_SUMMARY);
+	printf ("\t%s\t\tDetailed informations about each task.\n", B_CMD_DETAILED);
 	
 	printf ("\nEXPORTS\n");
 	printf ("\t%s\t\t\tExports to an baskbin file. (default)\n", B_CMD_BASKBIN);
@@ -530,7 +533,7 @@ int main (int argc, char* argv[])
 		}
 		else if (utils_streq (argv[optind], B_CMD_SHOW) == 0)
 		{
-			view_single (&tcore, &first, atoi (argv[optind+1]));
+			view_single (&tcore, &first, atoi (argv[optind+1]), FALSE);
 		}
 		else if (utils_streq (argv[optind], B_CMD_EXPORT) == 0)
 		{
@@ -569,6 +572,10 @@ int main (int argc, char* argv[])
 			else if (utils_streq (argv[optind+1], B_CMD_SUMMARY) == 0)
 			{
 				search_view (&tcore, &btheme, &bprioritys, &bfilter, &first, argv[optind+2], BVIEW_SUMMARY);
+			}
+			else if (utils_streq (argv[optind+1], B_CMD_DETAILED) == 0)
+			{
+				search_view (&tcore, &btheme, &bprioritys, &bfilter, &first, argv[optind+2], BVIEW_DETAILED);
 			}
 			else
 			{

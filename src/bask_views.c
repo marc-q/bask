@@ -103,17 +103,21 @@ void view_print_single (bask_core* tcore, struct bask_task* task)
 }
 
 /*
-	Function: view_single (bask_core* tcore, struct bask_task** first, unsigned int id);
+	Function: view_single (bask_core* tcore, struct bask_task** first, unsigned int id, short multi);
 	Description: Displays a single task.
 	InitVersion: 0.0.1
 */
-void view_single (bask_core* tcore, struct bask_task** first, unsigned int id)
+void view_single (bask_core* tcore, struct bask_task** first, unsigned int id, short multi)
 {
 	struct bask_task* ptr = *first;
 	
 	while (ptr != NULL)
 	{
-		if (ptr->t_id == id)
+		if (multi == TRUE)
+		{
+			view_print_single (tcore, ptr);
+		}
+		else if (ptr->t_id == id)
 		{
 			view_print_single (tcore, ptr);
 			break;

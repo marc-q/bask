@@ -17,6 +17,7 @@
 #define B_CMD_TASKLIST "tasklist"
 #define B_CMD_SUMMARY "summary"
 #define B_CMD_HISTORY "history"
+#define B_CMD_DETAILED "detailed"
 
 #define B_CMD_FINISH "finish"
 #define B_CMD_REMOVE "remove"
