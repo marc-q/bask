@@ -257,6 +257,35 @@ void ui_misc_print_progress (float p, char* bakcolor)
 	printf ("%s\n", BC_TXT_RST);
 }
 
+/*
+	Function: ui_misc_print_linebreak (bask_core* tcore, char* str, short indent, short breakat);
+	Description: Prints a string with linebreaks if needed.
+	InitVersion: 0.0.1
+*/
+void ui_misc_print_linebreak (bask_core* tcore, char* str, short indent, short breakat)
+{
+	int i, j;
+	
+	if (strlen (str) > breakat && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == TRUE)
+	{	
+		for (i = 0, j = 0; i < strlen (str); i++, j++)
+		{
+			if (j == breakat)
+			{
+				printf ("\n");
+				ui_print_nspaces (indent);
+				j = 0;
+			}
+				
+			printf ("%c", str[i]);
+		}
+	}
+	else
+	{
+		printf ("%s", str);
+	}
+}
+
 /* |--------------------------------------------|
    |			Table			|
    |--------------------------------------------| */

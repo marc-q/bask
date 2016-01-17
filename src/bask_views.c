@@ -74,31 +74,10 @@ void view_print_single (bask_core* tcore, struct bask_task* task)
 		printf ("\tFinished:\t%s\n", task->t_finished);
 		printf ("\tProject:\t%s\n", task->t_project);
 		
-		/* TODO: Put this into an functions! */
-		if (strlen (task->t_description) > tcore->t_descriptionmin && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == TRUE)
-		{
-			printf ("\tDescription:\t");
-			
-			for (i = 0, j = 0; i < strlen (task->t_description); i++, j++)
-			{
-				if (j == tcore->t_descriptionmin)
-				{
-					/* NOTE: That can be improved but for now thats a acceptable solution. */
-					printf ("\n\t");
-					ui_print_nspaces (12);
-					printf ("\t");
-					j = 0;
-				}
-					
-				printf ("%c", task->t_description[i]);
-			}
-			
-			printf ("\n");
-		}
-		else
-		{
-			printf ("\tDescription:\t%s\n", task->t_description);
-		}
+		/* Prefix length: strlen ("Description:")+8; Suffix Length: 2*8; */
+		ui_tbl_print_field_str ("Description:", 20, 16);
+		ui_misc_print_linebreak (tcore, task->t_description, 24, tcore->t_descriptionmin);
+		printf ("\n");
 	}
 }
 
@@ -284,26 +263,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, bask_priority** bprior
 			ui_tbl_print_field_int (ptr->t_id, GETDIGITS (idmax) - GETDIGITS (ptr->t_id), 2);
 			ui_tbl_print_field_str (ptr->t_project, -1, tprojectmax+1);
 			ui_tbl_print_field_str (pri, -1, 4);
-			
-			/* TODO: Put this into an functions! */
-			if (strlen (ptr->t_description) > tdescriptionmax && BITGET (tcore->t_options, T_O_DESCRIPTIONBREAK) == TRUE)
-			{
-				for (j = 0, x = 0; j < strlen (ptr->t_description); j++, x++)
-				{
-					if (x == tdescriptionmax)
-					{
-						printf ("\n");
-						ui_print_nspaces (GETDIGITS (idmax) + tprojectmax + 8);
-						x = 0;
-					}
-					
-					printf ("%c", ptr->t_description[j]);
-				}
-			}
-			else
-			{
-				ui_tbl_print_field_str (ptr->t_description, -1, tdescriptionmax);
-			}
+			ui_misc_print_linebreak (tcore, ptr->t_description, GETDIGITS (idmax) + tprojectmax + 8, tdescriptionmax);
 			
 			printf ("%s\n", BC_TXT_RST);
 			
