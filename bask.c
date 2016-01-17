@@ -47,8 +47,9 @@ static void search_view (bask_core* tcore, bask_theme* btheme, bask_priority** b
 			break;
 		case BVIEW_SUMMARY:
 			view_summary (tcore, btheme, &haystack, bfilter);
+			break;
 		case BVIEW_DETAILED:
-			view_single (tcore, &haystack, 0, TRUE);
+			view_single (tcore, &haystack, bfilter, 0, TRUE);
 			break;
 		default:
 			view_tasklist (tcore, btheme, bprioritys, &haystack, bfilter);
@@ -482,9 +483,35 @@ int main (int argc, char* argv[])
 			{
 				task_modificate_cmd (&tcore, &first, atoi (argv[optind+1]), pact, -1, ppri, padded, pdue, pfinished, pproject, pdescription);
 			}
+			else if (utils_streq (argv[optind], B_CMD_SEARCH) == 0)
+			{
+				search_view (&tcore, &btheme, &bprioritys, &bfilter, &first, argv[optind+1], BVIEW_TASKLIST);
+			}
 			else
 			{
 				usage ();
+			}
+		}
+		else if (argc-optind == 3)
+		{
+			if (utils_streq (argv[optind], B_CMD_SEARCH) == 0)
+			{
+				if (utils_streq (argv[optind+1], B_CMD_TASKLIST) == 0)
+				{
+					search_view (&tcore, &btheme, &bprioritys, &bfilter, &first, argv[optind+2], BVIEW_TASKLIST);
+				}
+				else if (utils_streq (argv[optind+1], B_CMD_SUMMARY) == 0)
+				{
+					search_view (&tcore, &btheme, &bprioritys, &bfilter, &first, argv[optind+2], BVIEW_SUMMARY);
+				}
+				else if (utils_streq (argv[optind+1], B_CMD_DETAILED) == 0)
+				{
+					search_view (&tcore, &btheme, &bprioritys, &bfilter, &first, argv[optind+2], BVIEW_DETAILED);
+				}
+				else
+				{
+					usage ();
+				}
 			}
 		}
 		else
@@ -533,7 +560,7 @@ int main (int argc, char* argv[])
 		}
 		else if (utils_streq (argv[optind], B_CMD_SHOW) == 0)
 		{
-			view_single (&tcore, &first, atoi (argv[optind+1]), FALSE);
+			view_single (&tcore, &first, &bfilter, atoi (argv[optind+1]), FALSE);
 		}
 		else if (utils_streq (argv[optind], B_CMD_EXPORT) == 0)
 		{
