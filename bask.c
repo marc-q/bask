@@ -197,7 +197,6 @@ static void print_help (void)
 	
 	printf ("\nARGUMENTS\n");
 	printf ("\t-a [active]\t\tIf the task is active.\n");
-	/*printf ("\t-s [state]\t\tThe state of the task.\n");*/ /* We dont need this right now. */
 	printf ("\t-p [priority]\t\tThe priority of the task.\n");
 	printf ("\t-P [PROJECT]\t\tThe projectname of the task.\n");
 	printf ("\t-D [DESCRIPTION]\tThe description of the task.\n");
@@ -228,6 +227,7 @@ static void print_help (void)
 	
 	printf ("\nFILTERS\n");
 	printf ("\t-a, -p\t\t\tThese args can be used, look at ARGUMENTS for more info.\n");
+	printf ("\t-s [finished]\t\tUse only tasks if there finished flag equals [finished].\n");
 	printf ("\t--day [day]\t\tUse only tasks if there day of the added date equals day.\n");
 	printf ("\t--month [month]\t\tUse only tasks if there month of the added date equals month.\n");
 	printf ("\t--year [year]\t\tUse only tasks if there year of the added date equals year.\n");
@@ -249,7 +249,7 @@ static void usage (void)
 int main (int argc, char* argv[])
 {
 	int optc, optindex;
-	short filter, pact, ppri, pday, pmonth, pyear, tmp;
+	short filter, pact, ppri, pday, pmonth, pyear, pfin, tmp;
 	char padded[T_S_ADDED], pdue[T_S_DUE], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
@@ -269,7 +269,7 @@ int main (int argc, char* argv[])
 	};
 	
 	optindex = tmp = filter = 0;
-	ppri = pact = pday = pmonth = pyear = -1;
+	ppri = pact = pday = pmonth = pyear = pfin = -1;
 	
 	strcpy (padded, "");
 	strcpy (pdue, "");
@@ -349,7 +349,7 @@ int main (int argc, char* argv[])
 	priority_insert (&bprioritys, 2, btheme.color_today, "T", "Today");
 	priority_insert (&bprioritys, 3, btheme.color_critical, "C", "Critical");
 	
-	while ((optc = getopt_long (argc, argv, "p:P:a:D:F:A:fh", long_options, &optindex)) != -1)
+	while ((optc = getopt_long (argc, argv, "p:P:a:D:F:A:s:fh", long_options, &optindex)) != -1)
 	{
 		switch (optc)
 		{
@@ -384,6 +384,12 @@ int main (int argc, char* argv[])
 				if (strlen (optarg) < sizeof (padded))
 				{
 					strcpy (padded, optarg);
+				}
+				break;
+			case 's':
+				if (utils_atos (&pfin, optarg) == -2 || ISBOOL (pfin) != TRUE)
+				{
+					errors_outofrange_int ("-s", FALSE, TRUE);
 				}
 				break;
 			case 'f':
@@ -437,7 +443,7 @@ int main (int argc, char* argv[])
 	
 	if (filter == TRUE)
 	{
-		filter_init (&bfilter, pact, -1, ppri, pday, pmonth, pyear);
+		filter_init (&bfilter, pact, pfin, ppri, pday, pmonth, pyear);
 	}
 	else
 	{

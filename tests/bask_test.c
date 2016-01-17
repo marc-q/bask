@@ -696,7 +696,7 @@ static short tst_filter_checktask (void)
 		passed = FALSE;
 	}
 	
-	filter_init (&bfilter, -1, 1, -1, 9, 9, 2015);
+	filter_init (&bfilter, -1, TRUE, -1, 9, 9, 2015);
 	
 	if (passed == TRUE &&
 	    filter_check_task (&bfilter, &btask) == FALSE)
