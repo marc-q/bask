@@ -193,7 +193,7 @@ static void print_help (void)
 	printf ("\t%s [id]\t\t\t\tDeactivates (hides) a task.\n", B_CMD_STOP);
 	printf ("\t%s [CONFIGLINE]\t\t\tChanges the settings using a line from the config file.\n", B_CMD_CONFIG);
 	
-	printf ("\t%s <VIEW> [SEARCHTAG]\t\tSearches through the tasks and optional uses <VIEW> to show the results.\n", B_CMD_SEARCH);
+	printf ("\t%s <VIEW> [SEARCHTAG] <ARGS>\tSearches through the tasks and optional uses <VIEW> to show the results.\n", B_CMD_SEARCH);
 	printf ("\t%s <EXPORT> [FILENAME]\t\tExports the data from the baskbin to an file with the format <EXPORT> or baskbin.\n", B_CMD_EXPORT);
 	printf ("\t%s <IMPORT> [FILENAME]\t\tImports the data from an file with the format <IMPORT> or baskbin to the baskbin.\n", B_CMD_IMPORT);
 	printf ("\t%s [id] [DUEDATE]\t\t\tSet the due date of a task.\n", B_CMD_DUE);
