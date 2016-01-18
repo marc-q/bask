@@ -104,6 +104,27 @@ short config_set_str (bask_core* tcore, char* str)
 }
 
 /*
+	Function: config_set_str_cmd (bask_core* tcore, char* str);
+	Description: Cmd handle for changing options via string!
+	InitVersion: 0.0.1
+*/
+void config_set_str_cmd (bask_core* tcore, char* str)
+{
+	short errorcode;
+
+	errorcode = config_set_str (tcore, str);
+	
+	if (errorcode != 0)
+	{
+		config_print_set_str_errors (errorcode);
+	}
+	else
+	{
+		printf ("Config succefully changed.\n");
+	}
+}
+
+/*
 	Function: config_print_set_str_errors (int error_id);
 	Description: Prints the errormessages for the function config_set_str.
 	InitVersion: 0.0.1

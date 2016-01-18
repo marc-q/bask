@@ -253,7 +253,7 @@ static void usage (void)
 int main (int argc, char* argv[])
 {
 	int optc, optindex;
-	short filter, pact, ppri, pday, pmonth, pyear, pfin, tmp;
+	short filter, pact, ppri, pday, pmonth, pyear, pfin;
 	char padded[T_S_ADDED], pdue[T_S_DUE], pfinished[T_S_FINISHED], pproject[T_S_PROJECT], pdescription[T_S_DESCRIPTION];
 	bask_core tcore;
 	bask_theme btheme;
@@ -272,7 +272,7 @@ int main (int argc, char* argv[])
 		 {0,0,0,0}
 	};
 	
-	optindex = tmp = filter = tcore.priority_min = tcore.priority_max = 0;
+	optindex = filter = tcore.priority_min = tcore.priority_max = 0;
 	ppri = pact = pday = pmonth = pyear = pfin = -1;
 	
 	strcpy (padded, "");
@@ -572,16 +572,7 @@ int main (int argc, char* argv[])
 		}
 		else if (utils_streq (argv[optind], B_CMD_CONFIG) == 0)
 		{
-			tmp = config_set_str (&tcore, argv[optind+1]);
-			
-			if (tmp != 0)
-			{
-				config_print_set_str_errors (tmp);
-			}
-			else
-			{
-				printf ("Config succefully changed.\n");
-			}
+			config_set_str_cmd (&tcore, argv[optind+1]);
 		}
 		else
 		{

@@ -13,6 +13,7 @@ enum
 
 short config_set_str_raw (bask_core*, char*, short*, char*, size_t, char*);
 short config_set_str (bask_core*, char*);
+void config_set_str_cmd (bask_core*, char*);
 void config_print_set_str_errors (short);
 void config_init (bask_core*);
 void config_save (bask_core*);
