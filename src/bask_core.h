@@ -51,6 +51,7 @@ short parser_get_short (char*, char*, short*, char, char*);
 int utils_streq (char*, char*);
 short utils_atos (short*, char*);
 void utils_mkstr (size_t, char**);
+void utils_chstr (char**, char*);
 short bask_init_local_file (FILE**, char*);
 void bask_get_baskpath (bask_core*, char*, char*);
 

@@ -108,6 +108,21 @@ short task_check_input (bask_core* tcore, char* added, char* due, char* finished
    |--------------------------------------------| */
 
 /*
+	Function: task_free_ll_object (struct bask_task* object);
+	Description: Free's a element from a bask_task linked list.
+	InitVersion: 0.0.1
+*/
+static void task_free_ll_object (struct bask_task* object)
+{	
+	if (object != NULL)
+	{
+		free (object->t_project);
+		free (object->t_description);
+		free (object);
+	}
+}
+
+/*
 	Function: task_free_ll (struct bask_task** first);
 	Description: Free's all elements from a bask_task linked list.
 	InitVersion: 0.0.1
@@ -120,8 +135,7 @@ void task_free_ll (struct bask_task** first)
 	{
 		preptr = ptr;
 		ptr = ptr->next;
-		free (preptr->t_description);
-		free (preptr);
+		task_free_ll_object (preptr);
 	}
 }
 
@@ -159,6 +173,7 @@ short task_insert (struct bask_task** first, unsigned int n, unsigned int tid, s
 	
 	if (strlen (tadded) >= T_S_ADDED || strlen (tdue) >= T_S_DUE || strlen (tfinished) >= T_S_FINISHED || strlen (tproject) >= T_S_PROJECT || strlen (tdescription) >= T_S_DESCRIPTION)
 	{
+		/* No strings have allocated memory so we only need to free the structure. */
 		free (newobj);
 		return -2;
 	}
@@ -166,6 +181,8 @@ short task_insert (struct bask_task** first, unsigned int n, unsigned int tid, s
 	strcpy (newobj->t_added, tadded);
 	strcpy (newobj->t_due, tdue);
 	strcpy (newobj->t_finished, tfinished);
+	
+	utils_mkstr (strlen (tproject), &newobj->t_project);
 	strcpy (newobj->t_project, tproject);
 	
 	utils_mkstr (strlen (tdescription), &newobj->t_description);
@@ -185,7 +202,7 @@ short task_insert (struct bask_task** first, unsigned int n, unsigned int tid, s
 		{
 			if (preobj->n == newobj->n)
 			{
-				free (newobj);
+				task_free_ll_object (newobj);
 				break;
 			}
 			else if (preobj->next == NULL)
@@ -228,12 +245,12 @@ short task_remove (struct bask_task** first, unsigned int id)
 			if (ptr == *first)
 			{
 				*first = ptr->next;
-				free (ptr);
+				task_free_ll_object (ptr);
 			}
 			else
 			{
 				pre->next = ptr->next;
-				free (ptr);
+				task_free_ll_object (ptr);
 			}
 			
 			break;
@@ -309,7 +326,7 @@ short task_modificate (struct bask_task** first, unsigned int id, short active, 
 			{
 				if (strlen (project) < T_S_PROJECT && strcmp (project, "") != 0 )
 				{
-					strcpy (ptr->t_project, project);
+					utils_chstr (&ptr->t_project, project);
 				}
 			}
 			
@@ -317,7 +334,7 @@ short task_modificate (struct bask_task** first, unsigned int id, short active, 
 			{
 				if (strlen (description) < T_S_DESCRIPTION && strcmp (description, "") != 0)
 				{
-					strcpy (ptr->t_description, description);
+					utils_chstr (&ptr->t_description, description);
 				}
 			}
 			break;

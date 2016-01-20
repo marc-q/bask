@@ -179,12 +179,24 @@ short utils_atos (short* out, char* str)
 
 /*
 	Function: utils_mkstr (size_t length, char* str);
-	Description: Converts a string to a short if it fits between the limits of a short. 
+	Description: Allocates the right amount of memory for a string.
 	InitVersion: 0.0.1
 */
 void utils_mkstr (size_t length, char** str)
 {
-	*str = malloc (length+2);
+	*str = malloc (length+1);
+}
+
+/*
+	Function: utils_chstr (char* str, char* newstr);
+	Description: Changes a string of a char*.
+	InitVersion: 0.0.1
+*/
+void utils_chstr (char** str, char* newstr)
+{
+	free (*str);
+	utils_mkstr (strlen (newstr), str);
+	strcpy (*str, newstr);
 }
 
 /*
