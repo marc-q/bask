@@ -7,6 +7,20 @@
 #include "bask_project.h"
 
 /*
+	Function: project_free_ll_object (struct bask_project* object);
+	Description: Free's a element from a bask_project linked list.
+	InitVersion: 0.0.1
+*/
+static void project_free_ll_object (struct bask_project* object)
+{	
+	if (object != NULL)
+	{
+		free (object->p_name);
+		free (object);
+	}
+}
+
+/*
 	Function: project_free_ll (struct bask_project** first);
 	Description: Free's all elements from a bask_project linked list.
 	InitVersion: 0.0.1
@@ -19,7 +33,7 @@ void project_free_ll (struct bask_project** first)
 	{
 		preptr = ptr;
 		ptr = ptr->next;
-		free (preptr);
+		project_free_ll_object (preptr);
 	}
 }
 
@@ -46,6 +60,7 @@ short project_insert (struct bask_project** first, short t_active, short t_state
 		return -2;
 	}
 
+	utils_mkstr (strlen (t_project), &newobj->p_name);
 	strcpy (newobj->p_name, t_project);
 	
 	if (*first == NULL)
@@ -77,7 +92,7 @@ short project_insert (struct bask_project** first, short t_active, short t_state
 				}
 				
 				preobj->p_tasks++;
-				free (newobj);
+				project_free_ll_object (newobj);
 				break;
 			}
 			else if (preobj->next == NULL)

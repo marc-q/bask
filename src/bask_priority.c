@@ -13,8 +13,8 @@
    |--------------------------------------------| */
 
 /*
-	Function: priority_free_ll_object (struct bask_task* object);
-	Description: Free's a element from a bask_task linked list.
+	Function: priority_free_ll_object (bask_priority* object);
+	Description: Free's a element from a bask_priority linked list.
 	InitVersion: 0.0.1
 */
 static void priority_free_ll_object (bask_priority* object)

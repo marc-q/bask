@@ -6,7 +6,7 @@ struct bask_project
 	short p_active;
 	float p_complete;
 	float p_tasks;
-	char p_name[T_S_PROJECT];
+	char* p_name;
 	struct bask_project* next;
 };
 
