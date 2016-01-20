@@ -177,6 +177,15 @@ short utils_atos (short* out, char* str)
 	return 0;
 }
 
+/*
+	Function: utils_mkstr (size_t length, char* str);
+	Description: Converts a string to a short if it fits between the limits of a short. 
+	InitVersion: 0.0.1
+*/
+void utils_mkstr (size_t length, char** str)
+{
+	*str = malloc (length+2);
+}
 
 /*
 	Function: bask_init_local_file (FILE** baskfile, char* filename);

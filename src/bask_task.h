@@ -26,7 +26,8 @@ struct bask_task
 	char t_due[T_S_DUE];
 	char t_finished[T_S_FINISHED];
 	char t_project[T_S_PROJECT];
-	char t_description[T_S_DESCRIPTION];
+	/*char t_description[T_S_DESCRIPTION];*/
+	char* t_description;
 	struct bask_task* next;
 };
 

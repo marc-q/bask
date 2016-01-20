@@ -120,6 +120,7 @@ void task_free_ll (struct bask_task** first)
 	{
 		preptr = ptr;
 		ptr = ptr->next;
+		free (preptr->t_description);
 		free (preptr);
 	}
 }
@@ -166,6 +167,8 @@ short task_insert (struct bask_task** first, unsigned int n, unsigned int tid, s
 	strcpy (newobj->t_due, tdue);
 	strcpy (newobj->t_finished, tfinished);
 	strcpy (newobj->t_project, tproject);
+	
+	utils_mkstr (strlen (tdescription), &newobj->t_description);
 	strcpy (newobj->t_description, tdescription);
 	
 	task_upgrade (newobj);
