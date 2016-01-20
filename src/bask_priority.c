@@ -13,6 +13,21 @@
    |--------------------------------------------| */
 
 /*
+	Function: priority_free_ll_object (struct bask_task* object);
+	Description: Free's a element from a bask_task linked list.
+	InitVersion: 0.0.1
+*/
+static void priority_free_ll_object (bask_priority* object)
+{	
+	if (object != NULL)
+	{
+		free (object->p_alias);
+		free (object->p_name);
+		free (object);
+	}
+}
+
+/*
 	Function: priority_free_ll (bask_priority** first);
 	Description: Free's all elements from a bask_priority linked list.
 	InitVersion: 0.0.1
@@ -25,7 +40,7 @@ void priority_free_ll (bask_priority** first)
 	{
 		preptr = ptr;
 		ptr = ptr->next;
-		free (preptr);
+		priority_free_ll_object (preptr);
 	}
 }
 
@@ -54,7 +69,11 @@ short priority_insert (bask_priority** first, short p_id, char* p_color, char* p
 	}
 
 	strcpy (newobj->p_color, p_color);
+	
+	utils_mkstr (strlen (p_alias), &newobj->p_alias);
 	strcpy (newobj->p_alias, p_alias);
+	
+	utils_mkstr (strlen (p_name), &newobj->p_name);
 	strcpy (newobj->p_name, p_name);
 	
 	if (*first == NULL)
@@ -69,7 +88,7 @@ short priority_insert (bask_priority** first, short p_id, char* p_color, char* p
 		{
 			if (preobj->p_id == newobj->p_id)
 			{
-				free (newobj);
+				priority_free_ll_object (newobj);
 				break;
 			}
 			else if (preobj->next == NULL)

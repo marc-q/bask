@@ -9,8 +9,8 @@ struct _bask_priority
 {
 	short p_id;
 	char p_color[PRI_S_PCOLOR];
-	char p_alias[PRI_S_PALIAS];
-	char p_name[PRI_S_PNAME];
+	char* p_alias;
+	char* p_name;
 	struct _bask_priority* next;
 };
 
