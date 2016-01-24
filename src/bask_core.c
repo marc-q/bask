@@ -4,6 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <limits.h>
+#include "../lib/dutils.h"
 #include "bask_errors.h"
 #include "bask_core.h"
 
@@ -32,7 +33,7 @@ short parser_get_str_old (char* token, char* key, char* out, size_t outsize, cha
 		return 0;
 	}
 
-	return -1;
+	return CORE_ERR_PARSER_NOTFOUND;
 }
 
 /*
@@ -60,7 +61,7 @@ short parser_get_str (char* line, char* key, char* out, size_t outsize, char sep
 		return 0;
 	}
 
-	return -1;
+	return CORE_ERR_PARSER_NOTFOUND;
 }
 
 /*
@@ -84,7 +85,7 @@ short parser_get_int_old (char* token, char* key, int* out, char* septags, char*
 		return 0;
 	}
 
-	return -1;
+	return CORE_ERR_PARSER_NOTFOUND;
 }
 
 /*
@@ -111,7 +112,7 @@ short parser_get_int (char* line, char* key, int* out, char septag, char* savept
 		return 0;
 	}
 
-	return -1;
+	return CORE_ERR_PARSER_NOTFOUND;
 }
 
 /*
@@ -131,7 +132,39 @@ short parser_get_short (char* line, char* key, short* out, char septag, char* sa
 		return 0;
 	}
 
-	return -1;
+	return CORE_ERR_PARSER_NOTFOUND;
+}
+
+/*
+	Function: parser_get_bool (char* line, char* key, short* out, char septag, char* saveptr);
+	Description: Parses a row and return the value if the key is right.
+	InitVersion: 0.0.1
+*/
+short parser_get_bool (char* line, char* key, short* out, char septag, char* saveptr)
+{
+	char tmp[6]; /* 1 / 0 / True OR False so this fits. */
+	
+	if (parser_get_str (line, key, tmp, sizeof (tmp), septag, saveptr) != CORE_ERR_PARSER_NOTFOUND)
+	{
+		if (utils_streq (tmp, "true") == 0 ||
+		    utils_streq (tmp, "1") == 0)
+		{
+			*out = TRUE;
+		}
+		else if (utils_streq (tmp, "false") == 0 ||
+			 utils_streq (tmp, "0") == 0)
+		{
+			*out = FALSE;
+		}
+		else
+		{
+			return CORE_ERR_PARSER_NOTBOOL;
+		}
+		
+		return 0;
+	}
+
+	return CORE_ERR_PARSER_NOTFOUND;
 }
 
 /*

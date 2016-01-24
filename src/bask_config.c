@@ -13,15 +13,18 @@
 	InitVersion: 0.0.1
 */
 short config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* baskbin, size_t baskbin_size, char* saveptr)
-{	
-	if (parser_get_str (line, "baskbin=", baskbin, baskbin_size, BASKSEP, saveptr) == 0)
+{
+	/* Little fix to mark false bools. */
+	*tmpsvalue = 2;
+	
+	if (parser_get_str (line, "baskbin=", baskbin, baskbin_size, BASKSEP, saveptr) != CORE_ERR_PARSER_NOTFOUND)
 	{
 		if (utils_streq (baskbin, "default") != 0)
 		{
 			strcpy (tcore->path_baskbin, baskbin);
 		}
 	}
-	else if (parser_get_short (line, "task_project_min=", tmpsvalue, BASKSEP, saveptr) == 0)
+	else if (parser_get_short (line, "task_project_min=", tmpsvalue, BASKSEP, saveptr) != CORE_ERR_PARSER_NOTFOUND)
 	{
 		if (*tmpsvalue < 0 || *tmpsvalue > 200)
 		{
@@ -32,7 +35,7 @@ short config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* 
 			tcore->t_projectmin = *tmpsvalue;
 		}
 	}
-	else if (parser_get_short (line, "task_description_max=", tmpsvalue, BASKSEP, saveptr) == 0)
+	else if (parser_get_short (line, "task_description_max=", tmpsvalue, BASKSEP, saveptr) != CORE_ERR_PARSER_NOTFOUND)
 	{
 		if (*tmpsvalue < 0 || *tmpsvalue > 200)
 		{
@@ -43,7 +46,7 @@ short config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* 
 			tcore->t_descriptionmax = *tmpsvalue;
 		}
 	}
-	else if (parser_get_short (line, "task_description_min=", tmpsvalue, BASKSEP, saveptr) == 0)
+	else if (parser_get_short (line, "task_description_min=", tmpsvalue, BASKSEP, saveptr) != CORE_ERR_PARSER_NOTFOUND)
 	{
 		if (*tmpsvalue < 0 || *tmpsvalue > 200)
 		{
@@ -54,7 +57,7 @@ short config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* 
 			tcore->t_descriptionmin = *tmpsvalue;
 		}
 	}
-	else if (parser_get_short (line, "task_description_break=", tmpsvalue, BASKSEP, saveptr) == 0)
+	else if (parser_get_bool (line, "task_description_break=", tmpsvalue, BASKSEP, saveptr) != CORE_ERR_PARSER_NOTFOUND)
 	{
 		if (ISBOOL (*tmpsvalue) != TRUE)
 		{
@@ -65,7 +68,7 @@ short config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* 
 			tcore->t_options ^= BITCOPY (*tmpsvalue, 0, tcore->t_options, T_O_DESCRIPTIONBREAK);
 		}
 	}
-	else if (parser_get_short (line, "automatic_due_today=", tmpsvalue, BASKSEP, saveptr) == 0)
+	else if (parser_get_bool (line, "automatic_due_today=", tmpsvalue, BASKSEP, saveptr) != CORE_ERR_PARSER_NOTFOUND)
 	{
 		if (ISBOOL (*tmpsvalue) != TRUE)
 		{
@@ -76,7 +79,7 @@ short config_set_str_raw (bask_core* tcore, char* line, short* tmpsvalue, char* 
 			tcore->t_options ^= BITCOPY (*tmpsvalue, 0, tcore->t_options, T_O_AUTODUETODAY);
 		}
 	}
-	else if (parser_get_short (line, "color=", tmpsvalue, BASKSEP, saveptr) == 0)
+	else if (parser_get_bool (line, "color=", tmpsvalue, BASKSEP, saveptr) != CORE_ERR_PARSER_NOTFOUND)
 	{
 		if (ISBOOL (*tmpsvalue) != TRUE)
 		{

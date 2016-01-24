@@ -26,6 +26,12 @@
 #define SMALLEST(a,b) ((a)<(b) ? (a) : (b))
 #define ISBOOL(a) ((((a) == (FALSE)) || ((a) == (TRUE))) ? (TRUE) : (FALSE)) 
 
+enum
+{
+	CORE_ERR_PARSER_NOTBOOL = -2,
+	CORE_ERR_PARSER_NOTFOUND
+};
+
 struct _bask_core
 {
 	int tc_amount;
@@ -49,6 +55,7 @@ short parser_get_str (char*, char*, char*, size_t, char, char*);
 short parser_get_int_old (char*, char*, int*, char*, char*);
 short parser_get_int (char*, char*, int*, char, char*);
 short parser_get_short (char*, char*, short*, char, char*);
+short parser_get_bool (char*, char*, short*, char, char*);
 int utils_streq (char*, char*);
 short utils_atos (short*, char*);
 void utils_mkstr (size_t, char**);
