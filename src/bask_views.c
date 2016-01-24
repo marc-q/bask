@@ -61,9 +61,7 @@ void view_legend (bask_core* tcore, bask_theme* btheme, bask_priority** bpriorit
 	InitVersion: 0.0.1
 */
 void view_print_single (bask_core* tcore, struct bask_task* task)
-{
-	unsigned int i, j;
-	
+{	
 	if (task != NULL)
 	{
 		printf ("\nTask:\n");
