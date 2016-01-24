@@ -25,8 +25,9 @@
 void view_print_legend_tag (bask_core* tcore, char* tagname, char* tagcolor)
 {
 	ui_misc_print_color (tcore, tagcolor);
-	printf ("%s, ", tagname);
+	printf ("%s", tagname);
 	ui_misc_print_color (tcore, BC_TXT_RST);
+	printf (", ");
 }
 
 /*
