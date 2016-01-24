@@ -496,11 +496,15 @@ static short tst_config_setstr (void)
 	config_set_str (&tcore, "task_description_max=50;");
 	config_set_str (&tcore, "task_description_min=50;");
 	config_set_str (&tcore, "task_description_break=1;");
+	config_set_str (&tcore, "automatic_due_today=1;");
+	config_set_str (&tcore, "color=1;");
 
 	if (tcore.t_projectmin == 50 &&
 	    tcore.t_descriptionmax == 50 &&
 	    tcore.t_descriptionmin == 50 &&
-	    BITGET (tcore.t_options, T_O_DESCRIPTIONBREAK) == TRUE)
+	    BITGET (tcore.t_options, T_O_DESCRIPTIONBREAK) == TRUE &&
+	    BITGET (tcore.t_options, T_O_AUTODUETODAY) == TRUE &&
+	    BITGET (tcore.t_options, T_O_COLOR) == TRUE)
 	{
 		passed = TRUE;
 	}
@@ -510,7 +514,9 @@ static short tst_config_setstr (void)
 	    config_set_str (&tcore, "task_project_min=201;") == CONFIG_ERR_SS_PROJMIN &&
 	    config_set_str (&tcore, "task_description_max=201;") == CONFIG_ERR_SS_DESCMAX &&
 	    config_set_str (&tcore, "task_description_min=201;") == CONFIG_ERR_SS_DESCMIN &&
-	    config_set_str (&tcore, "task_description_break=2;") == CONFIG_ERR_SS_DESCBREAK)
+	    config_set_str (&tcore, "task_description_break=2;") == CONFIG_ERR_SS_DESCBREAK &&
+	    config_set_str (&tcore, "automatic_due_today=2;") == CONFIG_ERR_SS_AUTODUETODAY &&
+	    config_set_str (&tcore, "color=2;") == CONFIG_ERR_SS_COLOR)
 	{
 		tst_print_success ("Config_Set_Str");
 		return TESTS_PASS;
@@ -534,7 +540,9 @@ static short tst_config_init (void)
 	if (tcore.t_projectmin == 15 &&
 	    tcore.t_descriptionmax == 50 &&
 	    tcore.t_descriptionmin == 50 &&
-	    BITGET (tcore.t_options, T_O_DESCRIPTIONBREAK) == TRUE)
+	    BITGET (tcore.t_options, T_O_DESCRIPTIONBREAK) == TRUE &&
+	    BITGET (tcore.t_options, T_O_AUTODUETODAY) == TRUE &&
+	    BITGET (tcore.t_options, T_O_COLOR) == TRUE)
 	{
 		tst_print_success ("Config_Init");
 		return TESTS_PASS;

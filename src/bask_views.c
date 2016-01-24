@@ -18,21 +18,23 @@
    |--------------------------------------------| */
 
 /*
-	Function: view_print_legend_tag (char* tagname, char* tagcolor);
+	Function: view_print_legend_tag (bask_core* tcore, char* tagname, char* tagcolor);
 	Description: Prints a single tag labeld tagname with txt color tagcolor.
 	InitVersion: 0.0.1
 */
-void view_print_legend_tag (char* tagname, char* tagcolor)
+void view_print_legend_tag (bask_core* tcore, char* tagname, char* tagcolor)
 {
-	printf ("%s \b%s \b%s, ", tagcolor, tagname, BC_TXT_RST);
+	ui_misc_print_color (tcore, tagcolor);
+	printf ("%s, ", tagname);
+	ui_misc_print_color (tcore, BC_TXT_RST);
 }
 
 /*
-	Function: view_legend (bask_theme* btheme, bask_priority** bprioritys);
+	Function: view_legend (bask_core* tcore, bask_theme* btheme, bask_priority** bprioritys);
 	Description: Displays a legend for the meanings of colors.
 	InitVersion: 0.0.1
 */
-void view_legend (bask_theme* btheme, bask_priority** bprioritys)
+void view_legend (bask_core* tcore, bask_theme* btheme, bask_priority** bprioritys)
 {
 	bask_priority* ptr = *bprioritys;
 	
@@ -40,12 +42,12 @@ void view_legend (bask_theme* btheme, bask_priority** bprioritys)
 	
 	while (ptr != NULL)
 	{
-		view_print_legend_tag (ptr->p_name, ptr->p_color);
+		view_print_legend_tag (tcore, ptr->p_name, ptr->p_color);
 		
 		ptr = ptr->next;
 	}
 	
-	view_print_legend_tag ("Finished", btheme->color_finished);
+	view_print_legend_tag (tcore, "Finished", btheme->color_finished);
 	printf ("\n");
 }
 
@@ -142,10 +144,19 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 		ptr = ptr->next;
 	}
 	
-	ui_tbl_print_title ("Project", pprojectmax, 1);
-	ui_tbl_print_title ("Remaining", -1, 1);
-	ui_tbl_print_title ("Complete", -1, 1);
+	ui_tbl_print_title (tcore, "Project", pprojectmax, 1);
+	ui_tbl_print_title (tcore, "Remaining", -1, 1);
+	ui_tbl_print_title (tcore, "Complete", -1, 1);
 	printf ("0%%               100%%\n");
+	
+	/* Print the underline if no color is used. */
+	if (BITGET (tcore->t_options, T_O_COLOR) == FALSE)
+	{
+		ui_tbl_print_title_underline (pprojectmax, 1);
+		ui_tbl_print_title_underline (9, 1);
+		ui_tbl_print_title_underline (8, 1);
+		printf ("\n");
+	}
 	
 	i = 0;
 	pptr = tprojects;
@@ -169,7 +180,7 @@ void view_summary (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 			ui_tbl_print_field_int (ppercent, 7-GETDIGITS (ppercent), -1);
 			ui_tbl_print_field_str ("%", -1, 2);
 			
-			ui_misc_print_progress (100.0*(pptr->p_complete/pptr->p_tasks), btheme->color_pbarbak);
+			ui_misc_print_progress (tcore, 100.0*(pptr->p_complete/pptr->p_tasks), btheme->color_pbarbak);
 			
 			i++;
 		}
@@ -235,11 +246,21 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, bask_priority** bprior
 		ptr = ptr->next;
 	}
 	
-	ui_tbl_print_title ("ID", -1, GETDIGITS (idmax)+1);
-	ui_tbl_print_title ("Project", tprojectmax, 1);
-	ui_tbl_print_title ("Pri", 3, 1);
-	ui_tbl_print_title ("Description", tdescriptionmax, 1);
+	ui_tbl_print_title (tcore, "ID", -1, GETDIGITS (idmax)+1);
+	ui_tbl_print_title (tcore, "Project", tprojectmax, 1);
+	ui_tbl_print_title (tcore, "Pri", 3, 1);
+	ui_tbl_print_title (tcore, "Description", tdescriptionmax, 1);
 	printf ("\n");
+	
+	/* Print the underline if no color is used. */
+	if (BITGET (tcore->t_options, T_O_COLOR) == FALSE)
+	{
+		ui_tbl_print_title_underline (2, GETDIGITS (idmax)+1);
+		ui_tbl_print_title_underline (tprojectmax, 1);
+		ui_tbl_print_title_underline (3, 1);
+		ui_tbl_print_title_underline (tdescriptionmax, 1);
+		printf ("\n");
+	}
 	
 	i = 0;
 	ptr = *first;
@@ -248,24 +269,29 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, bask_priority** bprior
 		if (filter_check_task (filter, ptr) == TRUE)
 		{	
 			priority_get_viewdata (bprioritys, ptr->t_priority, prefix, sizeof (prefix), pri, sizeof (pri));
-		
-			if (BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == TRUE)
+			
+			/* NOTE: This saves reduces the amount of instructions called. */
+			if (BITGET (tcore->t_options, T_O_COLOR) == TRUE)
 			{
-				strcpy (prefix, btheme->color_finished);
-			}
+				if (BITGET (ptr->t_flags, TASK_FLAG_FINISHED) == TRUE)
+				{
+					strcpy (prefix, btheme->color_finished);
+				}
 		
-			if (i%2 == 1)
-			{	
-				strcat (prefix, btheme->color_seclinesbak);
-			}
+				if (i%2 == 1)
+				{	
+					strcat (prefix, btheme->color_seclinesbak);
+				}
 		
-			printf ("%s", prefix);
+				printf ("%s", prefix);
+			}
+			
 			ui_tbl_print_field_int (ptr->t_id, GETDIGITS (idmax) - GETDIGITS (ptr->t_id), 2);
 			ui_tbl_print_field_str (ptr->t_project, -1, tprojectmax+1);
 			ui_tbl_print_field_str (pri, -1, 4);
 			ui_misc_print_linebreak (tcore, ptr->t_description, GETDIGITS (idmax) + tprojectmax + 8, tdescriptionmax);
-			
-			printf ("%s\n", BC_TXT_RST);
+			ui_misc_print_color (tcore, BC_TXT_RST);
+			printf ("\n");
 			
 			i++;
 		}
@@ -281,7 +307,7 @@ void view_tasklist (bask_core* tcore, bask_theme* btheme, bask_priority** bprior
 	{
 		printf ("\n%i tasks\n", i);
 	}
-	view_legend (btheme, bprioritys);
+	view_legend (tcore, btheme, bprioritys);
 }
 
 /* |--------------------------------------------|
@@ -367,27 +393,35 @@ void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 		
 		if (tasks_added > 0 || tasks_finished > 0)
 		{
-			printf ("%s", BC_BLD_BLUE);
+			ui_misc_print_color (tcore, BC_BLD_BLUE);
 			ui_tbl_print_field_int (current_year, -1, -1);
 			ui_tbl_print_field_str ("/", -1, -1);
 			ui_tbl_print_field_int (current_month, -1, (max_year+1+max_month+10)-(current_year+1+current_month));
 			
+			ui_misc_print_color (tcore, BC_BLD_GREEN);
+			printf ("%i", tasks_added);
+			ui_misc_print_color (tcore, BC_TXT_RST);
+				
 			if (tasks_added != 1)
 			{
-				printf ("%s%i%s tasks added, ", BC_BLD_GREEN, tasks_added, BC_TXT_RST);
+				printf (" tasks added, ");
 			}
 			else
 			{
-				printf ("%s%i%s task added, ", BC_BLD_GREEN, tasks_added, BC_TXT_RST);
+				printf (" task added, ");
 			}
+			
+			ui_misc_print_color (tcore, btheme->color_finished);
+			printf ("%i", tasks_finished);
+			ui_misc_print_color (tcore, BC_TXT_RST);
 			
 			if (tasks_finished != 1)
 			{
-				printf ("%s%i%s tasks finished.\n", btheme->color_finished, tasks_finished, BC_TXT_RST);
+				printf (" tasks finished.\n");
 			}
 			else
 			{
-				printf ("%s%i%s task finished.\n", btheme->color_finished, tasks_finished, BC_TXT_RST);
+				printf (" task finished.\n");
 			}
 		}
 		

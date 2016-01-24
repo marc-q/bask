@@ -12,30 +12,30 @@
    |--------------------------------------------| */
 
 /*
-	Function: ui_print_nspaces (int amount);
-	Description: Prints amount spaces.
+	Function: ui_print_nchars (char chr, int amount);
+	Description: Prints amount characters.
 	InitVersion: 0.0.1
 */
-void ui_print_nspaces (int amount)
+void ui_print_nchars (char chr, int amount)
 {
 	if (amount > 0)
 	{
 		while (amount > 0)
 		{
-			printf (" ");
+			printf ("%c", chr);
 			amount--;
 		}
 	}
 }
 
 /*
-	Function: ui_print_nspaces_str (char* tag, int length);
-	Description: Prints length spaces minus the length of tag.
+	Function: ui_print_nchars_str (char chr, char* tag, int length);
+	Description: Prints length characters minus the length of tag.
 	InitVersion: 0.0.1
 */
-void ui_print_nspaces_str (char* tag, int length)
+void ui_print_nchars_str (char chr, char* tag, int length)
 {	
-	ui_print_nspaces (length - strlen (tag));
+	ui_print_nchars (chr, length - strlen (tag));
 }
 
 /* |--------------------------------------------|
@@ -244,17 +244,39 @@ void ui_theme_load (bask_core* tcore, bask_theme* btheme)
    |--------------------------------------------| */
 
 /*
-	Function: ui_misc_print_progress (float p, char* bakcolor);
+	Function: ui_misc_print_color (bask_core* tcore, char* color);
+	Description: Prints the color if the option color is set to true.
+	InitVersion: 0.0.1
+*/
+void ui_misc_print_color (bask_core* tcore, char* color)
+{
+	if (BITGET (tcore->t_options, T_O_COLOR) == TRUE)
+	{
+		printf ("%s", color);
+	}
+}
+
+/*
+	Function: ui_misc_print_progress (bask_core* tcore, float p, char* bakcolor);
 	Description: Prints a progress bar filled p%.
 	InitVersion: 0.0.1
 */
-void ui_misc_print_progress (float p, char* bakcolor)
+void ui_misc_print_progress (bask_core* tcore, float p, char* bakcolor)
 {
-	printf ("%s", bakcolor);
+	if (BITGET (tcore->t_options, T_O_COLOR) == TRUE)
+	{
+		printf ("%s", bakcolor);
 	
-	ui_print_nspaces ((p/5)+1);
+		ui_print_nchars (' ', (p/5)+1);
 	
-	printf ("%s\n", BC_TXT_RST);
+		printf ("%s\n", BC_TXT_RST);
+	}
+	else
+	{
+		ui_print_nchars ('|', (p/5)+1);
+		ui_print_nchars (' ', 21 - (((int)(p/5)+1)%21));
+		printf ("\n");
+	}
 }
 
 /*
@@ -273,7 +295,7 @@ void ui_misc_print_linebreak (bask_core* tcore, char* str, short indent, short b
 			if (j == breakat)
 			{
 				printf ("\n");
-				ui_print_nspaces (indent);
+				ui_print_nchars (' ', indent);
 				j = 0;
 			}
 				
@@ -291,17 +313,29 @@ void ui_misc_print_linebreak (bask_core* tcore, char* str, short indent, short b
    |--------------------------------------------| */
 
 /*
-	Function: ui_tbl_print_title (char* name, int len_underline, int len_normal);
+	Function: ui_tbl_print_title (bask_core* tcore, char* name, int len_underline, int len_normal);
 	Description: Prints a table title.
 	InitVersion: 0.0.1
 */
-void ui_tbl_print_title (char* name, int len_underline, int len_normal)
+void ui_tbl_print_title (bask_core* tcore, char* name, int len_underline, int len_normal)
 {	
-	printf ("%s%s", BC_TXT_UND, name);
-	ui_print_nspaces_str (name, len_underline);
-	printf ("%s", BC_TXT_RST);
+	ui_misc_print_color (tcore, BC_TXT_UND);
+	printf ("%s", name);
+	ui_print_nchars_str (' ', name, len_underline);
+	ui_misc_print_color (tcore, BC_TXT_RST);
 	
-	ui_print_nspaces (len_normal);
+	ui_print_nchars (' ', len_normal);
+}
+
+/*
+	Function: ui_tbl_print_title_underline (int len_underline, int len_normal);
+	Description: Prints a underline for an table title.
+	InitVersion: 0.0.1
+*/
+void ui_tbl_print_title_underline (int len_underline, int len_normal)
+{	
+	ui_print_nchars ('-', len_underline);
+	ui_print_nchars (' ', len_normal);
 }
 
 /*
@@ -311,11 +345,11 @@ void ui_tbl_print_title (char* name, int len_underline, int len_normal)
 */
 void ui_tbl_print_field_str (char* value, int len_pre, int len_suf)
 {
-	ui_print_nspaces_str (value, len_pre);
+	ui_print_nchars_str (' ', value, len_pre);
 	
 	printf ("%s", value);
 	
-	ui_print_nspaces_str (value, len_suf);
+	ui_print_nchars_str (' ', value, len_suf);
 }
 
 /*
@@ -325,9 +359,9 @@ void ui_tbl_print_field_str (char* value, int len_pre, int len_suf)
 */
 void ui_tbl_print_field_int (int value, int len_pre, int len_suf)
 {	
-	ui_print_nspaces (len_pre);
+	ui_print_nchars (' ', len_pre);
 	
 	printf ("%i", value);
 	
-	ui_print_nspaces (len_suf);
+	ui_print_nchars (' ', len_suf);
 }
