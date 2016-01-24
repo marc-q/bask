@@ -395,7 +395,7 @@ void view_history (bask_core* tcore, bask_theme* btheme, struct bask_task** firs
 			ui_misc_print_color (tcore, BC_BLD_BLUE);
 			ui_tbl_print_field_int (current_year, -1, -1);
 			ui_tbl_print_field_str ("/", -1, -1);
-			ui_tbl_print_field_int (current_month, -1, (max_year+1+max_month+10)-(current_year+1+current_month));
+			ui_tbl_print_field_int (current_month, -1, (GETDIGITS (max_year)+1+GETDIGITS (max_month)+10)-(GETDIGITS (current_year)+1+GETDIGITS (current_month)));
 			
 			ui_misc_print_color (tcore, BC_BLD_GREEN);
 			printf ("%i", tasks_added);
