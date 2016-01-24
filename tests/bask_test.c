@@ -14,7 +14,7 @@
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 82
+#define TESTS_AMOUNT 83
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -272,6 +272,86 @@ static short tst_core_parser_short (void)
 }
 
 /*
+	Function: tst_core_parser_bool (void);
+	Description: Tests the parser_get_bool function from bask_core.c.
+	InitVersion: 0.0.1
+*/
+static short tst_core_parser_bool (void)
+{
+	short out, passed;
+	char instr[50];
+	char saveptr[200];
+	
+	out = passed = FALSE;
+	
+	strcpy (instr, "test=1\n");
+	
+	parser_get_bool (instr, "test=", &out, BASKSEP, saveptr);
+	
+	if (out == TRUE)
+	{
+		passed = TRUE;
+	}
+	
+	strcpy (instr, "test=true\n");
+	
+	parser_get_bool (instr, "test=", &out, BASKSEP, saveptr);
+	
+	if (passed == TRUE &&
+	    out != TRUE)
+	{
+		passed = FALSE;
+	}
+	
+	strcpy (instr, "test=0\n");
+	
+	parser_get_bool (instr, "test=", &out, BASKSEP, saveptr);
+	
+	if (passed == TRUE &&
+	    out != FALSE)
+	{
+		passed = FALSE;
+	}
+	
+	strcpy (instr, "test=false\n");
+	
+	if (passed == TRUE &&
+	    out != FALSE)
+	{
+		passed = FALSE;
+	}
+	
+	strcpy (instr, "test=2\n");
+	
+	if (passed == TRUE && 
+	    parser_get_bool (instr, "test=", &out, BASKSEP, saveptr) != CORE_ERR_PARSER_NOTBOOL)
+	{
+		passed = FALSE;
+	}
+
+	strcpy (instr, "test=test\n");
+	
+	if (passed == TRUE && 
+	    parser_get_bool (instr, "test=", &out, BASKSEP, saveptr) != CORE_ERR_PARSER_NOTBOOL)
+	{
+		passed = FALSE;
+	}
+
+	strcpy (instr, "test2=true\n");
+
+	if (passed == TRUE && 
+	    parser_get_bool (instr, "test=", &out, BASKSEP, saveptr) == CORE_ERR_PARSER_NOTFOUND)
+	{
+		tst_print_success ("Core_Parser_Bool");
+		return TESTS_PASS;
+	}
+
+	tst_print_fail ("Core_Parser_Bool");
+	return TESTS_FAIL;
+}
+
+
+/*
 	Function: tst_core_get_baskpath (void);
 	Description: Tests the bask_get_baskpath function from bask_core.c.
 	InitVersion: 0.0.1
@@ -492,12 +572,12 @@ static short tst_config_setstr (void)
 	tcore.t_descriptionmin = 0;
 	tcore.t_options = 0;
 	
-	config_set_str (&tcore, "task_project_min=50;");
-	config_set_str (&tcore, "task_description_max=50;");
-	config_set_str (&tcore, "task_description_min=50;");
-	config_set_str (&tcore, "task_description_break=1;");
-	config_set_str (&tcore, "automatic_due_today=1;");
-	config_set_str (&tcore, "color=1;");
+	config_set_str (&tcore, "task_project_min=50");
+	config_set_str (&tcore, "task_description_max=50");
+	config_set_str (&tcore, "task_description_min=50");
+	config_set_str (&tcore, "task_description_break=1");
+	config_set_str (&tcore, "automatic_due_today=1");
+	config_set_str (&tcore, "color=true");
 
 	if (tcore.t_projectmin == 50 &&
 	    tcore.t_descriptionmax == 50 &&
@@ -511,12 +591,12 @@ static short tst_config_setstr (void)
 	
 	if (passed == TRUE &&
 	    config_set_str (&tcore, "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem .") == CONFIG_ERR_SS_CONFLINE &&
-	    config_set_str (&tcore, "task_project_min=201;") == CONFIG_ERR_SS_PROJMIN &&
-	    config_set_str (&tcore, "task_description_max=201;") == CONFIG_ERR_SS_DESCMAX &&
-	    config_set_str (&tcore, "task_description_min=201;") == CONFIG_ERR_SS_DESCMIN &&
-	    config_set_str (&tcore, "task_description_break=2;") == CONFIG_ERR_SS_DESCBREAK &&
-	    config_set_str (&tcore, "automatic_due_today=2;") == CONFIG_ERR_SS_AUTODUETODAY &&
-	    config_set_str (&tcore, "color=2;") == CONFIG_ERR_SS_COLOR)
+	    config_set_str (&tcore, "task_project_min=201") == CONFIG_ERR_SS_PROJMIN &&
+	    config_set_str (&tcore, "task_description_max=201") == CONFIG_ERR_SS_DESCMAX &&
+	    config_set_str (&tcore, "task_description_min=201") == CONFIG_ERR_SS_DESCMIN &&
+	    config_set_str (&tcore, "task_description_break=2") == CONFIG_ERR_SS_DESCBREAK &&
+	    config_set_str (&tcore, "automatic_due_today=2") == CONFIG_ERR_SS_AUTODUETODAY &&
+	    config_set_str (&tcore, "color=2") == CONFIG_ERR_SS_COLOR)
 	{
 		tst_print_success ("Config_Set_Str");
 		return TESTS_PASS;
@@ -1041,6 +1121,7 @@ int main (int argc, char* argv[])
 	points += tst_core_parser_str ();
 	points += tst_core_parser_int ();
 	points += tst_core_parser_short ();
+	points += tst_core_parser_bool ();
 	points += tst_core_get_baskpath ();
 	
 	printf ("\n");
