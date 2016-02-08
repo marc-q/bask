@@ -11,31 +11,7 @@
 /* |--------------------------------------------|
    |			Utils			|
    |--------------------------------------------| */
-
-/*
-	Function: parser_get_str_old (char* token, char* key, char* out, size_t outsize, char* septags, char* saveptr);
-	Description: Parses a row and return the value if the key is right. (!DEPRECATED!)
-	InitVersion: 0.0.1
-*/
-short parser_get_str_old (char* token, char* key, char* out, size_t outsize, char* septags, char* saveptr)
-{
-	if (utils_streq (token, key) == 0)
-	{
-		token = strtok_r (NULL, septags, &saveptr);
-
-		if (strlen (token) < outsize)
-		{
-			strcpy (out, token);
-		}
-
-		token = strtok_r (NULL, septags, &saveptr);
-
-		return 0;
-	}
-
-	return CORE_ERR_PARSER_NOTFOUND;
-}
-
+   
 /*
 	Function: parser_get_str (char* line, char* key, char* out, size_t outsize, char septag, char* saveptr);
 	Description: Parses a row and return the value if the key is right.
@@ -57,30 +33,6 @@ short parser_get_str (char* line, char* key, char* out, size_t outsize, char sep
 			
 			strcpy (out, saveptr+1);
 		}
-
-		return 0;
-	}
-
-	return CORE_ERR_PARSER_NOTFOUND;
-}
-
-/*
-	Function: parser_get_int_old (char* token, char* key, int* out, char* septags, char* saveptr);
-	Description: Parses a row and return the value if the key is right. (!DEPRECATED!)
-	InitVersion: 0.0.1
-*/
-short parser_get_int_old (char* token, char* key, int* out, char* septags, char* saveptr)
-{
-	if (utils_streq (token, key) == 0)
-	{
-		token = strtok_r (NULL, septags, &saveptr);
-
-		if (isdigit (token[0]) != 0)
-		{
-			*out = atoi (token);
-		}
-
-		token = strtok_r (NULL, septags, &saveptr);
 
 		return 0;
 	}
