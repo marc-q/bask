@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <time.h>
+#include "../lib/dutils.h"
 #include "bask_core.h"
 #include "bask_errors.h"
 #include "bask_time.h"
@@ -13,7 +15,7 @@
    |--------------------------------------------| */
 
 /*
-	Function: time_get_tm (struct tm** out);
+	Function: time_get_tm (struct tm* out);
 	Description: Builds a tm structure with the current date.
 	InitVersion: 0.0.1
 */
@@ -63,13 +65,75 @@ short time_get_str (char* out, size_t outsize)
 */
 short time_get_str_described (char* out, size_t outsize, char* desc)
 {
+	int value, i;
+	unsigned short multiplier;
 	struct tm* tmp;
 	
+	value = i = 0;
+	multiplier = 1;
+	
+	tzset ();
+	/* This inits the tmp structure. */
 	if (time_get_tm (&tmp) != 0)
 	{
 		errors_timenotgot ();
 		return -1;
 	}
+	
+	if (strlen(desc) == F_BB_S_DATE-1 &&
+	    desc[2] == '/' &&
+	    desc[5] == '/' &&
+	    desc[8] == '/' &&
+	    desc[11] == '/' &&
+	    desc[14] == '/')
+	{
+		/* INFO: The time_get_tm_str function doesnt work here. */
+		tmp->tm_isdst = -1;
+		tmp->tm_sec = time_get_seconds (desc);
+		tmp->tm_min = time_get_minutes (desc);
+		tmp->tm_hour = time_get_hours (desc);
+		tmp->tm_mday = time_get_day (desc);
+		tmp->tm_mon = time_get_month (desc)-1;
+		tmp->tm_year = time_get_year (desc)-1900;
+	}
+	else
+	{
+		while (i < strlen (desc) && isdigit (desc[i]) != 0)
+		{
+			value *= multiplier;
+			value += CHARTOINT (desc[i]);
+			multiplier *= 10;
+			i++;
+		}
+		
+		if (strstr (desc, "ago") != NULL)
+		{
+			value = -value;
+		}
+	
+		if (strstr (desc, "day") != NULL ||
+		    strstr (desc, "days") != NULL)
+		{
+			tmp->tm_mday += value;
+		}
+		else if (strstr (desc, "week") != NULL ||
+			 strstr (desc, "weeks") != NULL)
+		{
+			tmp->tm_mday += value * 7;
+		}
+		else if (strstr (desc, "month") != NULL ||
+			 strstr (desc, "months") != NULL)
+		{
+			tmp->tm_mon += value;
+		}
+		else if (strstr (desc, "year") != NULL ||
+			 strstr (desc, "years") != NULL)
+		{
+			tmp->tm_year += value;
+		}
+	}
+	
+	mktime (tmp);
 	
 	if (strftime (out, outsize, "%H/%M/%S/%d/%m/%Y", tmp) == 0)
 	{

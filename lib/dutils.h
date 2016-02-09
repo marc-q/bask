@@ -103,4 +103,8 @@
 #define FALSE 0
 #define TRUE 1
 
+/* CHARTOINT */
+
+#define CHARTOINT(a) ((a) - (48))
+
 #endif /* __DUTILS_H__ */

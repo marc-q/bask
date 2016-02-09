@@ -426,7 +426,7 @@ static short tst_time_getstr_described (void)
 {
 	short passed;
 	char datestr[F_BB_S_DATE];
-	struct tm* tmp;
+	struct tm *tmp;
 	
 	passed = FALSE;
 	
@@ -547,9 +547,17 @@ static short tst_time_getstr_described (void)
 	time_get_str_described (datestr, sizeof (datestr), "4");
 	
 	if (passed == TRUE &&
-	    time_get_day (datestr) == tmp->tm_mday &&
-	    time_get_month (datestr) == tmp->tm_mon+1 &&
-	    time_get_year (datestr) == tmp->tm_year+1900)
+	    (time_get_day (datestr) != tmp->tm_mday ||
+	    time_get_month (datestr) != tmp->tm_mon+1 ||
+	    time_get_year (datestr) != tmp->tm_year+1900))
+	{
+		passed = FALSE;
+	}
+	
+	time_get_str_described (datestr, sizeof (datestr), "23/59/59/09/09/2015");
+	
+	if (passed == TRUE &&
+	    utils_streq (datestr, "23/59/59/09/09/2015") == 0)
 	{
 		tst_print_success ("Time_Get_Str_Described");
 		return TESTS_PASS;
