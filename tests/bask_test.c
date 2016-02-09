@@ -315,6 +315,8 @@ static short tst_core_parser_bool (void)
 	
 	strcpy (instr, "test=false\n");
 	
+	parser_get_bool (instr, "test=", &out, BASKSEP, saveptr);
+	
 	if (passed == TRUE &&
 	    out != FALSE)
 	{
@@ -387,17 +389,20 @@ static short tst_core_get_baskpath (void)
 */
 static short tst_time_getstr (void)
 {
+	short passed;
 	char datestr[F_BB_S_DATE];
+	
+	passed = FALSE;
 	
 	time_get_str (datestr, sizeof (datestr));
 	
-	if (datestr == NULL)
+	if (datestr != NULL)
 	{
-		tst_print_fail ("Time_Get_Str");
-		return TESTS_FAIL;
+		passed = TRUE;
 	}
 	
-	if (strlen(datestr) == F_BB_S_DATE-1 &&
+	if (passed == TRUE &&
+	    strlen(datestr) == F_BB_S_DATE-1 &&
 	    datestr[2] == '/' &&
 	    datestr[5] == '/' &&
 	    datestr[8] == '/' &&
@@ -419,15 +424,18 @@ static short tst_time_getstr (void)
 */
 static short tst_time_gettm_str (void)
 {
+	short passed;
 	struct tm out;
 	
-	if (time_get_tm_str (&out, "23/59/59/09/09/2015") != 0)
+	passed = FALSE;
+	
+	if (time_get_tm_str (&out, "23/59/59/09/09/2015") == 0)
 	{
-		tst_print_fail ("Time_Get_Tm_Str");
-		return TESTS_FAIL;
+		passed = TRUE;
 	}
 	
-	if (out.tm_hour == 23 &&
+	if (passed == TRUE &&
+	    out.tm_hour == 23 &&
 	    out.tm_min == 59 &&
 	    out.tm_sec == 59 &&
 	    out.tm_mday == 9 &&
@@ -685,12 +693,13 @@ static short tst_task_checkinput (void)
 	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", FALSE) == TASK_ERR_CHECK_PROJECT &&
 	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015","23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.", FALSE) == TASK_ERR_CHECK_DESCRIPTION)
 	{
-		passed = FALSE;
+		passed = TRUE;
 	}
 	
 	tcore.t_options ^= BITCOPY (TRUE, 0, tcore.t_options, T_O_DESCRIPTIONBREAK);
 	
-	if (passed == FALSE && task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem  .", 0) == TASK_ERR_CHECK_DESCRIPTION &&
+	if (passed == TRUE &&
+	    task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem  .", 0) == TASK_ERR_CHECK_DESCRIPTION &&
 	task_check_input (&tcore, "23/59/59/09/09/2015", "23/59/59/09/09/2015", "23/59/59/09/09/2015", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum  .", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum. Lorem Ipsum Lorem .", 0) == 0)
 	{
 		tst_print_success ("Task_Check_Input");
@@ -768,11 +777,7 @@ static short tst_filter_checktask (void)
 	filter_init (&bfilter, -1, -1, -1, -1, -1, -1);
 	
 	if (passed == TRUE &&
-	    filter_check_task (&bfilter, &btask) == TRUE)
-	{
-		passed = TRUE;
-	}
-	else
+	    filter_check_task (&bfilter, &btask) != TRUE)
 	{
 		passed = FALSE;
 	}
@@ -780,11 +785,7 @@ static short tst_filter_checktask (void)
 	filter_init (&bfilter, FALSE, -1, -1, 9, 9, 2015);
 	
 	if (passed == TRUE &&
-	    filter_check_task (&bfilter, &btask) == FALSE)
-	{
-		passed = TRUE;
-	}
-	else
+	    filter_check_task (&bfilter, &btask) != FALSE)
 	{
 		passed = FALSE;
 	}
@@ -792,11 +793,7 @@ static short tst_filter_checktask (void)
 	filter_init (&bfilter, -1, TRUE, -1, 9, 9, 2015);
 	
 	if (passed == TRUE &&
-	    filter_check_task (&bfilter, &btask) == FALSE)
-	{
-		passed = TRUE;
-	}
-	else
+	    filter_check_task (&bfilter, &btask) != FALSE)
 	{
 		passed = FALSE;
 	}
@@ -905,24 +902,26 @@ static short tst_pri_getidfromstr (void)
 */
 static short tst_pri_getviewdata (void)
 {
+	short passed;
 	char color[PRI_S_PCOLOR], pri[PRI_S_PALIAS];
 	bask_priority* first = NULL;
+	
+	passed = FALSE;
 	
 	strcpy (color, "");
 	strcpy (pri, "");
 	
-	if (priority_insert (&first, 0, "TestTestTestT", "T", "Test") != -2 ||
-	    priority_insert (&first, 0, BC_TXT_GREEN, "Test", "Test") != -2 ||
-	    priority_insert (&first, 0, BC_TXT_GREEN, "T", "TestTestTestTestTest") != -2 ||
-	    priority_insert (&first, 0, BC_TXT_GREEN, "T", "TestTestTestTestTes") != 0 ||
-	    priority_get_viewdata (&first, 0, color, sizeof (color), pri, sizeof (pri)) != 0)
+	if (priority_insert (&first, 0, "TestTestTestT", "T", "Test") == -2 &&
+	    priority_insert (&first, 0, BC_TXT_GREEN, "Test", "Test") == -2 &&
+	    priority_insert (&first, 0, BC_TXT_GREEN, "T", "TestTestTestTestTest") == -2 &&
+	    priority_insert (&first, 0, BC_TXT_GREEN, "T", "TestTestTestTestTes") == 0 &&
+	    priority_get_viewdata (&first, 0, color, sizeof (color), pri, sizeof (pri)) == 0)
 	{
-		priority_free_ll (&first);
-		tst_print_fail ("Priority_Get_Viewdata");
-		return TESTS_FAIL;
+		passed = TRUE;
 	}
 	
-	if (utils_streq (color, BC_TXT_GREEN) == 0 &&
+	if (passed == TRUE &&
+	    utils_streq (color, BC_TXT_GREEN) == 0 &&
 	    utils_streq (pri, "T") == 0)
 	{
 		priority_free_ll (&first);
@@ -1005,17 +1004,20 @@ static short tst_pri_create (void)
 */
 static short tst_export_icaldate (void)
 {
+	short passed;
 	char datestr[F_ICAL_S_DATE];
+	
+	passed = FALSE;
 	
 	export_ical_getdatestr (datestr, "23/59/59/09/09/2015");
 	
-	if (datestr == NULL)
+	if (datestr != NULL)
 	{
-		tst_print_fail ("Export_ICal_GetDateStr");
-		return TESTS_FAIL;
+		passed = TRUE;
 	}
 	
-	if (utils_streq (datestr, "20150909T235959") == 0)
+	if (passed == TRUE &&
+	    utils_streq (datestr, "20150909T235959") == 0)
 	{
 		tst_print_success ("Export_ICal_GetDateStr");
 		return TESTS_PASS;
@@ -1088,17 +1090,20 @@ static short tst_import_csvparser (void)
 */
 static short tst_import_icaldate (void)
 {
+	short passed;
 	char datestr[F_BB_S_DATE];
+	
+	passed = FALSE;
 	
 	import_ical_getdatestr (datestr, "20150909T235959");
 	
-	if (datestr == NULL)
+	if (datestr != NULL)
 	{
-		tst_print_fail ("Import_ICal_GetDateStr");
-		return TESTS_FAIL;
+		passed = TRUE;
 	}
 	
-	if (utils_streq (datestr, "23/59/59/09/09/2015") == 0)
+	if (passed == TRUE &&
+	    utils_streq (datestr, "23/59/59/09/09/2015") == 0)
 	{
 		tst_print_success ("Import_ICal_GetDateStr");
 		return TESTS_PASS;

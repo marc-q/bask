@@ -257,7 +257,9 @@ void config_load (bask_core* tcore)
 		if (line[0] != '#')
 		{
 			/* NOTE: Using this we only must change one function in order to add options. */
-			if ((error = config_set_str_raw (tcore, line, &tmpsvalue, baskbin, sizeof (baskbin), saveptr)) != 0)
+			error = config_set_str_raw (tcore, line, &tmpsvalue, baskbin, sizeof (baskbin), saveptr);
+			
+			if (error != 0)
 			{
 				config_print_set_str_errors (error);
 				
