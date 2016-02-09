@@ -379,16 +379,10 @@ int main (int argc, char* argv[])
 				}
 				break;
 			case 'F':
-				if (strlen (optarg) < sizeof (pfinished))
-				{
-					strcpy (pfinished, optarg);
-				}
+				time_get_str_described (pfinished, sizeof (pfinished), optarg);
 				break;
 			case 'A':
-				if (strlen (optarg) < sizeof (padded))
-				{
-					strcpy (padded, optarg);
-				}
+				time_get_str_described (padded, sizeof (padded), optarg);
 				break;
 			case 's':
 				if (utils_atos (&pfin, optarg) == -2 || ISBOOL (pfin) != TRUE)
@@ -426,10 +420,7 @@ int main (int argc, char* argv[])
 				}
 				break;
 			case B_CMD_ARG_DUE:
-				if (strlen (optarg) < sizeof (pdue))
-				{
-					strcpy (pdue, optarg);
-				}
+				time_get_str_described (pdue, sizeof (pdue), optarg);
 				break;
 			case B_CMD_ARG_TODAY:
 				/* TODO: Improve this. */
@@ -644,7 +635,8 @@ int main (int argc, char* argv[])
 		}
 		else if (utils_streq (argv[optind], B_CMD_DUE) == 0)
 		{
-			task_due_cmd (&tcore, &first, atoi (argv[optind+1]), argv[optind+2]);
+			time_get_str_described (pdue, sizeof (pdue), argv[optind+2]);
+			task_due_cmd (&tcore, &first, atoi (argv[optind+1]), pdue);
 		}
 		else
 		{

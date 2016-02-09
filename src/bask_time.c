@@ -72,14 +72,6 @@ short time_get_str_described (char* out, size_t outsize, char* desc)
 	value = i = 0;
 	multiplier = 1;
 	
-	tzset ();
-	/* This inits the tmp structure. */
-	if (time_get_tm (&tmp) != 0)
-	{
-		errors_timenotgot ();
-		return -1;
-	}
-	
 	if (strlen(desc) == F_BB_S_DATE-1 &&
 	    desc[2] == '/' &&
 	    desc[5] == '/' &&
@@ -87,17 +79,19 @@ short time_get_str_described (char* out, size_t outsize, char* desc)
 	    desc[11] == '/' &&
 	    desc[14] == '/')
 	{
-		/* INFO: The time_get_tm_str function doesnt work here. */
-		tmp->tm_isdst = -1;
-		tmp->tm_sec = time_get_seconds (desc);
-		tmp->tm_min = time_get_minutes (desc);
-		tmp->tm_hour = time_get_hours (desc);
-		tmp->tm_mday = time_get_day (desc);
-		tmp->tm_mon = time_get_month (desc)-1;
-		tmp->tm_year = time_get_year (desc)-1900;
+		if (strlen (desc) < outsize)
+		{
+			strcpy (out, desc);
+		}
 	}
 	else
 	{
+		if (time_get_tm (&tmp) != 0)
+		{
+			errors_timenotgot ();
+			return -1;
+		}
+	
 		while (i < strlen (desc) && isdigit (desc[i]) != 0)
 		{
 			value *= multiplier;
@@ -131,14 +125,14 @@ short time_get_str_described (char* out, size_t outsize, char* desc)
 		{
 			tmp->tm_year += value;
 		}
-	}
+		
+		mktime (tmp);
 	
-	mktime (tmp);
-	
-	if (strftime (out, outsize, "%H/%M/%S/%d/%m/%Y", tmp) == 0)
-	{
-		errors_timenotgot ();
-		return -2;
+		if (strftime (out, outsize, "%H/%M/%S/%d/%m/%Y", tmp) == 0)
+		{
+			errors_timenotgot ();
+			return -2;
+		}
 	}
 	
 	return 0;
