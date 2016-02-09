@@ -13,19 +13,59 @@
    |--------------------------------------------| */
 
 /*
+	Function: time_get_tm (struct tm** out);
+	Description: Builds a tm structure with the current date.
+	InitVersion: 0.0.1
+*/
+short time_get_tm (struct tm** out)
+{
+	time_t t;
+	
+	t = time (NULL);
+	*out = localtime (&t);
+	
+	if (*out == NULL)
+	{
+		return -1;
+	}
+	
+	return 0;
+}
+
+/*
 	Function: time_get_str (char* out, size_t outsize);
 	Description: Builds a string with the current date.
 	InitVersion: 0.0.1
 */
 short time_get_str (char* out, size_t outsize)
 {
-	time_t t;
-	struct tm *tmp;
+	struct tm* tmp;
 	
-	t = time (NULL);
-	tmp = localtime (&t);
+	if (time_get_tm (&tmp) != 0)
+	{
+		errors_timenotgot ();
+		return -1;
+	}
 	
-	if (tmp == NULL)
+	if (strftime (out, outsize, "%H/%M/%S/%d/%m/%Y", tmp) == 0)
+	{
+		errors_timenotgot ();
+		return -2;
+	}
+	
+	return 0;
+}
+
+/*
+	Function: time_get_str_described (char* out, size_t outsize, char* desc);
+	Description: Builds a string with the described date.
+	InitVersion: 0.0.1
+*/
+short time_get_str_described (char* out, size_t outsize, char* desc)
+{
+	struct tm* tmp;
+	
+	if (time_get_tm (&tmp) != 0)
 	{
 		errors_timenotgot ();
 		return -1;
