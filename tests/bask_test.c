@@ -14,7 +14,7 @@
 #include "../src/bask_export.h"
 #include "../src/bask_import.h"
 
-#define TESTS_AMOUNT 83
+#define TESTS_AMOUNT 84
 #define TESTS_FAIL 0
 #define TESTS_PASS 1
 
@@ -414,6 +414,148 @@ static short tst_time_getstr (void)
 	}
 	
 	tst_print_fail ("Time_Get_Str");
+	return TESTS_FAIL;
+}
+
+/*
+	Function: tst_time_getstr_described (void);
+	Description: Tests the time_get_str_described function from bask_time.c.
+	InitVersion: 0.0.1
+*/
+static short tst_time_getstr_described (void)
+{
+	short passed;
+	char datestr[F_BB_S_DATE];
+	struct tm* tmp;
+	
+	passed = FALSE;
+	
+	time_get_tm (&tmp);
+	tmp->tm_mday += 1;
+	mktime (tmp);
+	
+	time_get_str_described (datestr, sizeof (datestr), "1 day");
+	
+	
+	if (datestr != NULL)
+	{
+		passed = TRUE;
+	}
+	
+	/* ADDING TIME */
+	
+	if (passed == TRUE &&
+	    (strlen(datestr) != F_BB_S_DATE-1 ||
+	     datestr[2] != '/' ||
+	     datestr[5] != '/' ||
+	     datestr[8] != '/' ||
+	     datestr[11] != '/' ||
+	     datestr[14] != '/' ||
+	     time_get_day (datestr) != tmp->tm_mday))
+	{
+		passed = FALSE;
+	}
+	
+	time_get_tm (&tmp);
+	tmp->tm_mday += 14;
+	mktime (tmp);
+	
+	time_get_str_described (datestr, sizeof (datestr), "2 weeks");
+	
+	if (passed == TRUE &&
+	    time_get_day (datestr) != tmp->tm_mday)
+	{
+		passed = FALSE;
+	}
+	
+	time_get_tm (&tmp);
+	tmp->tm_mon += 3;
+	mktime (tmp);
+	
+	time_get_str_described (datestr, sizeof (datestr), "3 months");
+	
+	if (passed == TRUE &&
+	    time_get_month (datestr) != tmp->tm_mon+1)
+	{
+		passed = FALSE;
+	}
+	
+	time_get_tm (&tmp);
+	tmp->tm_year += 4;
+	mktime (tmp);
+	
+	time_get_str_described (datestr, sizeof (datestr), "4 years");
+	
+	if (passed == TRUE &&
+	    time_get_year (datestr) != tmp->tm_year+1900)
+	{
+		passed = FALSE;
+	}
+	
+	/* SUBTRACTING TIME */
+	
+	time_get_tm (&tmp);
+	tmp->tm_mday -= 1;
+	mktime (tmp);
+	
+	time_get_str_described (datestr, sizeof (datestr), "1 day ago");
+	
+	if (passed == TRUE &&
+	    time_get_day (datestr) != tmp->tm_mday)
+	{
+		passed = FALSE;
+	}
+	
+	time_get_tm (&tmp);
+	tmp->tm_mday -= 14;
+	mktime (tmp);
+	
+	time_get_str_described (datestr, sizeof (datestr), "2 weeks ago");
+	
+	if (passed == TRUE &&
+	    time_get_day (datestr) != tmp->tm_mday)
+	{
+		passed = FALSE;
+		
+	}
+	
+	time_get_tm (&tmp);
+	tmp->tm_mon -= 3;
+	mktime (tmp);
+	
+	time_get_str_described (datestr, sizeof (datestr), "3 months ago");
+	
+	if (passed == TRUE &&
+	    time_get_month (datestr) != tmp->tm_mon+1)
+	{
+		passed = FALSE;
+	}
+	
+	time_get_tm (&tmp);
+	tmp->tm_year -= 4;
+	mktime (tmp);
+	
+	time_get_str_described (datestr, sizeof (datestr), "4 years ago");
+	
+	if (passed == TRUE &&
+	    time_get_year (datestr) != tmp->tm_year+1900)
+	{
+		passed = FALSE;
+	}
+	
+	time_get_tm (&tmp);
+	time_get_str_described (datestr, sizeof (datestr), "4");
+	
+	if (passed == TRUE &&
+	    time_get_day (datestr) == tmp->tm_mday &&
+	    time_get_month (datestr) == tmp->tm_mon+1 &&
+	    time_get_year (datestr) == tmp->tm_year+1900)
+	{
+		tst_print_success ("Time_Get_Str_Described");
+		return TESTS_PASS;
+	}
+	
+	tst_print_fail ("Time_Get_Str_Described");
 	return TESTS_FAIL;
 }
 
@@ -1132,6 +1274,7 @@ int main (int argc, char* argv[])
 	printf ("\n");
 	
 	points += tst_time_getstr ();
+	points += tst_time_getstr_described ();
 	points += tst_time_gettm_str ();
 	points += tst_time_gethours ();
 	points += tst_time_getminutes ();
