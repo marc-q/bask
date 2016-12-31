@@ -1,4 +1,4 @@
-/* Copyright 2015 - 2016 Marc Volker Dickmann */
+/* Copyright 2015 - 2017 Marc Volker Dickmann */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
