@@ -1,4 +1,4 @@
-/* Copyright 2015 - 2016 Marc Volker Dickmann */
+/* Copyright 2015 - 2017 Marc Volker Dickmann */
 /* Project: Bask */
 #define _GNU_SOURCE
 #include <stdio.h>
@@ -164,7 +164,7 @@ static void bask_unload (bask_priority** bprioritys, struct bask_task** first)
 */
 static void print_about (void)
 {
-	printf ("Bask v. %s (c) 2015 - 2016 Marc Volker Dickmann\n", P_VERSION);
+	printf ("Bask v. %s (c) 2015 - 2017 Marc Volker Dickmann\n", P_VERSION);
 	printf ("Licence: %s\n", P_LICENCE);
 	printf ("A simple taskmanager for real life written in C.\n");
 }

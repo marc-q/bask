@@ -1,4 +1,4 @@
-/* Copyright 2015 - 2016 Marc Volker Dickmann */
+/* Copyright 2015 - 2017 Marc Volker Dickmann */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1269,7 +1269,7 @@ int main (int argc, char* argv[])
 	
 	points = 0;
 	
-	printf ("Bask-Tests (c) 2015 - 2016 Marc Volker Dickmann\n\n");
+	printf ("Bask-Tests (c) 2015 - 2017 Marc Volker Dickmann\n\n");
 	
 	points += tst_core_streq ();
 	points += tst_core_atos ();
